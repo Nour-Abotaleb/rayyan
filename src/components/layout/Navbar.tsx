@@ -48,7 +48,7 @@ export default function Navbar() {
       }`}
     >
       {/* Logo */}
-      <span className="font-abril text-xl md:text-2xl lg:text-[32px] text-primary">
+      <span className="font-abril text-xl md:text-2xl lg:text-[32px] text-red-600">
         RAYYAN
       </span>
 
