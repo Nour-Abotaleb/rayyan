@@ -50,7 +50,7 @@ export default function SignUpForm() {
               placeholder={t.auth.namePlaceholder}
               required
               autoComplete="name"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
             />
             <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
               <UserNameIcon size={20} />
@@ -70,7 +70,7 @@ export default function SignUpForm() {
               placeholder={t.auth.emailPlaceholder}
               required
               autoComplete="email"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
             />
             <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
               <EmailIcon size={20} />
@@ -90,7 +90,7 @@ export default function SignUpForm() {
               placeholder={t.auth.passwordPlaceholder}
               required
               autoComplete="new-password"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
             />
             <button
               type="button"
@@ -115,7 +115,7 @@ export default function SignUpForm() {
               placeholder={t.auth.passwordPlaceholder}
               required
               autoComplete="new-password"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
             />
             <button
               type="button"
@@ -138,7 +138,7 @@ export default function SignUpForm() {
 
         <button
           type="submit"
-          className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-zinc-800 transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-zinc-800 transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40"
         >
           {t.auth.signUp}
         </button>

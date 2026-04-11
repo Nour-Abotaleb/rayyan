@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -48,21 +49,39 @@ export default function Navbar() {
       }`}
     >
       {/* Logo */}
-      <span className="font-abril text-xl md:text-2xl lg:text-[32px] text-primary">
+      <span className="font-abril text-xl md:text-2xl lg:text-[28px] text-primary">
         RAYYAN
       </span>
 
       {/* Center nav icons */}
       <nav className="flex items-center gap-6">
-        {navIcons.map(({ Icon, key }) => (
-          <button
-            key={key}
-            aria-label={t.nav[key as keyof typeof t.nav]}
-            className="text-paragraph transition-colors hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center"
-          >
-            <Icon size={20} />
-          </button>
-        ))}
+        {navIcons.map(({ Icon, key }) => {
+          const label = t.nav[key as keyof typeof t.nav]
+          const iconClassName =
+            'text-paragraph transition-colors hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center'
+          if (key === 'layout') {
+            return (
+              <Link
+                key={key}
+                href="/dashboard"
+                aria-label={label}
+                className={iconClassName}
+              >
+                <Icon size={20} />
+              </Link>
+            )
+          }
+          return (
+            <button
+              key={key}
+              type="button"
+              aria-label={label}
+              className={iconClassName}
+            >
+              <Icon size={20} />
+            </button>
+          )
+        })}
       </nav>
 
       {/* Right controls */}

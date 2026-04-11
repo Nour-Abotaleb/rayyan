@@ -1,0 +1,20 @@
+<svg width="188" height="199" viewBox="0 0 188 199" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="160.534" y="47.0167" width="184.981" height="155.418" rx="23.5" transform="rotate(75 160.534 47.0167)" fill="url(#paint0_radial_293_4870)" stroke="url(#paint1_linear_293_4870)"/>
+<rect x="155.196" y="56.4238" width="41.0253" height="140.237" rx="18" transform="rotate(75 155.196 56.4238)" fill="url(#paint2_linear_293_4870)"/>
+<foreignObject x="21.7606" y="64.0531" width="144.633" height="68.4621"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(6.8px);clip-path:url(#bgblur_0_293_4870_clip_path);height:100%;width:100%"></div></foreignObject><path data-figma-bg-blur-radius="13.5914" fill-rule="evenodd" clip-rule="evenodd" d="M152.802 88.2118L149.971 77.6445L35.3518 108.357L38.1834 118.924L152.802 88.2118Z" fill="#9DC4BF"/>
+<defs>
+<clipPath id="bgblur_0_293_4870_clip_path" transform="translate(-21.7606 -64.0531)"><path fill-rule="evenodd" clip-rule="evenodd" d="M152.802 88.2118L149.971 77.6445L35.3518 108.357L38.1834 118.924L152.802 88.2118Z"/>
+</clipPath><radialGradient id="paint0_radial_293_4870" cx="0" cy="0" r="1" gradientTransform="matrix(92.1795 100.192 -118.617 77.1941 197.512 69.6894)" gradientUnits="userSpaceOnUse">
+<stop stop-color="#E4ECEE"/>
+<stop offset="1" stop-color="#488981"/>
+</radialGradient>
+<linearGradient id="paint1_linear_293_4870" x1="128.03" y1="88.4015" x2="196.964" y2="188.888" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.600574"/>
+<stop offset="1" stop-color="white" stop-opacity="0.01"/>
+</linearGradient>
+<linearGradient id="paint2_linear_293_4870" x1="175.708" y1="56.4238" x2="175.708" y2="196.661" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8DB7B6"/>
+<stop offset="1" stop-color="#488981"/>
+</linearGradient>
+</defs>
+</svg>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&family=Almarai:wght@300;400;700;800&family=Cairo:wght@200..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&family=Almarai:wght@300;400;700;800&family=Cairo:wght@200..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @import "tailwindcss";
 
@@ -7,28 +7,32 @@
 
 @theme inline {
   /* Brand colors */
-  --color-primary:       #488981;
-  --color-primary-dark:  #366b65;
+  --color-primary: #488981;
+  --color-primary-dark: #366b65;
   --color-primary-light: #5aab9e;
-  --color-secondary:     #50AED4;
-  --color-tertiary:      #51D1B8;
+  --color-secondary: #50aed4;
+  --color-tertiary: #51d1b8;
 
   /* Semantic */
-  --color-paragraph: #6B7280;
-  --color-screen:    #F6F6F6;
-  --color-screen-dark:    #161616;
-  --color-input-icon:    #A0A3BD;
-  --color-input-fill:    linear-gradient(to right, rgba(255, 255, 255, 0.35), #FFFFFF);
-  --color-input-stroke:    linear-gradient(to right, #E6E6E6, #EFEFEF);
+  --color-paragraph: #6b7280;
+  --color-screen: #f6f6f6;
+  --color-screen-dark: #161616;
+  --color-input-icon: #a0a3bd;
+  --color-input-fill: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.35),
+    #ffffff
+  );
+  --color-input-stroke: linear-gradient(to right, #e6e6e6, #efefef);
 
   /* Fonts */
-  --font-sans:  'Montserrat', sans-serif;
+  --font-sans: "Montserrat", sans-serif;
   --font-abril: var(--font-abril-fatface);
 }
 
 /* Light mode tokens */
 :root {
-  --bg: #F6F6F6;
+  --bg: #f6f6f6;
   --fg: #111827;
 }
 
@@ -40,11 +44,11 @@
 
 body {
   color: var(--fg);
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* Gradient border utility for inputs — border-color  */
-  /* Gradient border utility for inputs */
+/* Gradient border utility for inputs */
 @utility input-style {
   border: 1px solid transparent;
   background-image:
@@ -58,4 +62,11 @@ body {
       linear-gradient(to right, #1f2937, #1f2937),
       linear-gradient(to right, #374151, #4b5563);
   }
+}
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

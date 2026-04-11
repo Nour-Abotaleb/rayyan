@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import EmailIcon from "@/icons/EmailIcon";
 import EyeIcon from "@/icons/EyeIcon";
@@ -10,6 +11,7 @@ import GoogleIcon from "@/icons/GoogleIcon";
 
 export default function LoginForm() {
   const { t, dir } = useLanguage();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +20,7 @@ export default function LoginForm() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     // TODO: connect to auth
+    router.push("/dashboard");
   }
 
   return (
@@ -48,7 +51,7 @@ export default function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.auth.emailPlaceholder}
               required
-              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
             />
             <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
               <EmailIcon size={20} />
@@ -68,7 +71,7 @@ export default function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t.auth.passwordPlaceholder}
               required
-              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-2 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
             />
             <button
               type="button"
@@ -103,7 +106,7 @@ export default function LoginForm() {
         {/* Login button */}
         <button
           type="submit"
-          className="mt-1 w-full rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-zinc-800 transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+          className="mt-1 w-full rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-zinc-800 transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer"
         >
           {t.auth.login}
         </button>
