@@ -116,7 +116,7 @@ export default function LeftPanel() {
       </aside>
 
       {/* Desktop — single panel background, stacked cards */}
-      <aside className="relative z-10 m-3 hidden w-94 shrink-0 flex-col justify-start overflow-hidden rounded-2xl px-4 py-6 lg:flex lg:sticky lg:top-[4.5rem] lg:self-start lg:h-[calc(100dvh-4.5rem-1.5rem)]">
+      <aside className="relative z-10 m-3 hidden w-96 shrink-0 flex-col justify-start overflow-hidden rounded-2xl px-4 py-6 lg:flex lg:sticky lg:top-[4.5rem] lg:self-start lg:h-[calc(100dvh-4.5rem-1.5rem)]">
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
           <Image
             src={leftPanelBg}

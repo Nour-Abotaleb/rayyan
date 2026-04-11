@@ -94,7 +94,7 @@ export default function ProposalsTable() {
           alt=""
           aria-hidden="true"
           fill
-          className="object-cover object-top"
+          className="object-contain object-top"
           sizes="(max-width: 1024px) 100vw, 1000px"
           priority
         />
