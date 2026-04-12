@@ -38,20 +38,14 @@ function CardBlock({
   return (
     <div className="flex flex-col gap-3">
       <div className="relative z-0 h-52 w-full overflow-hidden rounded-2xl">
-        <Image
-          src={cardBg}
-          alt=""
-          fill
-          className="object-fill"
-          priority
-        />
+        <Image src={cardBg} alt="" fill className="object-fill" priority />
 
         <div className="absolute inset-0 p-5">
-          <div className="w-[55%]">
-            <h3 className="whitespace-pre-line text-xl md:text-2xl font-semibold leading-snug text-white">
+          <div className="">
+            <h3 className="w-[65%] whitespace-pre-line text-xl md:text-2xl font-semibold leading-snug text-white">
               {card.title}
             </h3>
-            <p className="mt-2 text-xs leading-relaxed text-[#CCCCCC]">
+            <p className="w-[55%] mt-2 text-xs leading-relaxed text-[#CCCCCC]">
               {card.description}
             </p>
           </div>
@@ -70,7 +64,7 @@ function CardBlock({
       <button
         type="button"
         onClick={onCreateClick}
-        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary px-3 py-2 text-sm font-normal text-white transition-colors hover:bg-primary-dark"
+        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1 md:px-4 lg:px-3.5 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark"
       >
         <span className="text-base leading-none">+</span>
         Create Proposal
@@ -85,29 +79,29 @@ export default function LeftPanel() {
 
   return (
     <>
-      {/* Mobile — one leftPanelBg per card, horizontal snap scroll */}
-      <aside className="relative z-10 m-3 w-full shrink-0 lg:hidden">
+      {/* Mobile — horizontal snap; bleed matches layout-shell-x (px-3 mobile, was -mx-6 vs px-3 → page scroll) */}
+      <aside className="relative z-10 my-3 min-w-0 shrink-0 max-sm:-mx-3 max-sm:w-[calc(100%+1.5rem)] sm:mx-0 sm:w-full lg:hidden">
         <div
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex w-full min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="region"
           aria-label="Promotional cards"
         >
           {cards.map((card, i) => (
             <div
               key={i}
-              className="relative flex min-h-0 shrink-0 snap-center flex-col overflow-hidden rounded-2xl flex-[0_0_88%] sm:flex-[0_0_90%]"
+              className="relative flex min-h-0 w-[93%] max-w-[93%] flex-none shrink-0 snap-center flex-col overflow-hidden rounded-2xl sm:w-[62%] sm:max-w-[62%] md:w-[52%] md:max-w-[52%]"
             >
-              <div className="pointer-events-none absolute inset-0 z-0 rounded-2xl">
+              <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
                 <Image
                   src={leftPanelBgMobile}
                   alt=""
                   fill
-                  className="object-contain object-center"
-                  sizes="(max-width:640px) 88vw, 90vw"
+                  className="object-cover object-center"
+                  sizes="(max-width: 640px) 92vw, 93vw"
                   priority={i === 0}
                 />
               </div>
-              <div className="relative z-10 flex flex-col gap-5 px-4 py-6">
+              <div className="relative z-10 flex flex-col gap-5 px-2 lg:px-4 py-2 md:py-4 lg:py-6">
                 <CardBlock card={card} onCreateClick={openModal} />
               </div>
             </div>
@@ -115,9 +109,9 @@ export default function LeftPanel() {
         </div>
       </aside>
 
-      {/* Desktop — single panel background, stacked cards */}
-      <aside className="relative z-10 m-3 hidden w-96 shrink-0 flex-col justify-start overflow-hidden rounded-2xl px-4 py-6 lg:flex lg:sticky lg:top-[4.5rem] lg:self-start lg:h-[calc(100dvh-4.5rem-1.5rem)]">
-        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
+      {/* Desktop — fixed column beside scrolling main (scroll container is DashboardPage main) */}
+      <aside className="scrollbar-hide relative z-10 my-3 hidden min-w-98 shrink-0 flex-col justify-start overflow-hidden rounded-2xl px-4 py-6 lg:my-0 lg:mt-4 lg:flex lg:h-[86vh] lg:min-h-0 lg:self-start lg:overflow-y-auto">
+        <div className="pointer-events-none min-w-98 absolute inset-0 z-0 overflow-hidden rounded-2xl">
           <Image
             src={leftPanelBg}
             alt=""

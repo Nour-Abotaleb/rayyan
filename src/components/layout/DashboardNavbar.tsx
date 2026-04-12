@@ -36,7 +36,10 @@ const navItems = [
   { Icon: SliderIcon, key: 'settings', label: 'Settings', href: '/dashboard/settings' },
 ] as const
 
-const navIconInactive =
+const navIconInactiveLanding =
+  'text-paragraph transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex shrink-0 items-center justify-center'
+
+const navIconInactiveOverview =
   'text-paragraph transition-colors hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center'
 
 const navIconActive =
@@ -69,17 +72,22 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
     ? 'bg-white shadow-sm dark:bg-zinc-950 dark:shadow-black/20'
     : 'bg-transparent'
 
+  /** Match other nav pills on proposal flows (e.g. /dashboard/proposals/new) */
+  const overviewInactiveClass = pathname?.startsWith('/dashboard/proposals')
+    ? navIconInactiveLanding
+    : navIconInactiveOverview
+
   return (
-    <header className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 ${bgClass}`}>
+    <header className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 py-2 ${bgClass}`}>
       {/* Main row */}
-      <div className="flex h-16 items-center justify-between px-6 py-4">
+      <div className="layout-shell-x flex h-16 items-center justify-between">
         {/* Logo */}
         <span className="font-abril text-xl text-primary md:text-2xl lg:text-[28px]">
           RAYYAN
         </span>
 
         {/* Center nav — desktop only */}
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-3 lg:flex">
           {navItems.map(({ Icon, key, label, href }) => {
             const isActive = pathname === href
             return (
@@ -87,7 +95,13 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
                 key={key}
                 href={href}
                 aria-label={label}
-                className={isActive ? navIconActive : navIconInactive}
+                className={
+                  isActive
+                    ? navIconActive
+                    : key === 'layout'
+                      ? overviewInactiveClass
+                      : navIconInactiveLanding
+                }
               >
                 {key === 'layout' && isActive ? (
                   <OverviewActiveIcon size={20} className="shrink-0 text-white" />
@@ -101,7 +115,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
         </nav>
 
         {/* Right controls — desktop only */}
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <RightControls
             theme={theme}
             toggleTheme={toggleTheme}
@@ -124,7 +138,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
 
       {/* Mobile dropdown */}
       {mobileOpen && (
-        <div className="flex flex-col gap-4 border-t border-zinc-100 px-6 pb-5 pt-4 lg:hidden dark:border-zinc-800">
+        <div className="layout-shell-x flex flex-col gap-4 border-t border-zinc-100 pb-5 pt-4 lg:hidden dark:border-zinc-800">
           {/* Nav items */}
           <nav className="flex items-center gap-3 flex-wrap">
             {navItems.map(({ Icon, key, label, href }) => {
@@ -134,7 +148,13 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
                   key={key}
                   href={href}
                   aria-label={label}
-                  className={isActive ? navIconActive : navIconInactive}
+                  className={
+                    isActive
+                      ? navIconActive
+                      : key === 'layout'
+                        ? overviewInactiveClass
+                        : navIconInactiveLanding
+                  }
                 >
                   {key === 'layout' && isActive ? (
                     <OverviewActiveIcon size={18} className="shrink-0 text-white" />
@@ -179,14 +199,15 @@ function RightControls({
 }) {
   return (
     <>
-      {/* Theme toggle */}
-      <div className="flex items-center gap-1 rounded-full bg-white/50 px-1.5 py-0.5">
+      <div className="flex items-center gap-1 rounded-full bg-white/50 dark:bg-white/8 dark:border dark:border-white/25 px-[7px] py-[2.5px]">
         <button
           type="button"
           onClick={toggleTheme}
           aria-label={navLabel.lightMode}
           className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
-            theme === 'light' ? 'bg-primary text-white' : 'text-zinc-900 hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light'
+            theme === 'light'
+              ? 'bg-primary text-white'
+              : 'text-zinc-900 hover:text-primary dark:text-white'
           }`}
         >
           <SunIcon size={18} />
@@ -196,7 +217,9 @@ function RightControls({
           onClick={toggleTheme}
           aria-label={navLabel.darkMode}
           className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
-            theme === 'dark' ? 'bg-primary text-white' : 'text-zinc-900 hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light'
+            theme === 'dark'
+              ? 'bg-primary text-white'
+              : 'text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light'
           }`}
         >
           <MoonIcon size={18} />
@@ -204,30 +227,35 @@ function RightControls({
       </div>
 
       <button
+        type="button"
         onClick={cycleLanguage}
         aria-label={navLabel.language}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
       >
         <TranslateIcon size={20} />
       </button>
 
       <button
+        type="button"
         aria-label="Search"
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
       >
         <SearchIcon size={20} />
       </button>
 
       <button
+        type="button"
         aria-label="Notifications"
-        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
       >
         <NotificationIcon size={20} />
-        <span className="absolute left-3.5 top-3.5 h-[5px] w-[5px] rounded-full bg-[#C10000]" />
+        <span className="absolute left-3 top-3 h-[5px] w-[5px] rounded-full bg-[#C10000]" />
       </button>
 
-      {/* User */}
-      <button className="flex items-center gap-2.5 rounded-full bg-white/50 py-1.5 ps-2 pe-3 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800">
+      <button
+        type="button"
+        className="flex items-center gap-2.5 rounded-full border border-transparent bg-white/50 py-1.5 ps-2 pe-3 transition-colors hover:bg-zinc-100 dark:border-white/25 dark:bg-white/8 dark:hover:bg-white/12"
+      >
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
           {user.name.charAt(0)}
         </div>

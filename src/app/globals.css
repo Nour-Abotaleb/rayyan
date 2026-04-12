@@ -34,12 +34,14 @@
 :root {
   --bg: #f6f6f6;
   --fg: #111827;
+  --modal-surface: #f8f8f8;
 }
 
 /* Dark mode tokens — same as --color-screen-dark (#161616) */
 .dark {
   --bg: #161616;
   --fg: #f1f5f4;
+  --modal-surface: #141414;
 }
 
 body {
@@ -47,8 +49,11 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
-/* Gradient border utility for inputs — border-color  */
-/* Gradient border utility for inputs */
+/*
+ * Gradient “border” for inputs. Dark gradients live in `.dark .input-style` below —
+ * nesting `&:where(.dark *)` inside @utility often fails to match (input is not `.dark`).
+ * Do not use dark:bg-* on the same element; it fights background-image.
+ */
 @utility input-style {
   border: 1px solid transparent;
   background-image:
@@ -56,12 +61,21 @@ body {
     linear-gradient(to right, #e6e6e6, #efefef);
   background-origin: border-box;
   background-clip: padding-box, border-box;
+}
 
-  &:where(.dark *) {
-    background-image:
-      linear-gradient(to right, #1f2937, #1f2937),
-      linear-gradient(to right, #374151, #4b5563);
-  }
+.dark .input-style {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05),
+      rgba(217, 255, 250, 0.05)
+    ),
+    linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.08),
+      rgba(255, 255, 255, 0.08)
+    );
 }
 .scrollbar-hide {
   scrollbar-width: none;
@@ -69,4 +83,14 @@ body {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Shared horizontal inset for nav + dashboard / proposal pages */
+/* Note: @apply px-3 md:px-6 inside @utility does not emit responsive rules — use explicit media */
+@utility layout-shell-x {
+  padding-inline: 0.75rem; /* px-3 */
+  @media (min-width: 48rem) {
+    /* md — matches Tailwind default */
+    padding-inline: 1.5rem; /* px-6 */
+  }
 }

@@ -24,16 +24,16 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="mb-6 flex flex-1 flex-col py-12 md:py-14 px-8 sm:px-12 lg:px-16">
+    <div className="mb-6 flex min-w-0 flex-1 flex-col px-4 py-10 sm:px-8 sm:py-12 md:px-12 md:py-14 lg:px-16">
       {/* Heading */}
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold leading-snug text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold leading-snug text-black">
           {t.auth.welcomeBack}{" "}
           <span className="font-medium text-primary font-abril">
             {t.auth.brandName}
           </span>
         </h1>
-        <p className="mt-3 max-w-sm text-sm md:text-base leading-relaxed text-paragraph dark:text-zinc-400">
+        <p className="mt-3 max-w-sm text-sm md:text-base leading-relaxed text-paragraph">
           {t.auth.subtitle}
         </p>
       </div>
@@ -51,7 +51,7 @@ export default function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.auth.emailPlaceholder}
               required
-              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-zinc-100 dark:placeholder:text-[#A0A3BD]"
             />
             <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
               <EmailIcon size={20} />
@@ -71,7 +71,7 @@ export default function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder={t.auth.passwordPlaceholder}
               required
-              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="w-full rounded-[44px] input-style py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-zinc-100 dark:placeholder:text-[#A0A3BD]"
             />
             <button
               type="button"
@@ -86,18 +86,18 @@ export default function LoginForm() {
 
         {/* Remember + Forgot */}
         <div className="flex items-center justify-between">
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-paragraph dark:text-zinc-400">
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-paragraph dark:text-[#757575]">
             <input
               type="checkbox"
               checked={remember}
               onChange={(e) => setRemember(e.target.checked)}
-              className="h-4 w-4 rounded border-zinc-300 accent-primary dark:border-zinc-600"
+              className="h-4 w-4 rounded border-[#A2A2A2] accent-primary dark:border-[#A2A2A2] text-[#A2A2A2] dark:text-white dark:bg-transparent"
             />
             {t.auth.rememberMe}
           </label>
           <button
             type="button"
-            className="text-sm font-bold text-zinc-800 hover:text-primary dark:text-zinc-300 dark:hover:text-primary-light"
+            className="text-sm font-semibold text-black hover:text-primary dark:text-white dark:hover:text-primary-light"
           >
             {t.auth.forgotPassword}
           </button>
@@ -106,7 +106,7 @@ export default function LoginForm() {
         {/* Login button */}
         <button
           type="submit"
-          className="mt-1 w-full rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-zinc-800 transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer"
+          className="mt-1 w-full rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-black transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer"
         >
           {t.auth.login}
         </button>
@@ -114,14 +114,14 @@ export default function LoginForm() {
         {/* Google sign in */}
         <button
           type="button"
-          className="flex w-full items-center justify-center gap-2.5 rounded-full border border-white bg-white/50 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-screen dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800 cursor-pointer"
+          className="flex w-full items-center justify-center gap-2.5 rounded-full border border-white bg-white/50 py-3 text-sm font-medium text-black dark:border-[#0D0D0D] dark:bg-[#0D0D0D] dark:text-white cursor-pointer"
         >
           <GoogleIcon size={20} />
           {t.auth.signInWithGoogle}
         </button>
 
         {/* Sign up link */}
-        <p className="text-center text-sm text-paragraph tracking-wide dark:text-zinc-400">
+        <p className="text-center text-sm text-paragraph tracking-wide dark:text-[#757575]">
           {t.auth.noAccount}{" "}
           <Link
             href="/signup"

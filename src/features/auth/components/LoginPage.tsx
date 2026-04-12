@@ -6,10 +6,10 @@ import spinnerImg from "@src/assets/dashboard/spinner.png";
 
 export default function LoginPage() {
   return (
-    <div className="relative flex min-h-0 flex-1 flex-col items-stretch overflow-x-clip bg-screen dark:bg-screen-dark lg:min-h-[calc(100dvh-4.5rem)] lg:flex-row lg:items-stretch lg:overflow-x-visible lg:overflow-y-visible">
+    <div className="relative flex min-h-0 flex-1 flex-col items-stretch overflow-x-clip bg-screen pb-6 dark:bg-screen-dark md:min-h-[calc(100dvh-4.5rem)] md:flex-1 lg:flex-row lg:items-stretch lg:overflow-x-visible lg:overflow-y-visible lg:pb-0">
       {/* Spinner (auth only) */}
       <div
-        className="pointer-events-none fixed left-0 top-0 z-[10000] w-[200px] sm:w-[260px] md:w-[320px] lg:w-[380px] max-w-[58vw]"
+        className="pointer-events-none fixed left-0 top-0 z-10000 w-50 max-w-[58vw] sm:w-65 md:w-80 lg:w-95"
         aria-hidden
       >
         <Image
@@ -23,22 +23,22 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Left — form */}
-      <div className="relative z-0 w-full ps-6 pt-1.5 lg:w-[45%]">
-        <section className="flex w-full flex-col rounded-2xl border border-white dark:border-zinc-800 bg-gradient-to-br from-white/40 from-[65%] to-[#D9FFFA] lg:w-[calc(100%+2.5rem)] lg:max-w-none">
+      {/* Left — form: mobile p-4; md–lg symmetric px; lg+ only start bleed */}
+      <div className="relative z-0 w-full shrink-0 p-4 md:px-6 md:pb-0 md:pt-1.5 lg:w-[45%] lg:px-0 lg:ps-6 lg:pt-1.5">
+        <section className="flex min-h-170 w-full flex-col rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA] dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/15 lg:h-full lg:min-h-0 lg:w-[calc(100%+2.5rem)] lg:max-w-none">
           <LoginForm />
         </section>
       </div>
 
-      {/* Hero */}
-      <section className="relative z-10 order-2 w-full px-4 pb-8 pt-4 lg:order-none lg:min-h-0 lg:w-[55%] lg:self-stretch lg:p-0">
-        <div className="relative min-h-[45vh] w-full overflow-hidden rounded-2xl lg:h-full lg:min-h-0 lg:rounded-none">
+      {/* Hero — md: same horizontal inset as form; lg: full-bleed column */}
+      <section className="relative z-10 order-2 hidden w-full min-h-0 min-w-0 flex-1 flex-col px-4 pb-8 pt-4 md:px-6 md:flex lg:order-0 lg:w-[55%] lg:self-stretch lg:flex-none lg:p-0">
+        <div className="relative min-h-0 min-w-0 w-full flex-1 overflow-hidden rounded-2xl lg:h-full lg:rounded-none">
           <Image
             src={heroImage}
             alt="Rayyan hero"
             fill
             sizes="(max-width: 1023px) 100vw, 55vw"
-            className="object-cover object-top dark:hidden"
+            className="object-contain object-right-top dark:hidden"
             priority
           />
           <Image
@@ -46,7 +46,7 @@ export default function LoginPage() {
             alt="Rayyan hero"
             fill
             sizes="(max-width: 1023px) 100vw, 55vw"
-            className="hidden object-cover object-top dark:block"
+            className="hidden object-contain object-right-top dark:block"
             priority
           />
         </div>

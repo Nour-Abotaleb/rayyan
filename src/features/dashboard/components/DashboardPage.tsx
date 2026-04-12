@@ -1,25 +1,25 @@
-import LeftPanel from './LeftPanel'
-import StatsCards from './StatsCards'
-import DocumentsSection from './DocumentsSection'
-import ProposalsTable from './ProposalsTable'
+import LeftPanel from "./LeftPanel";
+import StatsCards from "./StatsCards";
+import DocumentsSection from "./DocumentsSection";
+import ProposalsTable from "./ProposalsTable";
 
 // TODO: replace with real session data
-const mockUser = { name: 'Ahmed' }
+const mockUser = { name: "Ahmed" };
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-1 flex-col lg:flex-row">
+    <div className="layout-shell-x flex h-full min-h-0 flex-1 flex-col gap-3 overflow-x-hidden md:gap-6 lg:flex-row lg:items-stretch lg:overflow-hidden">
       {/* Left dark panel */}
       <LeftPanel />
 
-      {/* Main content */}
-      <main className="flex flex-1 flex-col gap-6 overflow-y-auto bg-screen py-4 md:py-6 px-3 dark:bg-zinc-950">
+      {/* Main content — only this column scrolls on desktop */}
+      <main className="scrollbar-hide flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto py-4">
         {/* Welcome */}
         <div className="hidden lg:block">
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold text-black dark:text-white tracking-wide">
             Welcome Back, {mockUser.name}
           </h1>
-          <p className="mt-1 text-sm text-paragraph dark:text-zinc-400">
+          <p className="mt-1 text-sm text-paragraph dark:text-[#656769] tracking-wide font-light">
             Generate, Manage, And Track Your AI Proposals
           </p>
         </div>
@@ -34,5 +34,5 @@ export default function DashboardPage() {
         <ProposalsTable />
       </main>
     </div>
-  )
+  );
 }

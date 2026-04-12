@@ -1,90 +1,106 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import popupHero from '@src/assets/dashboard/popup-hero.png'
-import popupBg from '@src/assets/dashboard/popup-bg.png'
-import ChipIcon from '@/icons/ChipIcon'
-import ArrowUpRightIcon from '@/icons/ArrowUpRightIcon'
-import CloseIcon from '@/icons/CloseIcon'
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import popupHero from "@src/assets/dashboard/popup-hero.png";
+import PopupBgTexture from "@/features/dashboard/components/PopupBgTexture";
+import ChipIcon from "@/icons/ChipIcon";
+import ArrowUpRightIcon from "@/icons/ArrowUpRightIcon";
+import CloseIcon from "@/icons/CloseIcon";
 
 interface ProposalType {
-  title: string
-  description: string
-  tone: 'primary' | 'secondary' | 'tertiary'
+  title: string;
+  description: string;
+  tone: "primary" | "secondary" | "tertiary";
 }
 
 const proposalTypes: ProposalType[] = [
   {
-    title: 'Technical Proposal',
-    description: 'Formulating the artistic concept, scope of work, and implementation plan using artificial intelligence.',
-    tone: 'primary',
+    title: "Technical Proposal",
+    description:
+      "Formulating the artistic concept, scope of work, and implementation plan using artificial intelligence.",
+    tone: "primary",
   },
   {
-    title: 'Visualization',
-    description: 'Visualize your data effortlessly and uncover insights that drive smarter decisions.',
-    tone: 'secondary',
+    title: "Visualization",
+    description:
+      "Visualize your data effortlessly and uncover insights that drive smarter decisions.",
+    tone: "secondary",
   },
   {
-    title: 'Financial Proposal',
-    description: 'Create clear, structured financial proposals that align with your business goals.',
-    tone: 'tertiary',
+    title: "Financial Proposal",
+    description:
+      "Create clear, structured financial proposals that align with your business goals.",
+    tone: "tertiary",
   },
-]
+];
 
-const toneStyles: Record<ProposalType['tone'], { arrowBg: string; chipBg: string; chipText: string }> = {
-  primary: { arrowBg: 'bg-primary', chipBg: 'bg-primary/10', chipText: 'text-primary' },
-  secondary: { arrowBg: 'bg-secondary', chipBg: 'bg-secondary/10', chipText: 'text-secondary' },
-  tertiary: { arrowBg: 'bg-tertiary', chipBg: 'bg-tertiary/10', chipText: 'text-tertiary' },
-}
+/** PopupBgTexture uses `currentColor` — white in light, #2A2A2A in dark */
+const popupTextureTint = "text-white dark:text-[#2A2A2A]";
+
+const toneStyles: Record<
+  ProposalType["tone"],
+  { arrowBg: string; chipBg: string; chipText: string }
+> = {
+  primary: {
+    arrowBg: "bg-primary",
+    chipBg: "bg-primary/10",
+    chipText: "text-primary",
+  },
+  secondary: {
+    arrowBg: "bg-secondary",
+    chipBg: "bg-secondary/10",
+    chipText: "text-secondary",
+  },
+  tertiary: {
+    arrowBg: "bg-tertiary",
+    chipBg: "bg-tertiary/10",
+    chipText: "text-tertiary",
+  },
+};
 
 interface CreateProposalModalProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
-export default function CreateProposalModal({ onClose }: CreateProposalModalProps) {
-  const router = useRouter()
+export default function CreateProposalModal({
+  onClose,
+}: CreateProposalModalProps) {
+  const router = useRouter();
 
   function handleSelect() {
-    onClose()
-    router.push('/dashboard/proposals/new')
+    onClose();
+    router.push("/dashboard/proposals/new");
   }
 
   return (
     /* Backdrop */
     <div
-      className="fixed inset-0 z-[20000] flex items-center justify-center bg-black/50 p-4"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      className="fixed inset-0 z-[20000] flex items-center justify-center bg-black/50 dark:bg-[rgba(85,85,85,0.7)] p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       {/* Panel */}
-      <div className="relative isolate w-full max-w-[900px] max-h-[90vh] overflow-auto scrollbar-hide rounded-3xl bg-[#F8F8F8] dark:bg-zinc-900">
-        {/* Background texture */}
-        <div className="pointer-events-none absolute inset-0 -z-0">
-          <Image
-            src={popupBg}
-            alt=""
-            aria-hidden="true"
-            fill
-            className="object-cover object-center opacity-35 dark:opacity-20"
-            priority
-          />
-        </div>
-
-        <div className="relative z-10 overflow-y-auto p-6">
+      <div className="relative isolate w-full max-w-[900px] max-h-[90vh] overflow-auto scrollbar-hide rounded-3xl bg-[var(--modal-surface)]">
+        <div className="scrollbar-hide relative z-10 overflow-y-auto p-6">
           {/* Header */}
-          <div className="mb-6 flex items-start justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">Proposal Type</h2>
-              <p className="mt-1 text-sm md:text-base text-black/60 dark:text-zinc-400">
-                Choose your proposal type to start your journey.
+          <div className="mb-6 flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-xl font-bold text-black dark:text-white tracking-wide">
+                Proposal Type
+              </h2>
+              <p className="mt-1 text-sm md:text-base text-black/60 dark:text-white/60 tracking-wide font-extralight">
+                Choose your proposal type to start your journey of excellence in a few simple steps.
               </p>
             </div>
             <button
+              type="button"
               onClick={onClose}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-400 bg-white/50 border border-white transition-colors hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-zinc-200 cursor-pointer"
+              className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-0 bg-white/50 p-0 text-zinc-400 touch-manipulation [-webkit-tap-highlight-color:transparent] dark:border dark:border-[#0D0D0D] dark:bg-[#0D0D0D]/50 hover:opacity-50 cursor-pointer"
               aria-label="Close"
             >
-              <CloseIcon size={22} className="text-[#737373]" />
+              <CloseIcon size={22} className="pointer-events-none text-[#737373]" />
             </button>
           </div>
 
@@ -108,40 +124,37 @@ export default function CreateProposalModal({ onClose }: CreateProposalModalProp
                 aria-label={`Select ${type.title}`}
                 className="group relative w-full overflow-visible rounded-2xl p-5 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-primary/40"
               >
-                {/* Card background texture */}
-                <div className="pointer-events-none absolute inset-0 -z-0 overflow-hidden rounded-2xl">
-                  <Image
-                    src={popupBg}
-                    alt=""
-                    aria-hidden="true"
-                    fill
-                    className="object-contain object-center opacity-80"
-                  />
+                <div
+                  className={`pointer-events-none absolute inset-0 -z-0 overflow-hidden rounded-2xl opacity-40 dark:opacity-35 ${popupTextureTint}`}
+                >
+                  <PopupBgTexture className="h-full w-full" />
                 </div>
 
                 {/* Arrow icon — outside card image (top right) */}
                 <div
-                  className={`pointer-events-none absolute -right-[0.1px] top-0 z-20 flex h-[52px] w-[52px] items-center justify-center rounded-full text-white cursor-pointer ${toneStyles[type.tone].arrowBg}`}
+                  className={`pointer-events-none absolute right-0 md:-right-[3px] top-3 md:top-[1px] z-20 flex h-11 w-11 md:h-[52px] md:w-[52px] items-center justify-center rounded-full text-white cursor-pointer ${toneStyles[type.tone].arrowBg}`}
                   aria-hidden="true"
                 >
                   <ArrowUpRightIcon size={20} />
                 </div>
 
                 <div className="relative z-10 flex flex-col gap-3">
-                {/* Chip icon */}
-                <div
-                  className={`flex h-12 w-12 md:h-13 md:w-13 items-center justify-center rounded-full ${toneStyles[type.tone].chipBg} ${toneStyles[type.tone].chipText}`}
-                >
-                  <ChipIcon size={30} />
-                </div>
+                  {/* Chip icon */}
+                  <div
+                    className={`flex h-12 w-12 md:h-13 md:w-13 items-center justify-center rounded-full ${toneStyles[type.tone].chipBg} ${toneStyles[type.tone].chipText}`}
+                  >
+                    <ChipIcon size={30} />
+                  </div>
 
-                {/* Text */}
-                <div className="mt-2">
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">{type.title}</h3>
-                  <p className="mt-1.5 text-xs leading-relaxed text-paragraph dark:text-zinc-400">
-                    {type.description}
-                  </p>
-                </div>
+                  {/* Text */}
+                  <div className="mt-2">
+                    <h3 className="text-base font-semibold text-black dark:text-white/80 tracking-wide">
+                      {type.title}
+                    </h3>
+                    <p className="mt-1.5 text-xs leading-relaxed text-paragraph dark:text-white/60 font-light">
+                      {type.description}
+                    </p>
+                  </div>
                 </div>
               </button>
             ))}
@@ -149,5 +162,5 @@ export default function CreateProposalModal({ onClose }: CreateProposalModalProp
         </div>
       </div>
     </div>
-  )
+  );
 }

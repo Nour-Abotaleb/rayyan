@@ -24,9 +24,9 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="flex flex-1 flex-col py-8 md:py-4 px-8 sm:px-12 lg:px-16">
+    <div className="flex flex-1 flex-col px-4 py-6 sm:px-12 md:py-4 lg:px-16">
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold leading-snug text-zinc-900">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold leading-snug text-black">
           {t.auth.createAccountTitle}{" "}
           <span className="font-abril font-medium text-primary">
             {t.auth.brandName}
@@ -50,7 +50,7 @@ export default function SignUpForm() {
               placeholder={t.auth.namePlaceholder}
               required
               autoComplete="name"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-zinc-100 dark:placeholder:text-[#A0A3BD]"
             />
             <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
               <UserNameIcon size={20} />
@@ -70,7 +70,7 @@ export default function SignUpForm() {
               placeholder={t.auth.emailPlaceholder}
               required
               autoComplete="email"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-zinc-100 dark:placeholder:text-[#A0A3BD]"
             />
             <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
               <EmailIcon size={20} />
@@ -90,7 +90,7 @@ export default function SignUpForm() {
               placeholder={t.auth.passwordPlaceholder}
               required
               autoComplete="new-password"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-zinc-100 dark:placeholder:text-[#A0A3BD]"
             />
             <button
               type="button"
@@ -115,7 +115,7 @@ export default function SignUpForm() {
               placeholder={t.auth.passwordPlaceholder}
               required
               autoComplete="new-password"
-              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-600"
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-zinc-800 placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-zinc-100 dark:placeholder:text-[#A0A3BD]"
             />
             <button
               type="button"
@@ -138,20 +138,20 @@ export default function SignUpForm() {
 
         <button
           type="submit"
-          className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-zinc-800 transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40"
+          className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-black transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40"
         >
           {t.auth.signUp}
         </button>
 
         <button
           type="button"
-          className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-white bg-white/50 py-3 text-sm font-medium text-zinc-700 transition-colors hover:bg-screen dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border border-white bg-white/50 py-3 text-sm font-medium text-black dark:border-[#0D0D0D] dark:bg-[#0D0D0D] dark:text-white"
         >
           <GoogleIcon size={20} />
           {t.auth.signInWithGoogle}
         </button>
 
-        <p className="text-center text-sm tracking-wide text-paragraph dark:text-zinc-400">
+        <p className="text-center text-sm tracking-wide text-paragraph dark:text-[#757575]">
           {t.auth.alreadyHaveAccount}{" "}
           <Link
             href="/"

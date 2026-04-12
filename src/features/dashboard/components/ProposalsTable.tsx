@@ -5,11 +5,8 @@ import SearchIcon from "@/icons/SearchIcon";
 import DownloadIcon from "@/icons/DownloadIcon";
 import EyeIcon from "@/icons/EyeIcon";
 import Image from "next/image";
-import allBg from "@src/assets/dashboard/all-bg.png";
-import completedBg from "@src/assets/dashboard/completed-bg.png";
-import processingBg from "@src/assets/dashboard/processing-bg.png";
-import failedBg from "@src/assets/dashboard/failed-bg.png";
 import statusBg from "@src/assets/dashboard/status-bg.png";
+import ProposalTabBgSvg from "./ProposalTabBgSvg";
 import ProposalCalendarIcon from "@/icons/ProposalCalendarIcon";
 
 type Status = "Completed" | "Processing" | "Failed";
@@ -61,13 +58,6 @@ const mockProposals = [
 
 const tabs: (Status | "ALL")[] = ["ALL", "Completed", "Processing", "Failed"];
 
-const tabBg: Record<Status | "ALL", typeof allBg> = {
-  ALL: allBg,
-  Completed: completedBg,
-  Processing: processingBg,
-  Failed: failedBg,
-};
-
 export default function ProposalsTable() {
   const [active, setActive] = useState<Status | "ALL">("ALL");
   const [search, setSearch] = useState("");
@@ -88,28 +78,20 @@ export default function ProposalsTable() {
   return (
     <div className="relative flex flex-col gap-4 rounded-2xl px-5">
       {/* Active tab background — clip here only so proposal actions can extend above cards */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
-        <Image
-          src={tabBg[active]}
-          alt=""
-          aria-hidden="true"
-          fill
-          className="object-contain object-top"
-          sizes="(max-width: 1024px) 100vw, 1000px"
-          priority
-        />
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
+        <ProposalTabBgSvg variant={active} className="h-full w-full" />
       </div>
 
       <div className="relative z-10 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 mt-3">
           {/* Tabs */}
-          <div className="flex items-center gap-18">
+          <div className="flex items-center gap-1 md:gap-4 lg:gap-18">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActive(tab)}
-                className={`rounded-full px-4 text-sm md:text-base font-medium transition-colors ${
+                className={`px-3 lg:px-4 text-sm md:text-base font-medium transition-colors ${
                   active === tab
                     ? "text-primary"
                     : "text-black dark:text-zinc-100"
@@ -121,7 +103,7 @@ export default function ProposalsTable() {
           </div>
 
           {/* Search */}
-          <div className="flex items-center bg-linear-to-r from-white/35 to-white justify-between gap-0 overflow-hidden rounded-full border border-white min-w-70">
+          <div className="hidden md:flex items-center bg-linear-to-r from-white/35 to-white justify-between gap-0 overflow-hidden rounded-full border border-white min-w-52 lg:min-w-70">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -141,109 +123,115 @@ export default function ProposalsTable() {
           {filtered.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center gap-2 py-10 text-center">
               <SearchIcon size={32} className="text-primary/40" />
-              <p className="text-sm font-semibold text-black/50 dark:text-zinc-400">No proposals found</p>
-              <p className="text-xs text-black/35 dark:text-zinc-500">Try a different search term or filter</p>
+              <p className="text-sm font-semibold text-black/50 dark:text-zinc-400">
+                No proposals found
+              </p>
+              <p className="text-xs text-black/35 dark:text-zinc-500">
+                Try a different search term or filter
+              </p>
             </div>
-          ) : filtered.map((p) => (
-            <div key={p.id} className="relative pt-6">
-              <div className="relative">
-                <button
-                  type="button"
-                  className="absolute -top-0.5 right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary px-2 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-dark"
-                >
-                  <EyeIcon size={14} />
-                  View Proposal
-                </button>
-                <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
-                  <Image
-                    src={statusBg}
-                    alt=""
-                    aria-hidden
-                    fill
-                    className="object-fill"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
-
-                <div className="relative z-10 flex flex-col gap-3 p-3">
-                  <span
-                    className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${statusStyles[p.status]}`}
+          ) : (
+            filtered.map((p) => (
+              <div key={p.id} className="relative lg:pt-6">
+                <div className="relative">
+                  <button
+                    type="button"
+                    className="absolute -top-0.5 right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary px-2 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-dark"
                   >
-                    {p.status}
-                  </span>
-
-                  {/* Title + subtitle + download (download right, circular outline) */}
-                  <div className="flex gap-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-base font-semibold leading-snug text-black/80">
-                        {p.title}
-                      </p>
-                      <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-black/60">
-                        {p.desc}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      aria-label="Download"
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E4ECEE]/50 text-primary transition-colors hover:bg-primary/10"
-                    >
-                      <DownloadIcon size={18} />
-                    </button>
+                    <EyeIcon size={14} />
+                    View Proposal
+                  </button>
+                  <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
+                    <Image
+                      src={statusBg}
+                      alt=""
+                      aria-hidden
+                      fill
+                      className="object-fill"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
                   </div>
 
-                  {/* Progress — tooltip-style % label + centered triangle above bar */}
-                  <div className="relative pt-5">
-                    <div
-                      className="absolute -top-2.5 flex flex-col items-center"
-                      style={{
-                        left: `${p.progress}%`,
-                        transform:
-                          p.progress <= 8
-                            ? "translateX(0)"
-                            : p.progress >= 92
-                              ? "translateX(-100%)"
-                              : "translateX(-50%)",
-                      }}
+                  <div className="relative z-10 flex flex-col gap-3 p-3">
+                    <span
+                      className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${statusStyles[p.status]}`}
                     >
-                      <div className="whitespace-nowrap rounded bg-[#E3EBEA] px-1.5 py-1 w-9 text-center text-[10px] font-semibold text-primary">
-                        {p.progress}%
+                      {p.status}
+                    </span>
+
+                    {/* Title + subtitle + download (download right, circular outline) */}
+                    <div className="flex gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-base font-semibold leading-snug text-black/80">
+                          {p.title}
+                        </p>
+                        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-black/60">
+                          {p.desc}
+                        </p>
                       </div>
-                      <div
-                        className="h-0 w-0 border-x-[6px] border-t-[9px] border-l-transparent border-r-transparent border-t-[#E3EBEA]"
-                        aria-hidden
-                      />
+                      <button
+                        type="button"
+                        aria-label="Download"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E4ECEE]/50 text-primary transition-colors hover:bg-primary/10"
+                      >
+                        <DownloadIcon size={18} />
+                      </button>
                     </div>
-                    <div className="h-3.5 w-full overflow-hidden rounded-full bg-[#E3EBEA] p-0.5">
-                      <div
-                        className="h-full rounded-full bg-primary transition-all"
-                        style={{ width: `${p.progress}%` }}
-                      />
-                    </div>
-                  </div>
 
-                  {/* Footer dates — calendar + DD-MM-YYYY */}
-                  <div className="flex flex-wrap items-center gap-2 py-2">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F5F9] px-2.5 py-1.5 text-[10px] font-medium text-black dark:bg-zinc-800 dark:text-zinc-300">
-                      <ProposalCalendarIcon
-                        size={14}
-                        className="shrink-0 text-black"
-                      />
-                      {formatCardDate(p.startDate)}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F5F9] px-2.5 py-1.5 text-[10px] font-medium text-black dark:bg-zinc-800 dark:text-zinc-300">
-                      <ProposalCalendarIcon
-                        size={14}
-                        className="shrink-0 text-black"
-                      />
-                      {formatCardDate(p.endDate)}
-                    </span>
+                    {/* Progress — tooltip-style % label + centered triangle above bar */}
+                    <div className="relative pt-5">
+                      <div
+                        className="absolute -top-2.5 flex flex-col items-center"
+                        style={{
+                          left: `${p.progress}%`,
+                          transform:
+                            p.progress <= 8
+                              ? "translateX(0)"
+                              : p.progress >= 92
+                                ? "translateX(-100%)"
+                                : "translateX(-50%)",
+                        }}
+                      >
+                        <div className="whitespace-nowrap rounded bg-[#E3EBEA] px-1.5 py-1 w-9 text-center text-[10px] font-semibold text-primary">
+                          {p.progress}%
+                        </div>
+                        <div
+                          className="h-0 w-0 border-x-[6px] border-t-[9px] border-l-transparent border-r-transparent border-t-[#E3EBEA]"
+                          aria-hidden
+                        />
+                      </div>
+                      <div className="h-3.5 w-full overflow-hidden rounded-full bg-[#E3EBEA] p-0.5">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all"
+                          style={{ width: `${p.progress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Footer dates — calendar + DD-MM-YYYY */}
+                    <div className="flex flex-wrap items-center gap-2 py-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F5F9] px-2.5 py-1.5 text-[10px] font-medium text-black dark:bg-zinc-800 dark:text-zinc-300">
+                        <ProposalCalendarIcon
+                          size={14}
+                          className="shrink-0 text-black"
+                        />
+                        {formatCardDate(p.startDate)}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F5F9] px-2.5 py-1.5 text-[10px] font-medium text-black dark:bg-zinc-800 dark:text-zinc-300">
+                        <ProposalCalendarIcon
+                          size={14}
+                          className="shrink-0 text-black"
+                        />
+                        {formatCardDate(p.endDate)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>
-  )
+  );
 }
