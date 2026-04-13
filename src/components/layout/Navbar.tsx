@@ -54,14 +54,14 @@ export default function Navbar() {
 
   const bgClass =
     scrolled || mobileOpen
-      ? 'bg-white shadow-sm dark:bg-zinc-950 dark:shadow-black/20'
+      ? 'bg-white dark:bg-zinc-950 dark:shadow-black/20'
       : 'bg-transparent'
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 ${bgClass}`}
+      className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 py-2 ${bgClass}`}
     >
-      <div className="layout-shell-x flex h-16 items-center justify-between py-4">
+      <div className="layout-shell-x flex h-16 items-center justify-between">
         <span className="font-abril text-xl text-primary dark:text-[#519A91] md:text-2xl lg:text-[28px]">
           RAYYAN
         </span>

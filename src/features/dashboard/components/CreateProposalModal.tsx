@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import popupHero from "@src/assets/dashboard/popup-hero.png";
+import { useEffect, useState } from "react";
+import popupHero from "@src/assets/dashboard/popup-hero.svg";
+import popupIcons from "@src/assets/dashboard/popup-icons.svg";
 import PopupBgTexture from "@/features/dashboard/components/PopupBgTexture";
 import ChipIcon from "@/icons/ChipIcon";
 import ArrowUpRightIcon from "@/icons/ArrowUpRightIcon";
@@ -67,6 +69,26 @@ export default function CreateProposalModal({
   onClose,
 }: CreateProposalModalProps) {
   const router = useRouter();
+  const fullHeroTextLine1 = "Transform Your Ideas into";
+  const fullHeroTextLine2 = "Professional Proposals in Minutes";
+  const [heroLine1, setHeroLine1] = useState("");
+  const [heroLine2, setHeroLine2] = useState("");
+
+  useEffect(() => {
+    let i = 0;
+    setHeroLine1("");
+    setHeroLine2("");
+    const totalLen = fullHeroTextLine1.length + fullHeroTextLine2.length;
+    const id = window.setInterval(() => {
+      i += 1;
+      const l1Count = Math.min(i, fullHeroTextLine1.length);
+      const l2Count = Math.max(0, i - fullHeroTextLine1.length);
+      setHeroLine1(fullHeroTextLine1.slice(0, l1Count));
+      setHeroLine2(fullHeroTextLine2.slice(0, l2Count));
+      if (i >= totalLen) window.clearInterval(id);
+    }, 70);
+    return () => window.clearInterval(id);
+  }, []);
 
   function handleSelect() {
     onClose();
@@ -91,7 +113,8 @@ export default function CreateProposalModal({
                 Proposal Type
               </h2>
               <p className="mt-1 text-sm md:text-base text-black/60 dark:text-white/60 tracking-wide font-extralight">
-                Choose your proposal type to start your journey of excellence in a few simple steps.
+                Choose your proposal type to start your journey of excellence in
+                a few simple steps.
               </p>
             </div>
             <button
@@ -100,7 +123,10 @@ export default function CreateProposalModal({
               className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-0 bg-white/50 p-0 text-zinc-400 touch-manipulation [-webkit-tap-highlight-color:transparent] dark:border dark:border-[#0D0D0D] dark:bg-[#0D0D0D]/50 hover:opacity-50 cursor-pointer"
               aria-label="Close"
             >
-              <CloseIcon size={22} className="pointer-events-none text-[#737373]" />
+              <CloseIcon
+                size={22}
+                className="pointer-events-none text-[#737373]"
+              />
             </button>
           </div>
 
@@ -111,6 +137,20 @@ export default function CreateProposalModal({
               alt="Proposal hero"
               fill
               className="object-contain object-center"
+              priority
+            />
+            <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center px-6 text-center">
+              <div className="text-base font-medium text-white md:text-xl lg:text-2xl leading-relaxed tracking-wide">
+                <p>{heroLine1}</p>
+                <p>{heroLine2}</p>
+              </div>
+            </div>
+            <Image
+              src={popupIcons}
+              alt=""
+              aria-hidden
+              fill
+              className="z-20 object-contain object-center opacity-0 animate-[fadeIn_2.4s_ease-in_forwards]"
               priority
             />
           </div>

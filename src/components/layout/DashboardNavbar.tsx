@@ -1,84 +1,148 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { useTheme } from '@/contexts/ThemeContext'
-import { useLanguage } from '@/contexts/LanguageContext'
-import LayoutIcon from '@/icons/LayoutIcon'
-import OverviewActiveIcon from '@/icons/OverviewActiveIcon'
-import GalleryStarIcon from '@/icons/GalleryStarIcon'
-import FolderCloudIcon from '@/icons/FolderCloudIcon'
-import SliderIcon from '@/icons/SliderIcon'
-import SunIcon from '@/icons/SunIcon'
-import MoonIcon from '@/icons/MoonIcon'
-import TranslateIcon from '@/icons/TranslateIcon'
-import SearchIcon from '@/icons/SearchIcon'
-import NotificationIcon from '@/icons/NotificationIcon'
-import MenuIcon from '@/icons/MenuIcon'
-import CloseIcon from '@/icons/CloseIcon'
-import { type Language, languages } from '@/lib/i18n'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LayoutIcon from "@/icons/LayoutIcon";
+import OverviewActiveIcon from "@/icons/OverviewActiveIcon";
+import ProposalNavIcon from "@/icons/ProposalNavIcon";
+import ProposalActiveIcon from "@/icons/ProposalActiveIcon";
+import DatabaseActiveIcon from "@/icons/DatabaseActiveIcon";
+import FolderCloudIcon from "@/icons/FolderCloudIcon";
+import SliderIcon from "@/icons/SliderIcon";
+import SettingsActiveIcon from "@/icons/SettingsActiveIcon";
+import SunIcon from "@/icons/SunIcon";
+import MoonIcon from "@/icons/MoonIcon";
+import TranslateIcon from "@/icons/TranslateIcon";
+import SearchIcon from "@/icons/SearchIcon";
+import NotificationIcon from "@/icons/NotificationIcon";
+import MenuIcon from "@/icons/MenuIcon";
+import CloseIcon from "@/icons/CloseIcon";
+import { type Language, languages } from "@/lib/i18n";
 
 interface User {
-  name: string
-  email: string
-  avatar?: string
+  name: string;
+  email: string;
+  avatar?: string;
 }
 
 interface DashboardNavbarProps {
-  user: User
+  user: User;
 }
 
 const navItems = [
-  { Icon: LayoutIcon, key: 'layout', label: 'Overview', href: '/dashboard' },
-  { Icon: GalleryStarIcon, key: 'gallery', label: 'Gallery', href: '/dashboard/gallery' },
-  { Icon: FolderCloudIcon, key: 'folderCloud', label: 'Documents', href: '/dashboard/documents' },
-  { Icon: SliderIcon, key: 'settings', label: 'Settings', href: '/dashboard/settings' },
-] as const
+  { Icon: LayoutIcon, key: "layout", label: "Overview", href: "/dashboard" },
+  {
+    Icon: ProposalNavIcon,
+    key: "proposal",
+    label: "Proposal",
+    href: "/dashboard/proposals",
+  },
+  {
+    Icon: FolderCloudIcon,
+    key: "database",
+    label: "Database",
+    href: "/dashboard/database",
+  },
+  {
+    Icon: SliderIcon,
+    key: "settings",
+    label: "Settings",
+    href: "/dashboard/settings",
+  },
+] as const;
 
 const navIconInactiveLanding =
-  'text-paragraph transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex shrink-0 items-center justify-center'
+  "text-paragraph transition-all duration-200 ease-out hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex shrink-0 items-center justify-center";
 
 const navIconInactiveOverview =
-  'text-paragraph transition-colors hover:text-primary dark:text-zinc-400 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center'
+  "text-paragraph transition-all duration-200 ease-out hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center";
 
 const navIconActive =
-  'bg-primary text-white rounded-full p-2 flex items-center justify-center gap-2 px-4 min-h-10 lg:min-h-11 w-auto text-sm font-medium'
+  "bg-primary text-white rounded-full min-h-10 lg:min-h-11 text-sm font-medium transition-all duration-200 ease-out";
 
 export default function DashboardNavbar({ user }: DashboardNavbarProps) {
-  const { theme, toggleTheme } = useTheme()
-  const { lang, setLang, t } = useLanguage()
-  const pathname = usePathname()
-  const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const { theme, toggleTheme } = useTheme();
+  const { lang, setLang, t } = useLanguage();
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const navRef = useRef<HTMLElement | null>(null);
+  const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const [activePill, setActivePill] = useState<{
+    x: number;
+    w: number;
+  } | null>(null);
+
+  const activeKey = useMemo(() => {
+    if (pathname === "/dashboard") return "layout";
+    if (
+      pathname === "/dashboard/proposals" ||
+      (pathname?.startsWith("/dashboard/proposals/") &&
+        !pathname?.startsWith("/dashboard/proposals/new"))
+    ) {
+      return "proposal";
+    }
+    if (pathname?.startsWith("/dashboard/database")) return "database";
+    if (pathname?.startsWith("/dashboard/settings")) return "settings";
+    return null;
+  }, [pathname]);
 
   useEffect(() => {
-    function onScroll() { setScrolled(window.scrollY > 8) }
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    function onScroll() {
+      setScrolled(window.scrollY > 8);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Close mobile menu on route change
-  useEffect(() => { setMobileOpen(false) }, [pathname])
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  useLayoutEffect(() => {
+    function recalc() {
+      if (!activeKey) return setActivePill(null);
+      const navEl = navRef.current;
+      const itemEl = itemRefs.current[activeKey];
+      if (!navEl || !itemEl) return;
+      const navRect = navEl.getBoundingClientRect();
+      const itemRect = itemEl.getBoundingClientRect();
+      setActivePill({
+        x: itemRect.left - navRect.left,
+        w: itemRect.width,
+      });
+    }
+
+    recalc();
+    window.addEventListener("resize", recalc);
+    return () => window.removeEventListener("resize", recalc);
+  }, [activeKey]);
 
   function cycleLanguage() {
-    const idx = languages.findIndex((l) => l.code === lang)
-    const next = languages[(idx + 1) % languages.length]
-    setLang(next.code as Language)
+    const idx = languages.findIndex((l) => l.code === lang);
+    const next = languages[(idx + 1) % languages.length];
+    setLang(next.code as Language);
   }
 
-  const bgClass = scrolled || mobileOpen
-    ? 'bg-white shadow-sm dark:bg-zinc-950 dark:shadow-black/20'
-    : 'bg-transparent'
+  const bgClass =
+    scrolled || mobileOpen
+      ? "bg-white shadow-sm dark:bg-zinc-950 dark:shadow-black/20"
+      : "bg-transparent";
 
   /** Match other nav pills on proposal flows (e.g. /dashboard/proposals/new) */
-  const overviewInactiveClass = pathname?.startsWith('/dashboard/proposals')
+  const overviewInactiveClass = pathname?.startsWith("/dashboard/proposals")
     ? navIconInactiveLanding
-    : navIconInactiveOverview
+    : navIconInactiveOverview;
 
   return (
-    <header className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 py-2 ${bgClass}`}>
+    <header
+      className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 py-2 ${bgClass}`}
+    >
       {/* Main row */}
       <div className="layout-shell-x flex h-16 items-center justify-between">
         {/* Logo */}
@@ -87,30 +151,83 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
         </span>
 
         {/* Center nav — desktop only */}
-        <nav className="hidden items-center gap-3 lg:flex">
+        <nav
+          ref={navRef}
+          className="relative hidden items-center gap-3 lg:flex"
+        >
+          {activePill && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 left-0 rounded-full bg-primary transition-transform duration-300 ease-out"
+              style={{
+                width: activePill.w,
+                transform: `translateX(${activePill.x}px)`,
+              }}
+            />
+          )}
           {navItems.map(({ Icon, key, label, href }) => {
-            const isActive = pathname === href
+            const isActive =
+              key === "layout"
+                ? pathname === href
+                : key === "proposal"
+                  ? pathname === "/dashboard/proposals" ||
+                    (pathname?.startsWith("/dashboard/proposals/") &&
+                      !pathname?.startsWith("/dashboard/proposals/new"))
+                  : key === "database"
+                    ? pathname?.startsWith("/dashboard/database")
+                    : key === "settings"
+                      ? pathname?.startsWith("/dashboard/settings")
+                  : pathname === href;
             return (
               <Link
                 key={key}
                 href={href}
                 aria-label={label}
-                className={
+                ref={(el) => {
+                  itemRefs.current[key] = el;
+                }}
+                className={[
+                  "relative z-10",
                   isActive
-                    ? navIconActive
-                    : key === 'layout'
-                      ? overviewInactiveClass
-                      : navIconInactiveLanding
-                }
+                    ? `grid grid-cols-[20px_1fr] items-center gap-2 px-4 py-2 text-white rounded-full min-h-10 lg:min-h-11`
+                    : `grid grid-cols-[20px_0fr] items-center gap-0 overflow-hidden ${
+                        key === "layout"
+                          ? overviewInactiveClass
+                          : navIconInactiveLanding
+                      }`,
+                ].join(" ")}
               >
-                {key === 'layout' && isActive ? (
-                  <OverviewActiveIcon size={20} className="shrink-0 text-white" />
+                {key === "layout" && isActive ? (
+                  <OverviewActiveIcon
+                    size={20}
+                    className="shrink-0 text-white"
+                  />
+                ) : key === "proposal" && isActive ? (
+                  <ProposalActiveIcon
+                    size={20}
+                    className="shrink-0 text-white"
+                  />
+                ) : key === "database" && isActive ? (
+                  <DatabaseActiveIcon
+                    size={20}
+                    className="shrink-0 text-white"
+                  />
+                ) : key === "settings" && isActive ? (
+                  <SettingsActiveIcon
+                    size={20}
+                    className="shrink-0 text-white"
+                  />
                 ) : (
-                  <Icon size={20} className={isActive ? 'shrink-0 text-white' : undefined} />
+                  <Icon
+                    size={20}
+                    className={isActive ? "shrink-0 text-white" : undefined}
+                  />
                 )}
-                {isActive && <span className="whitespace-nowrap">{label}</span>}
+                <span className="min-w-0 overflow-hidden whitespace-nowrap">
+                  {label}
+                </span>
               </Link>
-            )
+            );
           })}
         </nav>
 
@@ -129,7 +246,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
         <button
           type="button"
           onClick={() => setMobileOpen((v) => !v)}
-          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
           className="flex items-center justify-center rounded-full p-2 text-paragraph transition-colors hover:text-primary lg:hidden dark:text-zinc-400"
         >
           {mobileOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
@@ -142,28 +259,62 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
           {/* Nav items */}
           <nav className="flex items-center gap-3 flex-wrap">
             {navItems.map(({ Icon, key, label, href }) => {
-              const isActive = pathname === href
+              const isActive =
+                key === "layout"
+                  ? pathname === href
+                  : key === "proposal"
+                    ? pathname === "/dashboard/proposals" ||
+                      (pathname?.startsWith("/dashboard/proposals/") &&
+                        !pathname?.startsWith("/dashboard/proposals/new"))
+                    : key === "database"
+                      ? pathname?.startsWith("/dashboard/database")
+                      : key === "settings"
+                        ? pathname?.startsWith("/dashboard/settings")
+                    : pathname === href;
               return (
                 <Link
                   key={key}
                   href={href}
                   aria-label={label}
-                  className={
+                  className={[
                     isActive
-                      ? navIconActive
-                      : key === 'layout'
-                        ? overviewInactiveClass
-                        : navIconInactiveLanding
-                  }
+                      ? `${navIconActive} grid grid-cols-[18px_1fr] items-center gap-2 px-4 py-2`
+                      : `grid grid-cols-[18px_0fr] items-center gap-0 overflow-hidden ${
+                          key === "layout" ? overviewInactiveClass : navIconInactiveLanding
+                        }`,
+                  ].join(" ")}
                 >
-                  {key === 'layout' && isActive ? (
-                    <OverviewActiveIcon size={18} className="shrink-0 text-white" />
+                  {key === "layout" && isActive ? (
+                    <OverviewActiveIcon
+                      size={18}
+                      className="shrink-0 text-white"
+                    />
+                  ) : key === "proposal" && isActive ? (
+                    <ProposalActiveIcon
+                      size={18}
+                      className="shrink-0 text-white"
+                    />
+                  ) : key === "database" && isActive ? (
+                    <DatabaseActiveIcon
+                      size={18}
+                      className="shrink-0 text-white"
+                    />
+                  ) : key === "settings" && isActive ? (
+                    <SettingsActiveIcon
+                      size={18}
+                      className="shrink-0 text-white"
+                    />
                   ) : (
-                    <Icon size={18} className={isActive ? 'shrink-0 text-white' : undefined} />
+                    <Icon
+                      size={18}
+                      className={isActive ? "shrink-0 text-white" : undefined}
+                    />
                   )}
-                  {isActive && <span className="whitespace-nowrap text-xs">{label}</span>}
+                  <span className="min-w-0 overflow-hidden whitespace-nowrap text-xs">
+                    {label}
+                  </span>
                 </Link>
-              )
+              );
             })}
           </nav>
 
@@ -180,7 +331,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
         </div>
       )}
     </header>
-  )
+  );
 }
 
 /* ─── Shared controls (theme, lang, search, bell, user) ─── */
@@ -191,11 +342,11 @@ function RightControls({
   navLabel,
   user,
 }: {
-  theme: string
-  toggleTheme: () => void
-  cycleLanguage: () => void
-  navLabel: { lightMode: string; darkMode: string; language: string }
-  user: { name: string; email: string }
+  theme: string;
+  toggleTheme: () => void;
+  cycleLanguage: () => void;
+  navLabel: { lightMode: string; darkMode: string; language: string };
+  user: { name: string; email: string };
 }) {
   return (
     <>
@@ -205,9 +356,9 @@ function RightControls({
           onClick={toggleTheme}
           aria-label={navLabel.lightMode}
           className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
-            theme === 'light'
-              ? 'bg-primary text-white'
-              : 'text-zinc-900 hover:text-primary dark:text-white'
+            theme === "light"
+              ? "bg-primary text-white"
+              : "text-zinc-900 hover:text-primary dark:text-white"
           }`}
         >
           <SunIcon size={18} />
@@ -217,9 +368,9 @@ function RightControls({
           onClick={toggleTheme}
           aria-label={navLabel.darkMode}
           className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
-            theme === 'dark'
-              ? 'bg-primary text-white'
-              : 'text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light'
+            theme === "dark"
+              ? "bg-primary text-white"
+              : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
           }`}
         >
           <MoonIcon size={18} />
@@ -249,7 +400,7 @@ function RightControls({
         className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
       >
         <NotificationIcon size={20} />
-        <span className="absolute left-3 top-3 h-[5px] w-[5px] rounded-full bg-[#C10000]" />
+        <span className="absolute left-[12.7px] top-3 h-[5px] w-[5px] rounded-full bg-[#C10000]" />
       </button>
 
       <button
@@ -260,13 +411,29 @@ function RightControls({
           {user.name.charAt(0)}
         </div>
         <div className="hidden flex-col text-start lg:flex">
-          <span className="text-xs font-semibold text-black dark:text-zinc-100">{user.name}</span>
-          <span className="text-[10px] font-light text-[#656769]">{user.email}</span>
+          <span className="text-xs font-semibold text-black dark:text-zinc-100">
+            {user.name}
+          </span>
+          <span className="text-[10px] font-light text-[#656769]">
+            {user.email}
+          </span>
         </div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="hidden text-paragraph lg:block dark:text-zinc-400">
-          <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          className="hidden text-paragraph lg:block dark:text-zinc-400"
+        >
+          <path
+            d="M6 9L12 15L18 9"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
     </>
-  )
+  );
 }

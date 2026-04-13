@@ -64,7 +64,7 @@ function CardBlock({
       <button
         type="button"
         onClick={onCreateClick}
-        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1 md:px-4 lg:px-3.5 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark"
+        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1 md:px-4 lg:px-4 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer"
       >
         <span className="text-base leading-none">+</span>
         Create Proposal
@@ -110,7 +110,7 @@ export default function LeftPanel() {
       </aside>
 
       {/* Desktop — fixed column beside scrolling main (scroll container is DashboardPage main) */}
-      <aside className="scrollbar-hide relative z-10 my-3 hidden min-w-98 shrink-0 flex-col justify-start overflow-hidden rounded-2xl px-4 py-6 lg:my-0 lg:mt-4 lg:flex lg:h-[86vh] lg:min-h-0 lg:self-start lg:overflow-y-auto">
+      <aside className="scrollbar-hide relative z-10 my-3 hidden min-w-98 shrink-0 flex-col justify-start overflow-hidden rounded-2xl px-4 py-6 lg:my-0 lg:mt-4 lg:flex lg:h-[84vh] lg:min-h-0 lg:self-start lg:overflow-y-auto">
         <div className="pointer-events-none min-w-98 absolute inset-0 z-0 overflow-hidden rounded-2xl">
           <Image
             src={leftPanelBg}

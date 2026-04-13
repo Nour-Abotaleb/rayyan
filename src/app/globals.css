@@ -49,6 +49,42 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.02;
+  }
+  20% {
+    opacity: 0.1;
+  }
+  30% {
+    opacity: 0.09;
+  }
+  40% {
+    opacity: 0.14;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  60% {
+    opacity: 0.34;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.88;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /*
  * Gradient “border” for inputs. Dark gradients live in `.dark .input-style` below —
  * nesting `&:where(.dark *)` inside @utility often fails to match (input is not `.dark`).

@@ -24,7 +24,7 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="flex flex-1 flex-col px-4 py-6 sm:px-12 md:py-4 lg:px-16">
+    <div className="flex w-full flex-col px-4 py-6 sm:px-12 md:py-4 lg:px-16">
       <div className="mb-8">
         <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold leading-snug text-black">
           {t.auth.createAccountTitle}{" "}

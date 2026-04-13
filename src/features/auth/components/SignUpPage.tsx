@@ -25,12 +25,12 @@ export default function SignUpPage() {
 
       {/* Left — form: mobile p-4; md–lg symmetric px; lg+ only start bleed */}
       <div className="relative z-0 w-full shrink-0 p-4 md:px-6 md:pb-0 md:pt-1.5 lg:w-[45%] lg:px-0 lg:ps-6 lg:pt-1.5">
-        <section className="flex min-h-170 w-full flex-col rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA] dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/15 lg:h-full lg:min-h-0 lg:w-[calc(100%+2.5rem)] lg:max-w-none">
+        <section className="flex min-h-min w-full flex-col rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15 lg:w-[calc(100%+2.5rem)] lg:max-w-none">
           <SignUpForm />
         </section>
       </div>
 
-      {/* Hero — flex-1 so it fills remaining viewport height (md–lg column, lg+ row) */}
+      {/* Hero — md: same horizontal inset as form; lg: full-bleed column (match LoginPage) */}
       <section className="relative z-10 order-2 hidden w-full min-h-0 min-w-0 flex-1 flex-col px-4 pb-8 pt-4 md:px-6 md:flex lg:order-0 lg:w-[55%] lg:self-stretch lg:flex-none lg:p-0">
         <div className="relative min-h-0 min-w-0 w-full flex-1 overflow-hidden rounded-2xl lg:h-full lg:rounded-none">
           <Image
@@ -38,7 +38,7 @@ export default function SignUpPage() {
             alt="Rayyan hero"
             fill
             sizes="(max-width: 1023px) 100vw, 55vw"
-            className="object-contain object-top dark:hidden"
+            className="object-contain object-right-top dark:hidden"
             priority
           />
           <Image
@@ -46,7 +46,7 @@ export default function SignUpPage() {
             alt="Rayyan hero"
             fill
             sizes="(max-width: 1023px) 100vw, 55vw"
-            className="hidden object-contain object-top dark:block"
+            className="hidden object-contain object-right-top dark:block"
             priority
           />
         </div>

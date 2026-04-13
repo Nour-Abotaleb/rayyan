@@ -4,10 +4,9 @@ import { useState } from "react";
 import SearchIcon from "@/icons/SearchIcon";
 import DownloadIcon from "@/icons/DownloadIcon";
 import EyeIcon from "@/icons/EyeIcon";
-import Image from "next/image";
-import statusBg from "@src/assets/dashboard/status-bg.png";
 import ProposalTabBgSvg from "./ProposalTabBgSvg";
 import ProposalCalendarIcon from "@/icons/ProposalCalendarIcon";
+import StatusBgSvg from "./StatusBgSvg";
 
 type Status = "Completed" | "Processing" | "Failed";
 
@@ -93,7 +92,7 @@ export default function ProposalsTable() {
                 onClick={() => setActive(tab)}
                 className={`px-3 lg:px-4 text-sm md:text-base font-medium transition-colors ${
                   active === tab
-                    ? "text-primary"
+                    ? "text-primary dark:text-[#519A91]"
                     : "text-black dark:text-zinc-100"
                 }`}
               >
@@ -103,14 +102,14 @@ export default function ProposalsTable() {
           </div>
 
           {/* Search */}
-          <div className="hidden md:flex items-center bg-linear-to-r from-white/35 to-white justify-between gap-0 overflow-hidden rounded-full border border-white min-w-52 lg:min-w-70">
+          <div className="hidden md:flex items-center bg-linear-to-r from-white/35 to-white dark:bg-linear-to-r dark:from-white/15 dark:to-white/20 justify-between gap-0 overflow-hidden rounded-full border border-white min-w-52 lg:min-w-70">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search here"
               className="py-2.5 ps-4 text-xs text-zinc-700 placeholder:text-[#A9A9A9] focus:outline-none dark:text-zinc-100"
             />
-            <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary border border-white text-white">
+            <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary dark:bg-[#519A91] border border-white dark:border-[#0D0D0D] text-white dark:text-[#0D0D0D]">
               <SearchIcon size={16} />
             </button>
           </div>
@@ -136,20 +135,13 @@ export default function ProposalsTable() {
                 <div className="relative">
                   <button
                     type="button"
-                    className="absolute -top-0.5 right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary px-2 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-dark"
+                    className="absolute -top-0.5 right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 text-xs font-medium text-white dark:text-black transition-colors hover:bg-primary-dark"
                   >
                     <EyeIcon size={14} />
                     View Proposal
                   </button>
                   <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
-                    <Image
-                      src={statusBg}
-                      alt=""
-                      aria-hidden
-                      fill
-                      className="object-fill"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
+                    <StatusBgSvg className="h-full w-full text-white dark:text-[#0D0D0D]" />
                   </div>
 
                   <div className="relative z-10 flex flex-col gap-3 p-3">
@@ -162,17 +154,17 @@ export default function ProposalsTable() {
                     {/* Title + subtitle + download (download right, circular outline) */}
                     <div className="flex gap-3">
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-base font-semibold leading-snug text-black/80">
+                        <p className="truncate text-base font-semibold leading-snug text-black/80 dark:text-white/80">
                           {p.title}
                         </p>
-                        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-black/60">
+                        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-black/60 dark:text-white/60">
                           {p.desc}
                         </p>
                       </div>
                       <button
                         type="button"
                         aria-label="Download"
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E4ECEE]/50 text-primary transition-colors hover:bg-primary/10"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E4ECEE]/50 dark:bg-[#1B272B]/50 border border-[#F0F0F0] dark:border-[#1C1C1C]/80 text-primary transition-colors hover:bg-primary/10"
                       >
                         <DownloadIcon size={18} />
                       </button>
@@ -192,17 +184,17 @@ export default function ProposalsTable() {
                                 : "translateX(-50%)",
                         }}
                       >
-                        <div className="whitespace-nowrap rounded bg-[#E3EBEA] px-1.5 py-1 w-9 text-center text-[10px] font-semibold text-primary">
+                        <div className="whitespace-nowrap rounded bg-[#E3EBEA] dark:bg-[#1F2B29] px-1.5 py-1 w-9 text-center text-[10px] font-semibold text-primary">
                           {p.progress}%
                         </div>
                         <div
-                          className="h-0 w-0 border-x-[6px] border-t-[9px] border-l-transparent border-r-transparent border-t-[#E3EBEA]"
+                          className="h-0 w-0 border-x-[6px] border-t-[9px] border-l-transparent border-r-transparent border-t-[#E3EBEA] dark:border-t-[#1F2B29]"
                           aria-hidden
                         />
                       </div>
-                      <div className="h-3.5 w-full overflow-hidden rounded-full bg-[#E3EBEA] p-0.5">
+                      <div className="h-3.5 w-full overflow-hidden rounded-full bg-[#E3EBEA] dark:bg-[#1F2B29] p-0.5">
                         <div
-                          className="h-full rounded-full bg-primary transition-all"
+                          className="h-full rounded-full bg-primary dark:bg-[#519A91] transition-all"
                           style={{ width: `${p.progress}%` }}
                         />
                       </div>
@@ -213,14 +205,14 @@ export default function ProposalsTable() {
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F5F9] px-2.5 py-1.5 text-[10px] font-medium text-black dark:bg-zinc-800 dark:text-zinc-300">
                         <ProposalCalendarIcon
                           size={14}
-                          className="shrink-0 text-black"
+                          className="shrink-0 text-black dark:text-white"
                         />
                         {formatCardDate(p.startDate)}
                       </span>
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F5F9] px-2.5 py-1.5 text-[10px] font-medium text-black dark:bg-zinc-800 dark:text-zinc-300">
                         <ProposalCalendarIcon
                           size={14}
-                          className="shrink-0 text-black"
+                          className="shrink-0 text-black dark:text-white"
                         />
                         {formatCardDate(p.endDate)}
                       </span>
