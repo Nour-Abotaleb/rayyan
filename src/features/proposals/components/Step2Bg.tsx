@@ -11,7 +11,6 @@ export default function Step2Bg({
 }) {
   const raw = useId();
   const uid = raw.replace(/:/g, "");
-  const clipId = `${uid}-clip`;
   const fillId = `${uid}-fill`;
   const strokeId = `${uid}-stroke`;
 
@@ -24,16 +23,6 @@ export default function Step2Bg({
       preserveAspectRatio={preserveAspectRatio}
       aria-hidden
     >
-      <foreignObject x="-0.3" y="-0.3" width="315.933" height="274.6">
-        <div
-          style={{
-            backdropFilter: "blur(0.15px)",
-            clipPath: `url(#${clipId})`,
-            height: "100%",
-            width: "100%",
-          }}
-        />
-      </foreignObject>
       <g data-figma-bg-blur-radius="0.3">
         <path
           d="M0 16C0 7.16344 7.16344 0 16 0H164.373C168.616 0 172.686 1.68571 175.686 4.68629L190.314 19.3137C193.314 22.3143 197.384 24 201.627 24H254H299.333C308.17 24 315.333 31.1634 315.333 40V258C315.333 266.837 308.17 274 299.333 274H16C7.16346 274 0 266.837 0 258V16Z"
@@ -47,9 +36,6 @@ export default function Step2Bg({
         />
       </g>
       <defs>
-        <clipPath id={clipId} transform="translate(0.3 0.3)">
-          <path d="M0 16C0 7.16344 7.16344 0 16 0H164.373C168.616 0 172.686 1.68571 175.686 4.68629L190.314 19.3137C193.314 22.3143 197.384 24 201.627 24H254H299.333C308.17 24 315.333 31.1634 315.333 40V258C315.333 266.837 308.17 274 299.333 274H16C7.16346 274 0 266.837 0 258V16Z" />
-        </clipPath>
         <linearGradient
           id={fillId}
           x1="0"

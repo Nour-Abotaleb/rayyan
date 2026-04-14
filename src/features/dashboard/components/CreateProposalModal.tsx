@@ -104,7 +104,7 @@ export default function CreateProposalModal({
     >
       {/* Panel */}
       <div className="relative isolate w-full max-w-[900px] max-h-[90vh] overflow-auto scrollbar-hide rounded-3xl bg-[var(--modal-surface)]">
-        <div className="scrollbar-hide relative z-10 overflow-y-auto p-6">
+        <div className="scrollbar-hide relative z-10 overflow-y-auto p-4 md:p-6">
           {/* Header */}
           <div className="mb-6 flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">

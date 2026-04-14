@@ -11,7 +11,6 @@ export default function SecondRowBg({
 }) {
   const raw = useId();
   const uid = raw.replace(/:/g, "");
-  const clipId = `${uid}-clip`;
   const fillId = `${uid}-fill`;
   const strokeId = `${uid}-stroke`;
 
@@ -24,16 +23,6 @@ export default function SecondRowBg({
       preserveAspectRatio={preserveAspectRatio}
       aria-hidden
     >
-      <foreignObject x="-0.3" y="-0.3" width="481.6" height="274.6">
-        <div
-          style={{
-            backdropFilter: "blur(0.15px)",
-            clipPath: `url(#${clipId})`,
-            height: "100%",
-            width: "100%",
-          }}
-        />
-      </foreignObject>
       <g data-figma-bg-blur-radius="0.3">
         <path
           d="M0 16C0 7.16344 7.16344 0 16 0H256.061C259.178 0 262.227 0.910308 264.833 2.61911L293.452 21.3809C296.059 23.0897 299.107 24 302.224 24H387.444H465C473.837 24 481 31.1634 481 40V258C481 266.837 473.837 274 465 274H16C7.16345 274 0 266.837 0 258V16Z"
@@ -47,9 +36,6 @@ export default function SecondRowBg({
         />
       </g>
       <defs>
-        <clipPath id={clipId} transform="translate(0.3 0.3)">
-          <path d="M0 16C0 7.16344 7.16344 0 16 0H256.061C259.178 0 262.227 0.910308 264.833 2.61911L293.452 21.3809C296.059 23.0897 299.107 24 302.224 24H387.444H465C473.837 24 481 31.1634 481 40V258C481 266.837 473.837 274 465 274H16C7.16345 274 0 266.837 0 258V16Z" />
-        </clipPath>
         <linearGradient
           id={fillId}
           x1="0"

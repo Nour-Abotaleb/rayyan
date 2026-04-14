@@ -24,7 +24,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Left — form: mobile p-4; md–lg symmetric px; lg+ only start bleed */}
-      <div className="relative z-0 w-full shrink-0 p-4 md:px-6 md:pb-0 md:pt-1.5 lg:w-[45%] lg:px-0 lg:ps-6 lg:pt-1.5">
+      <div className="relative z-0 w-full shrink-0 p-2 md:px-6 md:pb-0 md:pt-1.5 lg:w-[45%] lg:px-0 lg:ps-6 lg:pt-1.5">
         <section className="flex min-h-min w-full flex-col rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15 lg:w-[calc(100%+2.5rem)] lg:max-w-none">
           <SignUpForm />
         </section>

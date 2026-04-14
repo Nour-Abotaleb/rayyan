@@ -59,7 +59,7 @@ function CardBlock({
       <button
         type="button"
         onClick={onCreateClick}
-        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1.5 md:px-4 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer"
+        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1 md:px-4 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer"
       >
         <span className="text-base leading-none">+</span>
         Create Proposal

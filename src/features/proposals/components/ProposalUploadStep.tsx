@@ -59,7 +59,7 @@ function UploadBox({
             </h3>
           </div>
 
-          <div className="mt-3 grid w-full grid-cols-2 text-sm font-medium pt-4">
+          <div className="mt-3 grid w-full grid-cols-2 text-sm font-medium lg:pt-4">
             <button
               type="button"
               onClick={() => setTab("system")}
@@ -90,7 +90,7 @@ function UploadBox({
             </button>
           </div>
 
-          <div className="mt-4 flex flex-1 flex-col items-center justify-center px-4 py-8 text-center">
+          <div className="md:mt-4 flex flex-1 flex-col items-center justify-center px-4 py-8 text-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/50 dark:bg-[#1B272B]/50 border border-white dark:border-white/5">
               <UploadCloudIcon className="text-primary dark:text-[#519A91]" />
             </div>
