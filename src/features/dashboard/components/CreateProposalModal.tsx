@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import popupHero from "@src/assets/dashboard/popup-hero.svg";
-import popupIcons from "@src/assets/dashboard/popup-icons.svg";
+import PopupHero from "@/features/dashboard/components/PopupHero";
+import PopupIcons from "@/features/dashboard/components/PopupIcons";
 import PopupBgTexture from "@/features/dashboard/components/PopupBgTexture";
 import ChipIcon from "@/icons/ChipIcon";
 import ArrowUpRightIcon from "@/icons/ArrowUpRightIcon";
@@ -132,27 +131,14 @@ export default function CreateProposalModal({
 
           {/* Hero image */}
           <div className="relative mb-6 h-44 w-full overflow-hidden rounded-2xl">
-            <Image
-              src={popupHero}
-              alt="Proposal hero"
-              fill
-              className="object-contain object-center"
-              priority
-            />
+            <PopupHero className="absolute inset-0 h-full w-full" />
             <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center px-6 text-center">
               <div className="text-base font-medium text-white md:text-xl lg:text-2xl leading-relaxed tracking-wide">
                 <p>{heroLine1}</p>
                 <p>{heroLine2}</p>
               </div>
             </div>
-            <Image
-              src={popupIcons}
-              alt=""
-              aria-hidden
-              fill
-              className="z-20 object-contain object-center opacity-0 animate-[fadeIn_2.4s_ease-in_forwards]"
-              priority
-            />
+            <PopupIcons className="absolute inset-0 z-20 h-full w-full opacity-0 animate-[fadeIn_2.4s_ease-in_forwards]" />
           </div>
 
           {/* Proposal type cards */}
@@ -172,7 +158,7 @@ export default function CreateProposalModal({
 
                 {/* Arrow icon — outside card image (top right) */}
                 <div
-                  className={`pointer-events-none absolute right-0 md:-right-[3px] top-3 md:top-[1px] z-20 flex h-11 w-11 md:h-[52px] md:w-[52px] items-center justify-center rounded-full text-white cursor-pointer ${toneStyles[type.tone].arrowBg}`}
+                  className={`pointer-events-none absolute -right-1.5 md:-right-[3px] top-2 md:top-[1px] z-20 flex h-10.5 w-10.5 md:h-[52px] md:w-[52px] items-center justify-center rounded-full text-white cursor-pointer ${toneStyles[type.tone].arrowBg}`}
                   aria-hidden="true"
                 >
                   <ArrowUpRightIcon size={20} />
@@ -191,7 +177,7 @@ export default function CreateProposalModal({
                     <h3 className="text-base font-semibold text-black dark:text-white/80 tracking-wide">
                       {type.title}
                     </h3>
-                    <p className="mt-1.5 text-xs leading-relaxed text-paragraph dark:text-white/60 font-light">
+                    <p className="mt-1.5 text-xs leading-relaxed line-clamp-2 text-paragraph dark:text-white/60 font-light">
                       {type.description}
                     </p>
                   </div>

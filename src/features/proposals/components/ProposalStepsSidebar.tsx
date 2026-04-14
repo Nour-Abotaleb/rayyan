@@ -22,7 +22,7 @@ export default function ProposalStepsSidebar({
   progress: number;
 }) {
   return (
-    <aside className="hidden shrink-0 overflow-hidden rounded-[24px] border border-[#F1F2F9] bg-white px-7 py-7 shadow-[0px_1px_8px_0px_rgba(25,33,61,0.06)] dark:border-[#171717] dark:bg-[#0D0D0D] lg:flex lg:h-[86vh] lg:min-h-0 lg:max-h-[86vh] lg:w-82 lg:flex-col lg:self-stretch">
+    <aside className="hidden shrink-0 overflow-hidden rounded-[24px] border border-[#F1F2F9] bg-white px-7 py-7 shadow-[0px_1px_8px_0px_rgba(25,33,61,0.06)] dark:border-[#171717] dark:bg-[#0D0D0D] lg:flex lg:h-[87vh] lg:min-h-0 lg:max-h-[87vh] lg:w-82 lg:flex-col lg:self-stretch">
       <h2 className="text-lg md:text-xl font-bold text-black dark:text-white">
         {title}
       </h2>

@@ -3,7 +3,7 @@
  */
 export default function PopupBgTexture({
   className,
-  preserveAspectRatio = "xMidYMid meet",
+  preserveAspectRatio = "none",
 }: {
   className?: string;
   preserveAspectRatio?: string;

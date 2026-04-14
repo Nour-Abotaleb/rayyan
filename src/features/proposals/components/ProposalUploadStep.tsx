@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import step2Bg from "@src/assets/dashboard/step2-bg.svg";
-import secondRowBg from "@src/assets/dashboard/second-row-bg.svg";
+import Step2Bg from "./Step2Bg";
+import SecondRowBg from "./SecondRowBg";
 import UploadCloudIcon from "@/icons/UploadCloudIcon";
 
 type UploadCard = {
@@ -29,26 +29,25 @@ function UploadBox({
 }) {
   const [tab, setTab] = useState<"system" | "db">("system");
   const isCompact = variant === "compact";
-  const bgUrl = isCompact ? secondRowBg : step2Bg;
-  const bgSrc = typeof bgUrl === "string" ? bgUrl : bgUrl.src;
 
   return (
     <section className="flex flex-col gap-3">
       <div
         className={[
           "relative overflow-hidden p-4 backdrop-blur-sm",
-          isCompact ? "aspect-[481/274]" : "aspect-[316/274]",
+          isCompact ? "aspect-[316/274] md:aspect-[481/230]" : "aspect-[316/274]",
         ].join(" ")}
       >
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-no-repeat opacity-100 dark:opacity-15"
-          style={{
-            backgroundImage: `url(${bgSrc})`,
-            backgroundPosition: "top center",
-            backgroundSize: "100% auto",
-          }}
-        />
+          className="pointer-events-none absolute inset-0 opacity-100 dark:opacity-15"
+        >
+          {isCompact ? (
+            <SecondRowBg className="h-full w-full" />
+          ) : (
+            <Step2Bg className="h-full w-full" />
+          )}
+        </div>
 
         <div className="relative z-10 flex h-full flex-col">
           <div className="flex items-center justify-between gap-3">

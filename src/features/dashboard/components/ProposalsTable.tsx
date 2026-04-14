@@ -13,7 +13,7 @@ type Status = "Completed" | "Processing" | "Failed";
 const statusStyles: Record<Status, string> = {
   Completed: "bg-[#34A853]/12 text-[#34A853]",
   Processing: "bg-[#FF5F00]/12 text-[#FF5F00]",
-  Failed: "bg-[#000000]/12 text-[#000000]",
+  Failed: "bg-[#000000]/12 text-[#000000] dark:bg-white/12 dark:text-white",
 };
 
 function formatCardDate(isoLike: string) {
@@ -75,7 +75,7 @@ export default function ProposalsTable() {
         : "lg:grid-cols-3";
 
   return (
-    <div className="relative flex flex-col gap-4 rounded-2xl px-5">
+    <div className="relative flex flex-col gap-4 rounded-2xl px-3 md:px-5">
       {/* Active tab background — clip here only so proposal actions can extend above cards */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
         <ProposalTabBgSvg variant={active} className="h-full w-full" />
@@ -83,9 +83,9 @@ export default function ProposalsTable() {
 
       <div className="relative z-10 flex flex-col gap-4">
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 mt-3">
+        <div className="flex items-center justify-between gap-6 mt-3">
           {/* Tabs */}
-          <div className="flex items-center gap-1 md:gap-4 lg:gap-18">
+          <div className="flex items-center gap-1 md:gap-4 xl:gap-24">
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -117,7 +117,7 @@ export default function ProposalsTable() {
 
         {/* Proposal cards */}
         <div
-          className={`grid grid-cols-1 gap-4 sm:grid-cols-2 pb-6 min-h-72 ${desktopCols}`}
+          className={`grid grid-cols-1 gap-2 md:gap-4 sm:grid-cols-2 pb-6 min-h-72 ${desktopCols}`}
         >
           {filtered.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center gap-2 py-10 text-center">
@@ -131,7 +131,7 @@ export default function ProposalsTable() {
             </div>
           ) : (
             filtered.map((p) => (
-              <div key={p.id} className="relative lg:pt-6">
+              <div key={p.id} className="relative pt-3 lg:pt-6">
                 <div className="relative">
                   <button
                     type="button"
@@ -146,7 +146,7 @@ export default function ProposalsTable() {
 
                   <div className="relative z-10 flex flex-col gap-3 p-3">
                     <span
-                      className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${statusStyles[p.status]}`}
+                      className={`w-fit rounded-full px-3 md:px-4 py-1 md:py-1.5 text-xs font-medium ${statusStyles[p.status]}`}
                     >
                       {p.status}
                     </span>

@@ -125,7 +125,7 @@ export default function NewProposalPage() {
       />
 
       {/* Scrollport for the right column only (not on <main>); left aside stays out of this flow */}
-      <div className="scrollbar-hide flex min-h-0 min-w-0 flex-1 flex-col gap-6 overflow-y-auto py-4">
+      <div className="scrollbar-hide flex min-h-0 min-w-0 flex-1 flex-col gap-6 overflow-y-auto pb-4 pt-1">
         {activeStep === 1 && (
           <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -194,7 +194,7 @@ export default function NewProposalPage() {
               </label>
               <textarea
                 placeholder="Any Additional context or requirements..."
-                rows={6}
+                rows={7}
                 value={basicInfo.additionalDetails}
                 onChange={(e) =>
                   setBasicInfo((s) => ({

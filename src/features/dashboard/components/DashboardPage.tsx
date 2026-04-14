@@ -8,12 +8,12 @@ const mockUser = { name: "Ahmed" };
 
 export default function DashboardPage() {
   return (
-    <div className="layout-shell-x flex h-full min-h-0 flex-1 flex-col gap-3 overflow-x-hidden md:gap-6 lg:flex-row lg:items-stretch lg:overflow-hidden">
+    <div className="layout-shell-x scrollbar-hide flex h-full min-h-0 flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto md:gap-6 lg:flex-row lg:items-stretch lg:overflow-hidden">
       {/* Left dark panel */}
       <LeftPanel />
 
       {/* Main content — only this column scrolls on desktop */}
-      <main className="scrollbar-hide flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto py-4">
+      <main className="scrollbar-hide flex min-h-0 flex-1 flex-col gap-6 lg:overflow-y-auto py-4">
         {/* Welcome */}
         <div className="hidden lg:block">
           <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold text-black dark:text-white tracking-wide">

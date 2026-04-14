@@ -1,30 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import Image from "next/image";
 import cardBg from "@src/assets/dashboard/card-bg.png";
 import leftPanelBg from "@src/assets/dashboard/left-panel-bg.png";
 import leftPanelBgMobile from "@src/assets/dashboard/left-panel-bg-mobile.png";
-import card1 from "@src/assets/dashboard/card-1.svg";
-import card2 from "@src/assets/dashboard/card-2.svg";
+import Card1Illustration from "./Card1Illustration";
+import Card2Illustration from "./Card2Illustration";
 import CreateProposalModal from "./CreateProposalModal";
 
 interface CardItem {
   title: string;
   description: string;
-  illustration: typeof card1;
+  Illustration: ComponentType<{ className?: string }>;
 }
 
 const cards: CardItem[] = [
   {
     title: "Create Your\nNew Proposal",
     description: "Add details, let RAYAN do the rest",
-    illustration: card1,
+    Illustration: Card1Illustration,
   },
   {
     title: "Create Your\nCompany Profile",
     description: "Just add your details and let the system do the rest.",
-    illustration: card2,
+    Illustration: Card2Illustration,
   },
 ];
 
@@ -50,13 +50,8 @@ function CardBlock({
             </p>
           </div>
 
-          <div className="absolute bottom-0 right-0 h-4/5 w-[45%]">
-            <Image
-              src={card.illustration}
-              alt=""
-              fill
-              className="object-contain object-bottom-right"
-            />
+          <div className="absolute -bottom-1 right-0 h-full w-[45%]">
+            <card.Illustration className="h-full w-full" />
           </div>
         </div>
       </div>
@@ -64,7 +59,7 @@ function CardBlock({
       <button
         type="button"
         onClick={onCreateClick}
-        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1 md:px-4 lg:px-4 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer"
+        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1.5 md:px-4 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer"
       >
         <span className="text-base leading-none">+</span>
         Create Proposal

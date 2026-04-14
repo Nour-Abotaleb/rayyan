@@ -6,7 +6,8 @@
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-turbopack --import-alias \"@/*\" --yes)",
       "Bash(npm install:*)",
       "Bash(node -e \"const data = require\\('./node_modules/next/dist/compiled/@next/font/dist/google/font-data.json'\\); const m = data['Montserrat']; console.log\\(JSON.stringify\\({subsets: m.subsets, weights: m.weights?.slice\\(0,5\\)}, null, 2\\)\\)\")",
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "Bash(git checkout:*)"
     ]
   }
 }
