@@ -130,3 +130,35 @@ body {
     padding-inline: 1.5rem; /* px-6 */
   }
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Moves the container by half its total width */
+    transform: translateX(-20%);
+  }
+}
+
+.animate-infinite-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll 5s linear infinite;
+}
+
+/* Pause on hover so users can read */
+.animate-infinite-scroll:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-reverse {
+  from { transform: translateX(-20%); }
+  to { transform: translateX(0); }
+}
+
+.animate-infinite-scroll-reverse {
+  display: flex;
+  width: max-content;
+  animation: scroll-reverse 5s linear infinite;
+}

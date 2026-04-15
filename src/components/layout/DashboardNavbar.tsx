@@ -63,6 +63,28 @@ const navIconInactiveOverview =
 const navIconActive =
   "bg-primary text-white rounded-full min-h-10 lg:min-h-11 text-sm font-medium transition-all duration-200 ease-out";
 
+function isOverviewPath(pathname: string | null) {
+  return pathname === "/dashboard";
+}
+
+function isItemActive(
+  key: (typeof navItems)[number]["key"],
+  pathname: string | null,
+  href: string,
+) {
+  if (key === "layout") return isOverviewPath(pathname);
+  if (key === "proposal") {
+    return (
+      pathname === "/dashboard/proposals" ||
+      (pathname?.startsWith("/dashboard/proposals/") &&
+        !pathname?.startsWith("/dashboard/proposals/new"))
+    );
+  }
+  if (key === "database") return pathname?.startsWith("/dashboard/database");
+  if (key === "settings") return pathname?.startsWith("/dashboard/settings");
+  return pathname === href;
+}
+
 export default function DashboardNavbar({ user }: DashboardNavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t } = useLanguage();
@@ -77,7 +99,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
   } | null>(null);
 
   const activeKey = useMemo(() => {
-    if (pathname === "/dashboard") return "layout";
+    if (isOverviewPath(pathname)) return "layout";
     if (
       pathname === "/dashboard/proposals" ||
       (pathname?.startsWith("/dashboard/proposals/") &&
@@ -166,18 +188,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
             />
           )}
           {navItems.map(({ Icon, key, label, href }) => {
-            const isActive =
-              key === "layout"
-                ? pathname === href
-                : key === "proposal"
-                  ? pathname === "/dashboard/proposals" ||
-                    (pathname?.startsWith("/dashboard/proposals/") &&
-                      !pathname?.startsWith("/dashboard/proposals/new"))
-                  : key === "database"
-                    ? pathname?.startsWith("/dashboard/database")
-                    : key === "settings"
-                      ? pathname?.startsWith("/dashboard/settings")
-                  : pathname === href;
+            const isActive = isItemActive(key, pathname, href);
             return (
               <Link
                 key={key}
@@ -259,18 +270,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
           {/* Nav items */}
           <nav className="flex items-center gap-3 flex-wrap">
             {navItems.map(({ Icon, key, label, href }) => {
-              const isActive =
-                key === "layout"
-                  ? pathname === href
-                  : key === "proposal"
-                    ? pathname === "/dashboard/proposals" ||
-                      (pathname?.startsWith("/dashboard/proposals/") &&
-                        !pathname?.startsWith("/dashboard/proposals/new"))
-                    : key === "database"
-                      ? pathname?.startsWith("/dashboard/database")
-                      : key === "settings"
-                        ? pathname?.startsWith("/dashboard/settings")
-                    : pathname === href;
+              const isActive = isItemActive(key, pathname, href);
               return (
                 <Link
                   key={key}

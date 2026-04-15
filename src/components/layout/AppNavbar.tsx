@@ -8,6 +8,8 @@ export default function AppNavbar() {
 
   // Dashboard routes use `src/app/dashboard/layout.tsx` (DashboardNavbar)
   if (pathname?.startsWith('/dashboard')) return null
+  // Home page has its own floating hero navbar
+  if (pathname === '/') return null
 
   return <Navbar />
 }

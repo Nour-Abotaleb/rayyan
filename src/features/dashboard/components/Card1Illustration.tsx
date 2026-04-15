@@ -21,6 +21,12 @@ export default function Card1Illustration({
       preserveAspectRatio={preserveAspectRatio}
       aria-hidden
     >
+      <style>{`
+        @keyframes ${uid}-float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-18px); }
+        }
+      `}</style>
       <path
         d="M165.486 126.036L40.7779 142.64C31.9 143.822 25.8682 152.26 27.6238 161.043L52.0132 283.041C53.6149 291.052 61.1594 296.445 69.2576 295.367L177.958 280.894C186.056 279.816 191.927 272.637 191.377 264.485L182.996 140.356C182.402 131.56 174.613 125.06 165.901 125.987L165.486 126.036Z"
         fill={`url(#${uid}-p0)`}
@@ -52,6 +58,11 @@ export default function Card1Illustration({
         clipRule="evenodd"
         d="M157.575 103.079C155.555 97.9454 150.294 94.851 144.825 95.5791L56.7851 107.301C49.0581 108.33 44.3476 116.338 47.2027 123.591L74.0722 191.855C76.0928 196.988 81.3533 200.083 86.822 199.355L174.862 187.633C182.589 186.604 187.3 178.596 184.445 171.343L157.575 103.079Z"
         fill="white"
+        style={{
+          animation: `${uid}-float 2s infinite`,
+          transformBox: "fill-box",
+          transformOrigin: "center",
+        }}
       />
       <path
         fillRule="evenodd"
