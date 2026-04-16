@@ -47,7 +47,7 @@ export default function HomeFooterSection() {
                 className="flex h-8 w-8 lg:h-9 lg:w-9 items-center justify-center rounded-full bg-zinc-900"
               >
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_643_10977)">
+                  <g clipPath="url(#clip0_643_10977)">
                   <path d="M3.375 2.8125H6.75L14.625 15.1875H11.25L3.375 2.8125Z" stroke="white" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M8.007 10.0918L3.375 15.1873" stroke="white" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M14.6249 2.8125L9.99292 7.908" stroke="white" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"/>

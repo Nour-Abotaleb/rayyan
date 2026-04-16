@@ -57,10 +57,10 @@ export default function HomeSecondSection() {
         <div className="relative mt-7 w-full rounded-[24px] bg-[#F2F2F2] p-4 md:p-6">
           
           {/* Main Card Container with height matching image aspect ratio */}
-          <div className="relative aspect-[1.8/1] p-6">
+          <div className="relative aspect-[1.56/1] p-6">
             
             {/* The RFP Bid Progress Card component */}
-            <div className="max-w-[300px] flex-col p-4 absolute top-0 right-0 w-[300px] z-20">
+            <div className="max-w-[300px] flex-col px-4 pt-4 absolute top-0 right-0 w-[300px] z-20">
             <CardBg 
                 className="absolute inset-0 z-0" 
                 preserveAspectRatio="none" 
@@ -114,10 +114,10 @@ export default function HomeSecondSection() {
                   {/* 5. Matching the progress bar width (32%) and color */}
                   <div className="h-full w-[32%] rounded-full bg-[#58A19A]"></div>
                 </div>
-                <div className="mt-2 flex items-center justify-between text-xs text-[#515459]">
+                {/* <div className="mt-2 flex items-center justify-between text-xs text-[#515459]">
                   <span>65 kg</span>
                   <span>75 kg</span>
-                </div>
+                </div> */}
               </div>
             </div>
             {/* 2. CENTER IMAGE */}

@@ -1,13 +1,16 @@
+import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import Link from "next/link";
 import tool1Img from "@src/assets/dashboard/technical-section-img.png";
+import tool2Img from "@src/assets/dashboard/technical-section-img-2.png";
 
 interface CapabilityRowProps {
   eyebrow: string;
   title: string;
   description: string;
   tags: readonly string[];
-  image: typeof tool1Img;
+  // image: typeof tool1Img;
+  image: StaticImageData;
   imageFirst?: boolean;
 }
 
@@ -99,7 +102,7 @@ export default function HomeCapabilitiesSection() {
           title="Impressive Financials, Delivered in Seconds"
           description="Move beyond basic spreadsheets. With our advanced BOQ engine and automated visualizations, you can generate stunning financial tables and interactive charts that build immediate trust."
           tags={["Advanced BOQ Engine", "Dynamic Analytics", "Precise Timelines", "One-Click PDF Export"]}
-          image={tool1Img}
+          image={tool2Img}
         />
       </div>
     </section>

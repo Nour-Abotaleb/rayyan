@@ -27,7 +27,7 @@ export default function CardBg({
             x="-4"
             y="-4"
             width="372"
-            height="227"
+            height="220"
             filterUnits="userSpaceOnUse"
             colorInterpolationFilters="sRGB"
           >
