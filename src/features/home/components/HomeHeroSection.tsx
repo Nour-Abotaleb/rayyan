@@ -14,7 +14,7 @@ export default function HomeHeroSection() {
     >
 
       <div className="layout-shell-x mx-auto flex w-full max-w-6xl flex-col items-center pb-10 md:pb-14">
-        <div className="w-full max-w-4xl rounded-full bg-white/25 px-3 py-3 backdrop-blur-sm">
+        <div className="w-full max-w-5xl rounded-full bg-white/25 px-3 py-2.5 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-4 px-3">
             <span className="font-abril text-lg text-primary md:text-xl">RAYYAN</span>
             <nav className="hidden items-center gap-5 lg:gap-8 text-sm text-[#1A1615] md:flex">

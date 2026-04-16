@@ -7,12 +7,15 @@ import shadowTopImage from '@src/assets/dashboard/shadow-top.png'
 /** Top shadow only — login `/` and signup `/signup`. Bottom shadow stays global in `layout.tsx`. */
 export default function AuthShadowOverlays() {
   const pathname = usePathname()
-  const show = pathname === '/' || pathname === '/signup'
+  // const show = pathname === '/login' || pathname === '/signup'
+  const show =
+  pathname.startsWith('/signup') ||
+  pathname.startsWith('/login')
   if (!show) return null
 
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 -top-20 z-[9999] flex justify-center"
+      className="pointer-events-none fixed inset-x-0 -top-20 z-50 flex justify-center"
       aria-hidden
     >
       <Image

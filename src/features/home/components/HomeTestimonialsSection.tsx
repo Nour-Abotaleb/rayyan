@@ -65,7 +65,7 @@ export default function HomeTestimonialsSection() {
         </h3>
 
         {/* --- Carousel Wrapper with Gradients --- */}
-        <div className="relative mt-32 lg:mt-40">
+        <div className="relative mt-14">
           
           {/* Left Gradient Overlay */}
           <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-32 bg-gradient-to-r from-[#F9F9F9] to-transparent md:w-64"></div>
@@ -80,47 +80,68 @@ export default function HomeTestimonialsSection() {
                 const isActive = selectedIndex === index;
 
                 return (
-                  <div 
-                    key={`${item.name}-${index}`} 
-                    className="min-w-0 flex-[0_0_100%] px-3 md:flex-[0_0_33.33%]"
-                  >
-                    <article
-                      className={`
-                        relative flex flex-col items-center rounded-3xl p-6 text-center transition-all duration-700 ease-in-out overflow-visible
-                        ${isActive 
-                          ? "bg-[#58A19A]/15 text-[#1A1615] scale-100 opacity-100 h-auto py-8" 
-                          : "bg-white scale-90 opacity-100 h-[220px] justify-center mt-4"}
-                      `}
+                    <div
+                      key={`${item.name}-${index}`}
+                      className="min-w-0 flex-[0_0_100%] px-3 md:flex-[0_0_33.33%]"
                     >
-                      {/* Quote */}
-                      <p className="text-sm leading-6 text-[#1A1615]">
-                        "{item.quote}"
-                      </p>
-                      {/* Profile Header (Floating for active) */}
-                      <div className={`
-                        flex items-center gap-2 transition-all duration-700
-                        ${isActive 
-                          ? "absolute top-0 left-1/2 -translate-x-1/2 w-full" 
-                          : "mb-4"}
-                      `}>
-                        <Image
-                          src={item.avatar}
-                          alt={item.name}
-                          className={`rounded-full border-2 border-white transition-all duration-700 ${isActive ? "h-16 w-16" : "h-12 w-12"}`}
-                        />
-                        <div className="flex flex-col items-start">
-                          <p className="mt-2 text-xs font-semibold text-[#1A1615]">
-                            {item.name}
-                          </p>
-                          <p className="mt-1 text-[11px] text-[#757170]">
-                            {item.role}
-                          </p>
-                        </div>
-                      </div>
+                      <div className="flex flex-col items-center">
+                        
+                        {/* ACTIVE: profile OUTSIDE */}
+                        {isActive && (
+                          <div className="mb-4 flex flex-col items-center gap-2">
+                            <Image
+                              src={item.avatar}
+                              alt={item.name}
+                              className="h-16 w-16 rounded-full border-2 border-white"
+                            />
+                            <div className="text-center">
+                              <p className="text-xs font-semibold text-[#1A1615]">
+                                {item.name}
+                              </p>
+                              <p className="text-[11px] text-[#757170]">
+                                {item.role}
+                              </p>
+                            </div>
+                          </div>
+                        )}
 
-                    </article>
-                  </div>
-                );
+                        {/* CARD */}
+                        <article
+                          className={`
+                            relative flex flex-col items-center rounded-3xl p-6 text-center
+                            transition-all duration-700 ease-in-out
+                            ${isActive
+                              ? "bg-[#58A19A]/15 scale-100 pt-6"
+                              : "bg-white scale-90 mt-4"
+                            }
+                          `}
+                        >
+                          <p className="text-sm leading-6 text-[#1A1615]">
+                            "{item.quote}"
+                          </p>
+
+                          {/* INACTIVE: profile INSIDE */}
+                          {!isActive && (
+                            <div className="mt-4 flex flex-col items-center gap-2">
+                              <Image
+                                src={item.avatar}
+                                alt={item.name}
+                                className="h-12 w-12 rounded-full border-2 border-white"
+                              />
+                              <div className="text-center">
+                                <p className="text-xs font-semibold text-[#1A1615]">
+                                  {item.name}
+                                </p>
+                                <p className="text-[11px] text-[#757170]">
+                                  {item.role}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </article>
+                      </div>
+                    </div>
+                  );
               })}
             </div>
           </div>

@@ -94,7 +94,7 @@ export default function HomeBuiltSection() {
                 ))}
               </div>
 
-             <div className="grid grid-cols-[2.5fr_1fr] gap-6">
+             <div className="grid grid-cols-[2.5fr_0.8fr] gap-5">
               {/* Toggle */}
               <div className="flex items-center justify-between rounded-2xl bg-white border border-[#E4E2E2] p-3.5 w-full">
                 <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ export default function HomeBuiltSection() {
                   <button
                     onClick={() => setMode("dark")}
                     className={`h-10 w-12 flex items-center justify-center rounded-xl transition
-                      ${mode === "dark" ? "bg-[#F1EBE5] border border-[#E4E2E2]" : "bg-transparent"}
+                      ${mode === "dark" ? "bg-[#F1EBE5] border-2 border-[#E4E2E2]" : "bg-transparent"}
                     `}
                   >
               
@@ -134,7 +134,7 @@ export default function HomeBuiltSection() {
                   <button
                     onClick={() => setMode("light")}
                     className={`h-10 w-12 flex items-center justify-center rounded-xl transition
-                      ${mode === "light" ? "bg-[#F1EBE5] border border-[#E4E2E2]" : "bg-transparent"}
+                      ${mode === "light" ? "bg-[#F1EBE5] border-2 border-[#E4E2E2]" : "bg-transparent"}
                     `}
                   >
                           {/* Sun SVG */}
