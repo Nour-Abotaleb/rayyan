@@ -77,15 +77,15 @@ export default function ProposalsTable() {
   return (
     <div className="relative flex flex-col gap-4 rounded-2xl px-3 md:px-5">
       {/* Active tab background — clip here only so proposal actions can extend above cards */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
-        <ProposalTabBgSvg variant={active} className="h-full w-full" />
+      <div className="w-full pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
+        <ProposalTabBgSvg variant={active} className="h-auto w-full" />
       </div>
 
       <div className="relative z-10 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-center justify-between gap-6 mt-3">
           {/* Tabs */}
-          <div className="flex items-center gap-1 md:gap-4 xl:gap-24">
+          <div className="flex items-center gap-1 md:gap-4 lg:gap-6 xl:gap-17">
             {tabs.map((tab) => (
               <button
                 key={tab}

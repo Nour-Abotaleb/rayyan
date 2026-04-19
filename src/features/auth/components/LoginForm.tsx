@@ -16,11 +16,36 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: connect to auth
-    router.push("/dashboard");
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, remember }),
+        credentials: "include",
+      });
+      const data = (await res.json()) as { redirectTo?: string; error?: string };
+      if (!res.ok) {
+        setError(data.error ?? "Sign in failed");
+        return;
+      }
+      if (data.redirectTo) {
+        router.push(data.redirectTo);
+        router.refresh();
+        return;
+      }
+      setError("Sign in failed");
+    } catch {
+      setError("Network error. Try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -85,6 +110,12 @@ export default function LoginForm() {
         </div>
 
         {/* Remember + Forgot */}
+        {error ? (
+          <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
+            {error}
+          </p>
+        ) : null}
+
         <div className="flex items-center justify-between">
           <label className="flex cursor-pointer items-center gap-2 text-sm text-paragraph dark:text-[#757575]">
             <input
@@ -106,9 +137,10 @@ export default function LoginForm() {
         {/* Login button */}
         <button
           type="submit"
-          className="mt-1 w-full rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-black transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 cursor-pointer"
+          disabled={loading}
+          className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 disabled:opacity-60 dark:text-black"
         >
-          {t.auth.login}
+          {loading ? "…" : t.auth.login}
         </button>
 
         {/* Google sign in */}

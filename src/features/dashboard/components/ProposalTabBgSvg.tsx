@@ -2,11 +2,11 @@
 
 import { useId } from "react";
 
-export type ProposalTabBgVariant = "ALL" | "Completed" | "Processing" | "Failed";
-
-/** Path geometry per tab — exported from `all-bg.svg`, `completed-bg.svg`, `processing-bg.svg`, `failed-bg.svg`. */
-const MOBILE_ALL_PATH =
-  "M18 1H49.2002C55.4784 1.00007 61.2457 4.46038 64.2002 10L70.0352 20.9414C73.3372 27.1327 79.783 30.9999 86.7998 31H340C349.389 31 357 38.6112 357 48V544C357 553.389 349.389 561 340 561H18C8.61116 561 1 553.389 1 544V18C1.00001 8.61116 8.61117 1 18 1Z";
+export type ProposalTabBgVariant =
+  | "ALL"
+  | "Completed"
+  | "Processing"
+  | "Failed";
 
 /** Path geometry per tab — exported from `all-bg.svg`, `completed-bg.svg`, `processing-bg.svg`, `failed-bg.svg`. */
 const TAB_PATHS: Record<ProposalTabBgVariant, string> = {
@@ -25,123 +25,89 @@ type Props = {
 };
 
 /**
- * Tab strip background (matches exported Figma SVGs). Override tint/stroke via CSS:
- * `--proposal-tab-tint`, `--proposal-tab-stroke` (defaults match light mode art).
+ * Tab strip background (matches exported Figma SVGs). Same landscape art at all breakpoints
+ * so the active-tab notch follows `variant` on mobile too.
  *
- * Renders a portrait SVG on mobile (ALL shape) and the original landscape SVG on md+.
+ * Override tint/stroke via CSS: `--proposal-tab-tint`, `--proposal-tab-stroke`.
  */
 export default function ProposalTabBgSvg({ variant, className }: Props) {
   const raw = useId();
   const uid = raw.replace(/:/g, "");
 
-  // Desktop gradient IDs
   const fillId = `${uid}-fill`;
   const strokeId = `${uid}-stroke`;
+  const blurClipId = `${uid}-blur-clip`;
 
-  // Mobile gradient / clip IDs
-  const mFillId = `${uid}-m-fill`;
-  const mStrokeId = `${uid}-m-stroke`;
-  const mClipId = `${uid}-m-clip`;
+  const path = TAB_PATHS[variant];
+
+  const outer = ["w-full max-w-full min-w-0", className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <>
-      {/* ── Mobile (portrait 358×562, ALL shape) ── */}
-      <svg
-        className={`${className} md:hidden`}
-        viewBox="0 0 358 562"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="none"
-        aria-hidden
+    <div className={outer}>
+      <div
+        className="relative w-full overflow-hidden rounded-2xl 
+          aspect-[2/1]        
+          sm:aspect-[3/1]     
+          md:aspect-[909/276] 
+          lg:aspect-[909/260] "
       >
-        <foreignObject x="-12" y="-12" width="382" height="586">
-          <div
-            style={{
-              backdropFilter: "blur(6px)",
-              clipPath: `url(#${mClipId})`,
-              height: "100%",
-              width: "100%",
-            }}
+        <svg
+          className="absolute inset-0 w-full h-full"
+          viewBox="0 0 909 276"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          aria-hidden
+        >
+          <defs>
+            <clipPath id={blurClipId} transform="translate(12 12)">
+              <path d={path} />
+            </clipPath>
+            <linearGradient
+              id={fillId}
+              x1="3.96432e-06"
+              y1="-6"
+              x2="45.1005"
+              y2="478.673"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="white" stopOpacity="0.64" />
+              <stop offset="1" stopColor="var(--proposal-tab-tint, #D9FFFA)" />
+            </linearGradient>
+            <linearGradient
+              id={strokeId}
+              x1="24.24"
+              y1="-1.1213"
+              x2="67.2776"
+              y2="480.479"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="var(--proposal-tab-stroke, white)" />
+              <stop offset="1" stopColor="var(--proposal-tab-stroke, white)" />
+            </linearGradient>
+          </defs>
+          <foreignObject x="-12" y="-12" width="933" height="300">
+            <div
+              style={{
+                backdropFilter: "blur(6px)",
+                clipPath: `url(#${blurClipId})`,
+                height: "100%",
+                width: "100%",
+              }}
+            />
+          </foreignObject>
+          <path
+            data-figma-bg-blur-radius="12"
+            d={path}
+            fill={`url(#${fillId})`}
+            fillOpacity={0.7}
+            stroke={`url(#${strokeId})`}
+            strokeWidth={2}
           />
-        </foreignObject>
-        <path
-          data-figma-bg-blur-radius="12"
-          d={MOBILE_ALL_PATH}
-          fill={`url(#${mFillId})`}
-          fillOpacity={0.7}
-          stroke={`url(#${mStrokeId})`}
-          strokeWidth={2}
-        />
-        <defs>
-          <clipPath id={mClipId} transform="translate(12 12)">
-            <path d={MOBILE_ALL_PATH} />
-          </clipPath>
-          <linearGradient
-            id={mFillId}
-            x1="-0.000197562"
-            y1="-26"
-            x2="45.1004"
-            y2="458.673"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="white" stopOpacity="0.64" />
-            <stop offset="1" stopColor="var(--proposal-tab-tint, #D9FFFA)" />
-          </linearGradient>
-          <linearGradient
-            id={mStrokeId}
-            x1="24.2401"
-            y1="-21.1213"
-            x2="67.2778"
-            y2="460.479"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="var(--proposal-tab-stroke, white)" />
-            <stop offset="1" stopColor="var(--proposal-tab-stroke, white)" />
-          </linearGradient>
-        </defs>
-      </svg>
-
-      {/* ── Desktop (landscape 909×276) ── */}
-      <svg
-        className={`${className} hidden md:block`}
-        viewBox="0 0 909 276"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="none"
-        aria-hidden
-      >
-        <defs>
-          <linearGradient
-            id={fillId}
-            x1="3.96432e-06"
-            y1="-6"
-            x2="45.1005"
-            y2="478.673"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="white" stopOpacity="0.64" />
-            <stop offset="1" stopColor="var(--proposal-tab-tint, #D9FFFA)" />
-          </linearGradient>
-          <linearGradient
-            id={strokeId}
-            x1="24.24"
-            y1="-1.1213"
-            x2="67.2776"
-            y2="480.479"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="var(--proposal-tab-stroke, white)" />
-            <stop offset="1" stopColor="var(--proposal-tab-stroke, white)" />
-          </linearGradient>
-        </defs>
-        <path
-          d={TAB_PATHS[variant]}
-          fill={`url(#${fillId})`}
-          fillOpacity={0.7}
-          stroke={`url(#${strokeId})`}
-          strokeWidth={2}
-        />
-      </svg>
-    </>
+        </svg>
+      </div>
+    </div>
   );
 }

@@ -1,22 +1,31 @@
-"use client"
+"use client";
 import { useState } from "react";
 import Image from "next/image";
 import CardBg from "./CardBg";
 import centeredImg from "@src/assets/dashboard/centered-img.svg";
 import healthAssistantCard from "@src/assets/dashboard/health-assistant-card.svg";
 
-const companies = ["Amsterdam", "SAVANNAH", "MILANO", "Luminous", "Luminous", "Luminous", "Luminous"] as const;
+const companies = [
+  "Amsterdam",
+  "SAVANNAH",
+  "MILANO",
+  "Luminous",
+  "Luminous",
+  "Luminous",
+  "Luminous",
+] as const;
 const filters = ["Technical", "Visualization", "Financial"] as const;
 
 export default function HomeSecondSection() {
-  const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>("Visualization");
+  const [activeFilter, setActiveFilter] =
+    useState<(typeof filters)[number]>("Visualization");
   return (
     <section className="pt-12 pb-10 md:pt-16 md:pb-14">
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center text-center">
         <p className="text-lg font-semibold text-[#656769]">
           Trusted by 7,000+ top startups, freelancers and studios
         </p>
-{/* 
+        {/* 
         <div className="mt-4 md:mt-6 lg:mt-8 flex flex-wrap items-center justify-center gap-x-6 lg:gap-x-8 gap-y-2 text-lg font-semibold text-[#6A6C6A]">
           {companies.map((company) => (
           {companies.map((company, idx) => (
@@ -44,8 +53,8 @@ export default function HomeSecondSection() {
         </div>
         {/* --- INFINITE SLIDER END --- */}
 
-      {/* second section header */}
-      <p className="mt-10 text-base font-semibold text-[#656769] md:mt-20 lg:mt-24">
+        {/* second section header */}
+        <p className="mt-10 text-base font-semibold text-[#656769] md:mt-20 lg:mt-24">
           Stay in Control of Your Records
         </p>
         <h2 className="mt-2 max-w-4xl text-2xl font-semibold leading-snug text-[#1A1615] md:text-3xl">
@@ -55,15 +64,13 @@ export default function HomeSecondSection() {
 
         {/* 2. Modified Content Area to replicate image structure */}
         <div className="relative mt-7 w-full rounded-[24px] bg-[#F2F2F2] p-4 md:p-6">
-          
           {/* Main Card Container with height matching image aspect ratio */}
           <div className="relative aspect-[1.56/1] p-6">
-            
             {/* The RFP Bid Progress Card component */}
             <div className="max-w-[300px] flex-col px-4 pt-4 absolute top-0 right-0 w-[300px] z-20">
-            <CardBg 
-                className="absolute inset-0 z-0" 
-                preserveAspectRatio="none" 
+              <CardBg
+                className="absolute inset-0 z-0"
+                preserveAspectRatio="xMidYMid meet"
               />
               {/* Header: Title and Edit Icon */}
               <div className="flex items-start justify-between relative z-10">
@@ -126,19 +133,19 @@ export default function HomeSecondSection() {
                 src={centeredImg}
                 alt="center"
                 className="lg:w-[550px] max-w-[500px] h-auto rounded-2xl"
-            />
+              />
             </div>
 
-          {/* 3. BOTTOM LEFT IMAGE */}
-          <div className="absolute -bottom-6 -left-6 z-10 overflow-hidden">
-            <Image
-              src={healthAssistantCard}
-              alt="bottom"
-              className="max-w-[280px] h-auto rounded-tr-2xl"
-            />
+            {/* 3. BOTTOM LEFT IMAGE */}
+            <div className="absolute -bottom-6 -left-6 z-10 overflow-hidden">
+              <Image
+                src={healthAssistantCard}
+                alt="bottom"
+                className="max-w-[280px] h-auto rounded-tr-2xl"
+              />
+            </div>
           </div>
-          </div>
-          
+
           {/* Filter Buttons moved inside/below the card section */}
           <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-[#AFAFAF]/25 p-1.5 md:bottom-6">
             {filters.map((label) => (

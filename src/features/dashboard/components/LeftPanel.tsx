@@ -50,7 +50,7 @@ function CardBlock({
             </p>
           </div>
 
-          <div className="absolute -bottom-1 right-0 h-full w-[45%]">
+          <div className="absolute -bottom-3 -right-1 h-full w-[58%] max-sm:w-[52%]">
             <card.Illustration className="h-full w-full" />
           </div>
         </div>
