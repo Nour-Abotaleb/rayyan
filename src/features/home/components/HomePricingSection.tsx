@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Plan = {
   name: string;
@@ -62,29 +62,50 @@ const companies = ["Amsterdam", "SAVANNAH", "MILANO", "Luminous", "Vector"] as c
 const filters = ["Annually", "Monthly"] as const;
 export default function HomePricingSection() {
   const [activeFilter, setActiveFilter] = useState<(typeof filters)[number]>("Annually");
+  const pricingTrackRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const track = pricingTrackRef.current;
+    if (!track) return;
+
+    const centerTrackOnMobile = () => {
+      if (window.innerWidth >= 768) return;
+      const centeredScrollLeft = (track.scrollWidth - track.clientWidth) / 2;
+      track.scrollTo({ left: Math.max(0, centeredScrollLeft), behavior: "auto" });
+    };
+
+    centerTrackOnMobile();
+    window.addEventListener("resize", centerTrackOnMobile);
+    return () => window.removeEventListener("resize", centerTrackOnMobile);
+  }, []);
+
   return (
-    <section className="layout-shell-x py-14 lg:py-24">
+    <section className="layout-shell-x py-10 lg:py-24">
       <div className="mx-auto w-full max-w-5xl">
         <div className="text-center">
-          <p className="text-base font-semibold text-[#656769]">
+          <p className="text-sm md:text-base font-semibold text-[#656769]">
             Built for Proposal Professionals.
           </p>
-          <h3 className="mx-auto mt-2 max-w-xl text-2xl font-semibold leading-snug text-[#1A1615]">
+          <h3 className="mx-auto mt-2 max-w-xl text-base sm:text-lg md:text-2xl font-semibold leading-snug text-[#1A1615]">
             Empowering your team with the tools needed to win complex government
             tenders.
           </h3>
         </div>
 
-        <div className="mt-8 grid gap-5 md:grid-cols-3 lg:mt-12 items-end">
-          {plans.map((plan) => (
-            <article
-              key={plan.name}
-              className={`rounded-3xl p-5 relative flex flex-col justify-between ${
-                plan.highlighted
-                  ? "border-4 border-[#58A19A] bg-gradient-to-b from-[#50AED4]/30 to-[#58A19A]/15"
-                  : "bg-white"
-              }`}
-            >
+        <div
+          ref={pricingTrackRef}
+          className="mt-8 max-w-full overflow-x-auto scroll-smooth px-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:overflow-visible md:px-0 lg:mt-12"
+        >
+          <div className="flex items-end gap-2.5 snap-x snap-proximity md:grid md:grid-cols-3 md:gap-5">
+            {plans.map((plan) => (
+              <div key={plan.name} className="min-w-0 flex-[0_0_74%] snap-center md:flex-none">
+                <article
+                  className={`relative flex h-full flex-col justify-between rounded-3xl p-5 ${
+                    plan.highlighted
+                      ? "border-4 border-[#58A19A] bg-gradient-to-b from-[#50AED4]/30 to-[#58A19A]/15"
+                      : "bg-white"
+                  }`}
+                >
               {plan.highlighted ? (
                   <div className="mb-2 flex items-center justify-center gap-2 rounded-full bg-white p-1">
                     {filters.map((label) => (
@@ -115,12 +136,12 @@ export default function HomePricingSection() {
                   {plan.tier}
                 </h4>
                 {plan.badge && (
-                  <span className="rounded-full bg-[#EAF3ED] px-5 py-1 text-[10px] font-semibold text-[#00A82D] border border-[#00A82D]">
+                  <span className="rounded-full bg-[#EAF3ED] px-5 py-1 text-[10px] font-semibold text-[#00A82D] border border-[#00A82D] text-nowrap">
                     {plan.badge}
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-2xl lg:text-3xl font-semibold text-[#1A1615]">
+              <p className="mt-1 text-2xl lg:text-3xl font-semibold text-[#1A1615] text-nowrap">
                 {plan.price}
               </p>
               <p className="mt-4 lg:mt-6 text-sm text-[#453F3D]">
@@ -148,8 +169,10 @@ export default function HomePricingSection() {
               >
                 {plan.cta}
               </Link>
-            </article>
-          ))}
+                </article>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="pt-16 pb-10 md:pt-24 md:pb-14 text-center">

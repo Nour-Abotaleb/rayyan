@@ -8,14 +8,15 @@ export default function BottomShadow() {
   const pathname = usePathname()
 
   const show =
-    pathname.startsWith('/login') ||
-    pathname.startsWith('/signup')
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/signup") ||
+    pathname.startsWith("/dashboard")
 
   if (!show) return null
 
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center"
+      className="pointer-events-none fixed inset-x-0 -bottom-6 z-40 flex justify-center"
       aria-hidden
     >
       <Image

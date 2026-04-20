@@ -24,20 +24,20 @@ const miniCards = [
 
 export default function HomeInsightsSection() {
   return (
-    <section className="layout-shell-x py-14">
+    <section className="layout-shell-x pb-10 md:pb-14">
       <div className="mx-auto w-full max-w-5xl">
         <div className="text-center">
-          <p className="text-base font-semibold text-[#656769]">
+          <p className="text-sm md:text-base font-semibold text-[#656769]">
             Bid Insights &amp; Strategies
           </p>
-          <h3 className="mx-auto mt-2 max-w-xl text-2xl font-semibold leading-snug text-[#1A1615]">
+          <h3 className="mx-auto mt-2 max-w-xl text-base sm:text-lg md:text-2xl font-semibold leading-snug text-[#1A1615]">
             Master the art of tendering with our expert guides and AI-driven
             procurement strategies.
           </h3>
         </div>
 
         <div className="mt-8 overflow-hidden rounded-2xl bg-white/70 p-3">
-        <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center">
+        <div className="flex flex-col-reverse md:flex-row gap-6 md:gap-8 items-center">
 
         {/* Left Image */}
         <div className="w-full md:w-[50%] overflow-hidden rounded-2xl">
@@ -94,7 +94,7 @@ export default function HomeInsightsSection() {
               <Image
                 src={card.image}
                 alt={card.title}
-                className="h-auto w-full rounded-2xl object-cover"
+                className="h-[210px] md:h-auto w-full rounded-2xl object-cover"
               />
               <div className="mt-2 flex items-center justify-between gap-2">
                 <p className="text-lg md:text-xl font-semibold text-[#1A1615]">{card.title}</p>

@@ -4,7 +4,7 @@ import { useId } from "react";
 
 export default function Step2Bg({
   className,
-  preserveAspectRatio = "none",
+  preserveAspectRatio = "xMidYMid meet",
 }: {
   className?: string;
   preserveAspectRatio?: string;

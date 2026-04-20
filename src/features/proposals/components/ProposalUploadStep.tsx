@@ -34,8 +34,8 @@ function UploadBox({
     <section className="flex flex-col gap-3">
       <div
         className={[
-          "relative overflow-hidden p-4 backdrop-blur-sm",
-          isCompact ? "aspect-[316/274] md:aspect-[481/230]" : "aspect-[316/274]",
+          "relative flex min-h-0 flex-col overflow-hidden backdrop-blur-sm px-4 pt-4",
+          isCompact ? "aspect-[316/274] md:aspect-[481/274]" : "aspect-[316/274] pb-4",
         ].join(" ")}
       >
         <div
@@ -49,7 +49,12 @@ function UploadBox({
           )}
         </div>
 
-        <div className="relative z-10 flex h-full flex-col">
+        <div
+          className={[
+            "relative z-10 flex min-h-0 flex-1 flex-col",
+            isCompact ? "pb-10 md:pb-12" : "",
+          ].join(" ")}
+        >
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-sm font-bold text-black dark:text-white">
               {title}{" "}
@@ -90,7 +95,7 @@ function UploadBox({
             </button>
           </div>
 
-          <div className="md:mt-4 flex flex-1 flex-col items-center justify-center px-4 py-8 text-center">
+          <div className="md:mt-4 flex min-h-0 flex-1 flex-col items-center justify-center px-2 py-6 text-center sm:px-4 sm:py-8">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/50 dark:bg-[#1B272B]/50 border border-white dark:border-white/5">
               <UploadCloudIcon className="text-primary dark:text-[#519A91]" />
             </div>

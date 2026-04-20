@@ -1,33 +1,34 @@
 import Link from "next/link";
 import Image from "next/image";
-import dreelioLogo from "@src/assets/dashboard/dreelio-logo.svg";
+import codgooLogo from "@src/assets/dashboard/codgoo-logo.svg";
 
 const pagesLinks = [
-  { label: "Home", href: "/" },
+  { label: "Home Page", href: "/" },
   { label: "Features", href: "/dashboard" },
   { label: "Pricing", href: "/signup" },
-  { label: "Blog", href: "/" },
+  // { label: "Blog", href: "/" },
 ] as const;
 
 const infoLinks = [
-  { label: "Contact", href: "/login" },
-  { label: "Privacy", href: "/" },
-  { label: "Terms of use", href: "/" },
-  { label: "FAQ", href: "/" },
+  { label: "Technical Proposals", href: "/login" },
+  { label: "Financial Proposals", href: "/" },
+  { label: "Visualization Proposals", href: "/" },
+  // { label: "FAQ", href: "/" },
 ] as const;
 
 export default function HomeFooterSection() {
   return (
     <footer className="layout-shell-x pb-8 pt-3">
       <div className="mx-auto w-full max-w-5xl rounded-2xl bg-white/25 border border-[#757372]/15 px-6 py-6 lg:pb-12 md:px-8">
-        <div className="grid gap-6 md:grid-cols-[3fr_1fr] pb-12">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-[3fr_1.2fr] pb-12">
           <div>
-            <Image src={dreelioLogo} alt="dreelio logo" />
-            <p className="mt-2 max-w-46 text-sm leading-5 text-[#453F3D]">
-              Your favorite platform for building proposals and team workflows
-              quickly.
+            <span className="font-abril text-2xl text-primary md:text-3xl">
+              RAYYAN
+            </span>
+            <p className="mt-2 md:max-w-md text-sm leading-5 text-[#453F3D]">
+            The next generation of business proposal intelligence. From document analysis to final export, experience a seamless AI workflow designed for modern enterprises.
             </p>
-            <div className="mt-3 flex items-center gap-2">
+            {/* <div className="mt-3 flex items-center gap-2">
               <Link
                 href="/"
                 aria-label="X"
@@ -59,17 +60,17 @@ export default function HomeFooterSection() {
                   </defs>
                 </svg>
               </Link>
-            </div>
+            </div> */}
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#1A1615]">
+              {/* <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#1A1615]">
                 Pages
-              </p>
+              </p> */}
               <ul className="mt-2 space-y-1.5">
                 {pagesLinks.map((item) => (
                   <li key={item.label}>
-                    <Link className="text-sm text-[#453F3D] hover:text-primary" href={item.href}>
+                    <Link className="text-sm text-[#1A1615] hover:text-primary" href={item.href}>
                       {item.label}
                     </Link>
                   </li>
@@ -78,13 +79,13 @@ export default function HomeFooterSection() {
             </div>
 
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#1A1615]">
+              {/* <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#1A1615]">
                 Info
-              </p>
+              </p> */}
               <ul className="mt-2 space-y-1.5">
                 {infoLinks.map((item) => (
                   <li key={item.label}>
-                    <Link className="text-sm text-[#453F3D] hover:text-primary" href={item.href}>
+                    <Link className="text-sm text-[#1A1615] hover:text-primary" href={item.href}>
                       {item.label}
                     </Link>
                   </li>
@@ -94,10 +95,12 @@ export default function HomeFooterSection() {
           </div>
         </div>
 
-        <div className="mt-6 border-t border-[#757170]/15 pt-3 text-xs text-[#453F3D]">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p>© 2025 Dreelo. Crafted by Leon chike</p>
-            <p>Built in Framer</p>
+        <div className="mt-6 border-t border-[#757170]/15 pt-3 text-sm text-[#453F3D]">
+          <div className="flex flex-col-reverse md:flex-row items-start md:items-center justify-between gap-2">
+            <p>Copyright © 2026 Rayyan AI. All rights reserved.</p>
+            <p className="flex items-center gap-2">Built in 
+              <Image src={codgooLogo} alt="codgoo logo" className="w-16 md:w-20" />
+            </p>
           </div>
         </div>
       </div>

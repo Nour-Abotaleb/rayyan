@@ -55,8 +55,8 @@ export default function HomeCommunitySection() {
           </article>
         </div> */}
 
-        <div className="mt-10 text-center">
-          <h3 className="text-4xl font-semibold tracking-tight text-[#1A1615] md:text-6xl">
+        <div className="mt-8 md:mt-10 text-center">
+          <h3 className="text-3xl font-semibold tracking-tight text-[#1A1615] md:text-5xl lg:text-6xl">
             All Your Documents.
           </h3>
           <p className="mx-auto mt-3 max-w-lg text-sm text-[#453F3D] leading-relaxed">

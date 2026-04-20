@@ -23,39 +23,45 @@ function CapabilityRow({
   imageFirst = false,
 }: CapabilityRowProps) {
   const imageBlock = (
-    <div className="">
-      <Image src={image} alt={title} className="h-auto w-full rounded-xl object-cover" />
+    <div className="relative w-full md:h-full md:min-h-0">
+      <Image
+        src={image}
+        alt={title}
+        className="h-auto w-full rounded-xl object-cover md:h-full md:min-h-[240px] md:w-full"
+      />
     </div>
   );
 
   const textBlock = (
-    <div className="flex flex-col h-full">
-      <p className="text-sm md:text-base font-semibold uppercase tracking-[0.04em] text-[#656769]">
-        {eyebrow}
-      </p>
-      <h3 className="mt-1 text-xl md:text-2xl max-w-md font-semibold leading-snug text-[#1A1615]">
-        {title}
-      </h3>
-      <p className="mt-4 max-w-md text-sm leading-6 text-[#656769]">
-        {description}
-      </p>
+    <div className="flex min-h-0 flex-col items-center justify-center md:h-full md:min-h-0 md:items-start md:justify-start">
+      <div className="flex w-full flex-col items-center md:items-start md:shrink-0">
+        <p className="text-sm md:text-base text-center md:text-start font-semibold uppercase tracking-[0.04em] text-[#656769]">
+          {eyebrow}
+        </p>
+        <h3 className="mt-1 text-xl md:text-2xl max-w-md text-center md:text-start font-semibold leading-snug text-[#1A1615]">
+          {title}
+        </h3>
+        <p className="mt-4 max-w-md text-sm leading-6 text-center md:text-start text-[#656769]">
+          {description}
+        </p>
 
-      <div className="mt-6 flex items-center gap-4">
-        <Link
-          href="/dashboard/proposals/new"
-          className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark tracking-[1px]"
-        >
-          Create First Proposal
-        </Link>
-        <button
-          type="button"
-          className="text-sm px-5 py-2 rounded-full font-medium text-black bg-[#F0F0F0]/50 border border-[#F0F0F0] transition-colors hover:text-primary tracking-[1px]"
-        >
-          Watch Demo
-        </button>
+        <div className="mt-6 mb-6 flex flex-wrap items-center justify-center gap-4 md:mb-0 md:justify-start md:shrink-0">
+          <Link
+            href="/dashboard/proposals/new"
+            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark tracking-[1px]"
+          >
+            Create First Proposal
+          </Link>
+          <button
+            type="button"
+            className="text-sm px-5 py-2 rounded-full font-medium text-black bg-[#F0F0F0]/50 border border-[#F0F0F0] transition-colors hover:text-primary tracking-[1px]"
+          >
+            Watch Demo
+          </button>
+        </div>
       </div>
     {/* Tags */}
-      <div className="mt-auto grid grid-cols-2 gap-2 md:gap-6 max-w-md">
+      <div className="mt-6 grid max-w-md grid-cols-2 justify-items-stretch gap-2 md:mt-auto md:w-full md:shrink-0 md:gap-6">
         {tags.map((tag) => (
           <span
             key={tag}
@@ -77,9 +83,18 @@ function CapabilityRow({
   );
 
   return (
-    <div className="grid items-start gap-8 md:gap-12 lg:grid-cols-2 lg:gap-18">
-      {imageFirst ? imageBlock : textBlock}
-      {imageFirst ? textBlock : imageBlock}
+    <div className="flex w-full flex-col items-center gap-8 md:grid md:grid-cols-2 md:items-stretch md:gap-12 lg:gap-18">
+      {/* Mobile: always text → image; md+: `order` restores image-left / image-right */}
+      <div
+        className={`flex w-full max-w-md min-h-0 flex-col md:max-w-none md:h-full ${imageFirst ? "md:order-2" : "md:order-1"}`}
+      >
+        {textBlock}
+      </div>
+      <div
+        className={`flex w-full max-w-md min-h-0 flex-col md:max-w-none md:h-full ${imageFirst ? "md:order-1" : "md:order-2"}`}
+      >
+        {imageBlock}
+      </div>
     </div>
   );
 }
@@ -87,7 +102,7 @@ function CapabilityRow({
 export default function HomeCapabilitiesSection() {
   return (
     <section className="layout-shell-x py-14 lg:py-24">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-14 md:gap-18">
+      <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-14 md:max-w-5xl md:gap-18 md:items-stretch">
         <CapabilityRow
           imageFirst
           eyebrow="Technical Power"
