@@ -67,7 +67,7 @@ export default function HomeSecondSection() {
           {/* Flatter box on small screens so the mock doesn’t dominate the viewport */}
           <div className="relative aspect-[1.95/1] min-h-[180px] p-2 sm:p-4 md:aspect-[1.56/1] md:min-h-0 md:p-6">
             {/* The RFP Bid Progress Card component */}
-            <div className="absolute right-0 top-0 z-20 flex w-[min(64vw,190px)] flex-col rounded-2xl px-1.5 pt-1.5 sm:max-w-[240px] sm:px-3 sm:pt-3 md:w-[300px] md:max-w-[300px] lg:px-4 lg:pt-4">
+            <div className="absolute right-4 top-0 z-20 flex w-[min(64vw,190px)] flex-col rounded-2xl px-2 pt-1.5 sm:right-0 sm:max-w-[240px] sm:px-3 sm:pt-3 md:w-[300px] md:max-w-[300px] lg:px-4 lg:pt-4">
               <CardBg
                 className="absolute inset-0 z-0"
                 preserveAspectRatio="xMidYMid meet"
@@ -78,7 +78,7 @@ export default function HomeSecondSection() {
                   RFP Bid Progress
                 </h4>
                 {/* 3. Replicating the Edit Icon placement */}
-                <button className="absolute rounded-full bg-white/60 p-1.5 -right-1.5 -top-2 sm:p-2 md:-right-4.5 md:-top-4.5 md:p-3">
+                <button className="absolute -right-2.5 -top-1.5 rounded-full bg-white/60 p-1.5 sm:-right-2 sm:-top-2 sm:p-2 md:-right-4.5 md:-top-4.5 md:p-3">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"

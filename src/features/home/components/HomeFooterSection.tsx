@@ -97,8 +97,8 @@ export default function HomeFooterSection() {
 
         <div className="mt-6 border-t border-[#757170]/15 pt-3 text-sm text-[#453F3D]">
           <div className="flex flex-col-reverse md:flex-row items-start md:items-center justify-between gap-2">
-            <p>Copyright © 2026 Rayyan AI. All rights reserved.</p>
-            <p className="flex items-center gap-2">Built in 
+            <p className="text-nowrap">Copyright © 2026 Rayyan AI. All rights reserved.</p>
+            <p className="flex items-center gap-1">Built in 
               <Image src={codgooLogo} alt="codgoo logo" className="w-16 md:w-20" />
             </p>
           </div>

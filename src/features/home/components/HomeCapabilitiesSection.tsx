@@ -45,16 +45,16 @@ function CapabilityRow({
           {description}
         </p>
 
-        <div className="mt-6 mb-6 flex flex-wrap items-center justify-center gap-4 md:mb-0 md:justify-start md:shrink-0">
+        <div className="mt-6 mb-6 flex items-center justify-center gap-4 md:mb-0 md:justify-start md:shrink-0">
           <Link
             href="/dashboard/proposals/new"
-            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark tracking-[1px]"
+            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark md:tracking-[1px]"
           >
             Create First Proposal
           </Link>
           <button
             type="button"
-            className="text-sm px-5 py-2 rounded-full font-medium text-black bg-[#F0F0F0]/50 border border-[#F0F0F0] transition-colors hover:text-primary tracking-[1px]"
+            className="text-sm px-5 py-2 rounded-full font-medium text-black bg-[#F0F0F0]/50 border border-[#F0F0F0] transition-colors hover:text-primary md:tracking-[1px]"
           >
             Watch Demo
           </button>

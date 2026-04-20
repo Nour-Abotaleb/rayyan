@@ -198,7 +198,7 @@ export default function HomePricingSection() {
             {[...companies, ...companies].map((company, idx) => (
               <span
                 key={`${company}-${idx}`}
-                className="text-base font-semibold text-[#6A6C6A] md:text-lg"
+                className="text-sm font-semibold text-[#6A6C6A] md:text-lg"
               >
                 {company}
               </span>

@@ -112,7 +112,7 @@ export default function HomeHeroSection() {
           </div>
 
           {mobileOpen && (
-            <div className="flex flex-col gap-4 border-t border-zinc-200/80 pb-5 pt-4 lg:hidden dark:border-zinc-700/80">
+            <div className="flex flex-col gap-4 border-t border-zinc-200/80 pb-5 pt-4 lg:hidden dark:border-zinc-400/80">
               <div className="flex flex-wrap items-center gap-3 px-3">
                 <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[7px] py-[2.5px] dark:bg-white/8 dark:border-white/25">
                   <button
