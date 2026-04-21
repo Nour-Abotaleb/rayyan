@@ -10,14 +10,14 @@ import HomeTestimonialsSection from "@/features/home/components/HomeTestimonials
 
 export default function Home() {
   return (
-    <main className="flex flex-col bg-[#f9f9f9]">
+    <main className="flex flex-col bg-[#f9f9f9] dark:bg-[#161616]">
       <HomeHeroSection />
       <HomeSecondSection />
       <HomeCapabilitiesSection />
       <HomeBuiltSection />
       <HomeTestimonialsSection />
       <HomePricingSection />
-      <div className="relative bg-gradient-to-b from-[#F9F9F9] from-[5%] via-[#C6DBD9] to-[#B7D4D1]">
+      <div className="relative bg-gradient-to-b from-[#F9F9F9] from-[5%] via-[#C6DBD9] to-[#B7D4D1] dark:bg-none dark:from-transparent dark:via-transparent dark:to-transparent">
         <HomeInsightsSection />
         <HomeCommunitySection />
         <HomeFooterSection />

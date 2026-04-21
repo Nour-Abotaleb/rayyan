@@ -1,30 +1,13 @@
-"use client"
+"use client";
 import Image from "next/image";
 import { useId, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import icon1 from "@src/assets/dashboard/icon1.svg";
 import icon2 from "@src/assets/dashboard/icon2.svg";
 import icon3 from "@src/assets/dashboard/icon3.svg";
 import icon4 from "@src/assets/dashboard/icon4.svg";
 import icon5 from "@src/assets/dashboard/icon5.svg";
 import icon6 from "@src/assets/dashboard/icon6.svg";
-
-const bottomCards = [
-  {
-    title: "Technical Approach Mastery",
-    description:
-      "Automatically generate rich technical methodologies based on bid requirements and scoring criteria.",
-  },
-  {
-    title: "Smart Resource Mapping",
-    description:
-      "Structure teams by role and cost while balancing effort and timeline for every section.",
-  },
-  {
-    title: "Zero-Error Compliance",
-    description:
-      "Cross-check your proposal against all mandatory RFP clauses before submission.",
-  },
-] as const;
 
 function BottomCardIcon({ cardIndex }: { cardIndex: number }) {
   const uid = useId().replace(/:/g, "");
@@ -35,7 +18,7 @@ function BottomCardIcon({ cardIndex }: { cardIndex: number }) {
   if (cardIndex === 0) {
     return (
       <svg
-        className={`${base} h-[14px] w-[14px] sm:h-[18px] sm:w-[18px] md:h-7 md:w-7 lg:h-9 lg:w-9`}
+        className={`${base} h-5 w-5 lg:h-7 lg:w-7 dark:[&_path]:fill-[#5aab9e]`}
         viewBox="0 0 27 27"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +35,7 @@ function BottomCardIcon({ cardIndex }: { cardIndex: number }) {
   if (cardIndex === 1) {
     return (
       <svg
-        className={`${base} h-[14px] w-[18px] sm:h-[18px] sm:w-[22px] md:h-7 md:w-[30px] lg:h-9 lg:w-[34px]`}
+        className={`${base} h-5 w-5 lg:h-7 lg:w-7 dark:[&_path]:fill-[#5aab9e]`}
         viewBox="0 0 33 32"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +59,7 @@ function BottomCardIcon({ cardIndex }: { cardIndex: number }) {
 
   return (
     <svg
-      className={`${base} h-[14px] w-[14px] sm:h-[18px] sm:w-[18px] md:h-7 md:w-7 lg:h-9 lg:w-9`}
+      className={`${base} h-5 w-5 lg:h-7 lg:w-7 dark:[&_path]:fill-[#5aab9e]`}
       viewBox="0 0 26 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -127,49 +110,65 @@ const colors = [
   {
     color: "#F1EBE5",
     icon: (
-      <svg width="15" height="20" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.65987 19.5056C9.49248 19.5056 11.25 18.7776 12.5459 17.4817C13.8417 16.1858 14.5697 14.4282 14.5697 12.5956C14.5697 10.6213 13.5826 8.74579 11.6084 7.16638C9.63412 5.58696 8.15343 3.21784 7.65987 0.75C7.16631 3.21784 5.68562 5.58696 3.71137 7.16638C1.73712 8.74579 0.75 10.6213 0.75 12.5956C0.74987 13.5031 0.928498 14.4017 1.27571 15.2401C1.62291 16.0785 2.1319 16.8403 2.77356 17.482C3.41523 18.1236 4.17704 18.6326 5.01544 18.9798C5.85384 19.327 6.75242 19.5057 7.65987 19.5056Z" stroke="#453F3D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <svg width="15" height="20" viewBox="0 0 16 21" fill="none" className="text-[#453F3D] dark:text-zinc-400" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.65987 19.5056C9.49248 19.5056 11.25 18.7776 12.5459 17.4817C13.8417 16.1858 14.5697 14.4282 14.5697 12.5956C14.5697 10.6213 13.5826 8.74579 11.6084 7.16638C9.63412 5.58696 8.15343 3.21784 7.65987 0.75C7.16631 3.21784 5.68562 5.58696 3.71137 7.16638C1.73712 8.74579 0.75 10.6213 0.75 12.5956C0.74987 13.5031 0.928498 14.4017 1.27571 15.2401C1.62291 16.0785 2.1319 16.8403 2.77356 17.482C3.41523 18.1236 4.17704 18.6326 5.01544 18.9798C5.85384 19.327 6.75242 19.5057 7.65987 19.5056Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
   },
   {
     color: "#F1EBE5",
     icon: (
-      <svg width="20" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.2498 11.7921C16.8303 10.4812 15.9359 9.24627 14.5697 8.15351C12.5955 6.5741 11.1148 4.20497 10.6212 1.73713C10.4406 2.62161 10.1474 3.47943 9.74862 4.28986M0.75 0.75L20.4925 20.4927M7.45752 7.45956C7.20712 7.70322 6.94522 7.9348 6.67275 8.15351C4.6985 9.73293 3.71137 11.6085 3.71137 13.5828C3.71179 14.7398 4.00267 15.8783 4.55736 16.8938C5.11206 17.9093 5.9128 18.7692 6.88618 19.3948C7.85956 20.0204 8.97441 20.3917 10.1285 20.4745C11.2826 20.5573 12.4391 20.3491 13.4918 19.8688C14.9012 19.2253 16.0533 18.1267 16.7631 16.7495" stroke="#453F3D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <svg width="20" height="20" viewBox="0 0 22 22" fill="none" className="text-[#453F3D] dark:text-zinc-400" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.2498 11.7921C16.8303 10.4812 15.9359 9.24627 14.5697 8.15351C12.5955 6.5741 11.1148 4.20497 10.6212 1.73713C10.4406 2.62161 10.1474 3.47943 9.74862 4.28986M0.75 0.75L20.4925 20.4927M7.45752 7.45956C7.20712 7.70322 6.94522 7.9348 6.67275 8.15351C4.6985 9.73293 3.71137 11.6085 3.71137 13.5828C3.71179 14.7398 4.00267 15.8783 4.55736 16.8938C5.11206 17.9093 5.9128 18.7692 6.88618 19.3948C7.85956 20.0204 8.97441 20.3917 10.1285 20.4745C11.2826 20.5573 12.4391 20.3491 13.4918 19.8688C14.9012 19.2253 16.0533 18.1267 16.7631 16.7495" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
   },
 ];
 export default function HomeBuiltSection() {
+  const { t } = useLanguage();
   const [mode, setMode] = useState<"light" | "dark">("light");
+
+  const bottomCards = [
+    {
+      title: t.home.built.bottom1Title,
+      description: t.home.built.bottom1Body,
+    },
+    {
+      title: t.home.built.bottom2Title,
+      description: t.home.built.bottom2Body,
+    },
+    {
+      title: t.home.built.bottom3Title,
+      description: t.home.built.bottom3Body,
+    },
+  ] as const;
+
   return (
     <section className="layout-shell-x py-12 md:py-16">
       <div className="mx-auto w-full max-w-5xl">
         <div className="text-center">
-          <p className="text-xs sm:text-sm md:text-base font-semibold text-[#656769]">
-            Built for Proposal Professionals.
+          <p className="text-xs font-semibold text-[#656769] sm:text-sm md:text-base dark:text-[#9CA3AF]">
+            {t.home.marketing.eyebrow}
           </p>
-          <h3 className="mx-auto mt-2 max-w-xl px-1 text-base sm:text-lg md:text-2xl font-semibold leading-snug text-[#1A1615]">
-            Empowering your team with the tools needed to win complex
-            government tenders.
+          <h3 className="mx-auto mt-2 max-w-xl px-1 text-base font-semibold leading-snug text-[#1A1615] sm:text-lg md:text-2xl dark:text-white">
+            {t.home.marketing.governmentTendersTitle}
           </h3>
         </div>
 
         <div className="mt-5 grid min-w-0 grid-cols-2 gap-2 sm:mt-7 sm:gap-3 md:gap-5">
 
           {/* LEFT CARD */}
-          <div className="flex min-w-0 flex-col justify-between rounded-2xl bg-[#58A19A]/16 p-3 sm:p-4 md:rounded-3xl md:p-6">
+          <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-transparent bg-[#58A19A]/16 p-3 sm:p-4 md:rounded-3xl md:p-6 dark:border-white/10 dark:bg-[#519A91]/15">
             
-            <h4 className="max-w-none text-[11px] font-semibold leading-snug text-[#1A1615] sm:max-w-xs sm:text-sm md:text-lg">
-              Smart, flexible, and built for your unique bid structure.
+            <h4 className="max-w-none text-[11px] font-semibold leading-snug text-[#1A1615] sm:max-w-xs sm:text-sm md:text-lg dark:text-white">
+              {t.home.built.leftCardTitle}
             </h4>
 
             {/* UI BOX */}
             <div className="mt-4 space-y-2 sm:mt-6 sm:space-y-4 md:mt-24">
               
               {/* Colors */}
-              <div className="flex w-full items-center justify-center gap-0.5 rounded-xl border border-[#E4E2E2] bg-white p-2 sm:gap-2 sm:rounded-2xl sm:p-3.5">
+              <div className="flex w-full items-center justify-center gap-0.5 rounded-xl border border-[#E4E2E2] bg-white p-2 sm:gap-2 sm:rounded-2xl sm:p-3.5 dark:border-white/15 dark:bg-[#141414]">
                 {colors.map((item, i) => (
                   <div
                     key={i}
@@ -185,35 +184,35 @@ export default function HomeBuiltSection() {
 
              <div className="grid min-w-0 grid-cols-[2fr_1fr] md:grid-cols-[2.5fr_0.8fr] gap-1 md:gap-3 lg:gap-5">
               {/* Toggle */}
-              <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-2 sm:rounded-2xl sm:p-3.5">
+              <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-2 sm:rounded-2xl sm:p-3.5 dark:border-white/15 dark:bg-[#141414]">
                 <div className="flex min-w-0 items-center gap-1 sm:gap-2">
                   <div className="relative h-3 w-6 md:h-4 md:w-8 shrink-0 rounded-full bg-[#00A82D]/15 border border-[#00A82D] sm:h-5 sm:w-10">
                     <div className="absolute right-0.5 top-0.5 h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-[#00A82D] sm:h-3.5 sm:w-3.5" />
                   </div>
-                  <span className="truncate text-[9px] leading-tight text-[#1C1C1C] sm:text-xs md:text-sm">
-                    Hide Dreelio branding
+                  <span className="truncate text-[9px] leading-tight text-[#1C1C1C] sm:text-xs md:text-sm dark:text-zinc-200">
+                    {t.home.built.hideBranding}
                   </span>
                 </div>
                 </div>
-                <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-1 sm:rounded-2xl sm:p-1.5">
+                <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-1 sm:rounded-2xl sm:p-1.5 dark:border-white/15 dark:bg-[#141414]">
                   
                   {/* SUN */}
                   <button
                     type="button"
                     onClick={() => setMode("dark")}
                     className={`flex h-6 w-7 md:h-8 md:w-9 items-center justify-center rounded-lg transition sm:h-10 sm:w-12 sm:rounded-xl
-                      ${mode === "dark" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5]" : "bg-transparent"}
+                      ${mode === "dark" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5] dark:border-white/20 dark:bg-white/10" : "bg-transparent"}
                     `}
                   >
               
                     {/* Moon SVG */}
                     <svg
-                      className="h-4 w-4 sm:h-6 sm:w-6"
+                      className="h-4 w-4 text-[#1A1615] sm:h-6 sm:w-6 dark:text-zinc-100"
                       width="24"
                       height="24"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#1A1615"
+                      stroke="currentColor"
                       strokeWidth="1.5"
                     >
                       <path d="M21 12.79A9 9 0 0111.21 3 
@@ -226,17 +225,17 @@ export default function HomeBuiltSection() {
                     type="button"
                     onClick={() => setMode("light")}
                     className={`flex h-6 w-7 md:h-8 md:w-9 items-center justify-center rounded-lg transition sm:h-10 sm:w-12 sm:rounded-xl
-                      ${mode === "light" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5]" : "bg-transparent"}
+                      ${mode === "light" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5] dark:border-white/20 dark:bg-white/10" : "bg-transparent"}
                     `}
                   >
                     {/* Sun SVG */}
                     <svg
-                      className="h-4 w-4 sm:h-6 sm:w-6"
+                      className="h-4 w-4 text-[#1A1615] sm:h-6 sm:w-6 dark:text-zinc-100"
                       width="24"
                       height="24"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="#1A1615"
+                      stroke="currentColor"
                       strokeWidth="1.5"
                     >
                       <circle cx="12" cy="12" r="4" />
@@ -247,16 +246,16 @@ export default function HomeBuiltSection() {
                 </div>
             </div>
               {/* Description */}
-              <p className="mt-3 max-w-sm text-[10px] leading-snug text-[#656769] sm:mt-6 sm:text-sm md:leading-relaxed">
-                Tailor every proposal to the specific requirements of the RFP. From Technical Methodologies to Cybersecurity and Sustainability plans—Rayyan adapts to your firm’s identity and the client’s standards.
+              <p className="mt-3 max-w-sm text-[10px] leading-snug text-[#656769] sm:mt-6 sm:text-sm md:leading-relaxed dark:text-[#9CA3AF]">
+                {t.home.built.leftCardBody}
               </p>
             </div>
           </div>
 
           {/* RIGHT CARD */}
-          <div className="flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl bg-[#58A19A]/16 p-3 sm:p-4 md:rounded-3xl md:p-6">
-            <h4 className="max-w-none text-[11px] font-semibold leading-snug text-[#1A1615] sm:max-w-xs sm:text-sm md:text-lg">
-              Extract intelligence directly from your RFP documents.
+          <div className="flex min-w-0 flex-col justify-between overflow-hidden rounded-2xl border border-transparent bg-[#58A19A]/16 p-3 sm:p-4 md:rounded-3xl md:p-6 dark:border-white/10 dark:bg-[#519A91]/15">
+            <h4 className="max-w-none text-[11px] font-semibold leading-snug text-[#1A1615] sm:max-w-xs sm:text-sm md:text-lg dark:text-white">
+              {t.home.built.rightCardTitle}
             </h4>
 
             {/* ICON ROWS CONTAINER */}
@@ -270,10 +269,10 @@ export default function HomeBuiltSection() {
               }}
             >
                 {/* LEFT FADE */}
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-[#EAF4F3] to-transparent z-10" />
+                <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-[#EAF4F3] to-transparent dark:from-[#161616]" />
 
                 {/* RIGHT FADE */}
-                <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-[#EAF4F3] to-transparent z-10" />
+                <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-[#EAF4F3] to-transparent dark:from-[#161616]" />
 
               {/* ROW 1: Slides Left */}
               <div className="relative flex overflow-hidden">
@@ -304,8 +303,8 @@ export default function HomeBuiltSection() {
             </div>
 
             {/* Description */}
-            <p className="mt-3 max-w-sm text-[10px] leading-snug text-[#656769] sm:mt-6 sm:text-sm md:text-base md:leading-relaxed">
-              Stop manual data entry. Our AI automatically scans your tender documents to identify deliverables, mandatory timelines, and team requirements in seconds—so you can focus on strategy.
+            <p className="mt-3 max-w-sm text-[10px] leading-snug text-[#656769] sm:mt-6 sm:text-sm md:text-base md:leading-relaxed dark:text-[#9CA3AF]">
+              {t.home.built.rightCardBody}
             </p>
           </div>
 
@@ -313,14 +312,14 @@ export default function HomeBuiltSection() {
 
         <div className="mt-4 grid min-w-0 grid-cols-3 gap-2 sm:mt-5 sm:gap-3 md:gap-5">
           {bottomCards.map((card, cardIndex) => (
-            <article key={card.title} className="min-w-0 rounded-2xl bg-[#58A19A]/15 p-2 sm:rounded-3xl sm:p-4 md:p-5 lg:p-7">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white sm:h-10 sm:w-10 md:h-12 md:w-12 lg:h-14 lg:w-14">
+            <article key={card.title} className="min-w-0 rounded-2xl border border-transparent bg-[#58A19A]/15 p-2 sm:rounded-3xl sm:p-4 md:p-5 lg:p-7 dark:border-white/10 dark:bg-[#519A91]/15">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-transparent bg-white sm:h-10 sm:w-10 md:h-12 md:w-12 lg:h-14 lg:w-14 dark:border-white/10 dark:bg-[#141414]">
                 <BottomCardIcon cardIndex={cardIndex} />
               </div>
-              <h5 className="mt-2 text-[10px] font-semibold leading-tight text-[#1A1615] sm:mt-3 sm:text-xs md:text-base">
+              <h5 className="mt-2 text-[10px] font-semibold leading-tight text-[#1A1615] sm:mt-3 sm:text-xs md:text-base dark:text-white">
                 {card.title}
               </h5>
-              <p className="mt-2 text-[9px] leading-snug text-[#656769] sm:mt-6 sm:text-sm md:text-base md:leading-5">
+              <p className="mt-2 text-[9px] leading-snug text-[#656769] sm:mt-6 sm:text-sm md:text-base md:leading-5 dark:text-[#9CA3AF]">
                 {card.description}
               </p>
             </article>

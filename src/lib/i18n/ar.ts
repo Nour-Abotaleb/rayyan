@@ -1,36 +1,248 @@
 const ar = {
   auth: {
-    welcomeBack: 'مرحباً بعودتك إلى',
-    brandName: 'RAYYAN',
-    subtitle:
-      'بوابتك لتصميم مقترحات احترافية تفوز بأفضل المناقصات بذكاء ودقة.',
-    email: 'بريدك الإلكتروني',
-    emailPlaceholder: 'مثال: example@gmail.com',
-    password: 'كلمة المرور',
-    passwordPlaceholder: 'XXXX XXXX XXXX',
-    rememberMe: 'تذكرني',
-    forgotPassword: 'نسيت كلمة المرور',
-    login: 'تسجيل الدخول',
-    signInWithGoogle: 'تسجيل الدخول بـ Google',
-    noAccount: 'ليس لديك حساب؟',
-    signUp: 'إنشاء حساب',
-    createAccountTitle: 'أنشئ حسابك مع',
+    welcomeBack: "مرحباً بعودتك إلى",
+    brandName: "RAYYAN",
+    subtitle: "بوابتك لتصميم مقترحات احترافية تفوز بأفضل المناقصات بذكاء ودقة.",
+    email: "بريدك الإلكتروني",
+    emailPlaceholder: "مثال: example@gmail.com",
+    password: "كلمة المرور",
+    passwordPlaceholder: "XXXX XXXX XXXX",
+    rememberMe: "تذكرني",
+    forgotPassword: "نسيت كلمة المرور",
+    login: "تسجيل الدخول",
+    signInWithGoogle: "تسجيل الدخول بـ Google",
+    noAccount: "ليس لديك حساب؟",
+    signUp: "إنشاء حساب",
+    createAccountTitle: "أنشئ حسابك مع",
     signupSubtitle:
-      'ابدأ إدارة مستنداتك بذكاء باستخدام الذكاء الاصطناعي في خطوات بسيطة.',
-    yourName: 'اسمك',
-    namePlaceholder: 'مثال: أحمد عادل',
-    confirmPassword: 'تأكيد كلمة المرور',
-    alreadyHaveAccount: 'لديك حساب بالفعل؟',
+      "ابدأ إدارة مستنداتك بذكاء باستخدام الذكاء الاصطناعي في خطوات بسيطة.",
+    yourName: "اسمك",
+    namePlaceholder: "مثال: أحمد عادل",
+    confirmPassword: "تأكيد كلمة المرور",
+    alreadyHaveAccount: "لديك حساب بالفعل؟",
   },
   nav: {
-    layout: 'التخطيط',
-    gallery: 'المعرض',
-    folderCloud: 'مجلد السحابة',
-    settings: 'الإعدادات',
-    lightMode: 'الوضع الفاتح',
-    darkMode: 'الوضع الداكن',
-    language: 'اللغة',
+    layout: "التخطيط",
+    gallery: "المعرض",
+    folderCloud: "مجلد السحابة",
+    settings: "الإعدادات",
+    lightMode: "الوضع الفاتح",
+    darkMode: "الوضع الداكن",
+    language: "اللغة",
   },
-} as const
+  contact: {
+    contactUs: "اتصل بنا",
+    loginNow: "سجل الآن",
+    openMenu: "فتح القائمة",
+    closeMenu: "إغلاق القائمة",
+    heroTitleLine1: "لِنُقوِّي",
+    heroTitleLine2: "عرضك القادم",
+    heroSubtitle:
+      "وفِّر ساعات الإجابة عن أسئلتك واكتشف كيف يمكن لـ Rayyan أن يغيّر سير عمل عروضك بذكاء.",
+    fullName: "الاسم الكامل",
+    namePlaceholder: "مثال: أحمد علي",
+    email: "البريد الإلكتروني",
+    emailPlaceholder: "مثال: sample@gmail.com",
+    yourMessage: "رسالتك",
+    messagePlaceholder: "اكتب رسالتك هنا",
+    send: "إرسال",
+  },
+  home: {
+    hero: {
+      titleLine1: "جميع مستنداتك.",
+      titleLine2: "منصة واحدة ذكية",
+      subtitle:
+        "حمّل ملفاتك وحلّلها وأدرها بأدوات ذكية مصممة لتبسيط سير عملك وتعزيز الإنتاجية.",
+      getStarted: "ابدأ الآن",
+      dashboardPreviewAlt: "معاينة لوحة التحكم",
+    },
+    marketing: {
+      eyebrow: "مصمم لمحترفي العروض الفنية.",
+      governmentTendersTitle:
+        "مكِّن فريقك بالأدوات اللازمة للفوز في مناقصات القطاع الحكومي المعقدة.",
+      trustedBy: "موثوق به من أكثر من ٧٬٠٠٠ شركة ناشئة ومستقل واستوديو رائد",
+    },
+    secondSection: {
+      recordsEyebrow: "تحكّم في سجلاتك",
+      recordsHeading:
+        "اطّلع على مستنداتك وتتبّعها وأدرها من أي مكان عبر واجهة نظيفة وسهلة.",
+      rfpBidProgress: "تقدّم عطاء طلب العروض",
+      completed: "مكتمل",
+      filterTechnical: "تقني",
+      filterVisualization: "مرئيات",
+      filterFinancial: "مالي",
+    },
+    capabilities: {
+      createFirstProposal: "أنشئ أول عرض",
+      watchDemo: "شاهد العرض",
+      technicalRow: {
+        eyebrow: "قوة تقنية",
+        title: "أتقن كل طلب عرض بذكاء تحليلي",
+        description:
+          "Rayyan لا يقرأ فقط؛ بل يفهم. يغوص ذكاؤنا الاصطناعي في مستندات طلبات العروض المعقدة لاستخراج المتطلبات الخفية وبناء منهجية تقنية مخصصة تلبي كل معيار—موفّراً عليك أسابيع من الكتابة اليدوية.",
+        tags: [
+          "استخراج ذكي لطلب العروض",
+          "منهجية مخصصة",
+          "مواءمة النطاق",
+          "مسودة بالذكاء الاصطناعي",
+        ] as const,
+      },
+      outputsRow: {
+        eyebrow: "مخرجات احترافية",
+        title: "أرقام مالية مبهرة في ثوانٍ",
+        description:
+          "تجاوز الجداول البسيطة. مع محرّك BOQ المتقدم والرسوم البيانية التلقائية، أنشئ جداول مالية ورسوماً تفاعلية تبني الثقة فوراً.",
+        tags: [
+          "محرّك BOQ متقدم",
+          "تحليلات ديناميكية",
+          "جداول زمنية دقيقة",
+          "تصدير PDF بنقرة واحدة",
+        ] as const,
+      },
+    },
+    built: {
+      leftCardTitle: "ذكي ومرن ومبني لهيكل عطائك الفريد.",
+      hideBranding: "إخفاء علامة Dreelio",
+      leftCardBody:
+        "خصّص كل عرض وفق متطلبات طلب العروض. من المنهجيات التقنية إلى الأمن السيبراني والاستدامة—يتكيّف Rayyan مع هوية شركتك ومعايير العميل.",
+      rightCardTitle: "استخرج الذكاء مباشرة من مستندات طلب العروض.",
+      rightCardBody:
+        "توقّف عن الإدخال اليدوي. يفحص ذكاؤنا الاصطناعي مستندات المناقصة تلقائياً لتحديد المخرجات والجداول الزمنية الإلزامية ومتطلبات الفريق في ثوانٍ—لتركيزك على الاستراتيجية.",
+      bottom1Title: "إتقان المنهجية التقنية",
+      bottom1Body:
+        "أنشئ منهجيات تقنية غنية تلقائياً وفق متطلبات العطاء ومعايير التقييم.",
+      bottom2Title: "ربط ذكي للموارد",
+      bottom2Body:
+        "هيكّل الفرق حسب الدور والتكلفة مع موازنة الجهد والجدول الزمني لكل قسم.",
+      bottom3Title: "امتثال بلا أخطاء",
+      bottom3Body: "قارن عرضك مع جميع بنود طلب العروض الإلزامية قبل التسليم.",
+    },
+    testimonials: {
+      heading: "اكتشف كيف يُغيّر Rayyan AI طريقة فرق العطاءات للفوز بالمناقصات",
+      items: [
+        {
+          quote:
+            "قدرة الذكاء الاصطناعي على استخراج المتطلبات من طلب عروض مئتي صفحة وإنشاء منهجية متوافقة في دقائق مذهلة.",
+          name: "م. عبدالله منصور",
+          role: "أخصائي عروض أول",
+        },
+        {
+          quote:
+            "Rayyan أعاد تعريف تعاملنا مع مناقصات القطاع الحكومي المعقدة. ربحنا سرعة وتسليماً.",
+          name: "مايا ديتريش",
+          role: "قائد عطاءات، القطاع العام",
+        },
+        {
+          quote:
+            "لم تكن درجاتنا التقنية أعلى من ذلك. المنهجية المُنشأة متوافقة واحترافية.",
+          name: "م. عديلة نور",
+          role: "الرئيس التنفيذي، Building Matrix",
+        },
+        {
+          quote:
+            "استخراج المتطلبات كان يستغرق أياماً؛ الآن يستغرق دقائق. أنصح به لفرق العطاءات.",
+          name: "ماركوس تشين",
+          role: "مدير العمليات",
+        },
+      ] as const,
+    },
+    pricing: {
+      filterAnnually: "سنوياً",
+      filterMonthly: "شهرياً",
+      plans: [
+        {
+          name: "Dreelo Basic",
+          tier: "مجاني",
+          price: "",
+          description: "للمستخدمين الأفراد ذوي الاحتياجات الخفيفة.",
+          features: [
+            "مشاريع غير محدودة",
+            "عملاء غير محدودين",
+            "تتبع الوقت",
+            "إدارة علاقات العملاء",
+            "مساعدة ذكاء اصطناعي للعطاء ١/٥",
+          ] as const,
+          cta: "جرّب مجاناً الآن",
+        },
+        {
+          name: "Dreelo Premium",
+          tier: "Dreelio Premium",
+          price: "١٨٩ دولار/شهر",
+          description: "للمحترفين الفردي والفرق المرنة.",
+          features: [
+            "كل ما في Basic",
+            "مدفوعات غير محدودة",
+            "تتبع المصروفات",
+            "تتبع الدخل",
+            "عرض عميل مشترك",
+          ] as const,
+          cta: "ابدأ الآن",
+          badge: "وفر ٢٥٪",
+        },
+        {
+          name: "Dreelo Enterprise",
+          tier: "مرن",
+          price: "",
+          description: "للفرق التي توسّع عطاءات عالية القيمة.",
+          features: [
+            "كل ما في Premium",
+            "تخطيط أدوار مخصص",
+            "أتمتة متقدمة",
+            "تكامل الميزانية",
+            "التنبؤات",
+          ] as const,
+          cta: "تواصل مع المبيعات",
+        },
+      ] as const,
+    },
+    insights: {
+      eyebrow: "رؤى واستراتيجيات العطاءات",
+      sectionTitle:
+        "أتقن فن المناقصات مع أدلتنا الخبراء واستراتيجيات الشراء المدعومة بالذكاء الاصطناعي.",
+      featuredImageAlt: "مقال مميز",
+      featuredPost: "مقال مميز",
+      featuredArticleTitle: "مستقبل مناقصات القطاع الحكومي في ٢٠٢٦",
+      featuredArticleBody:
+        "اكتشف كيف يعيد الذكاء الاصطناعي تشكيل المنهجيات التقنية وكيف يمكن لمؤسستك الحفاظ على تقدّم في مشهد شراء رقمي سريع التغيير.",
+      authorName: "مارثا بونلا",
+      authorRole: "نائب التسويق، Meta",
+      featuredBadge: "مميز",
+      miniArticles: [
+        {
+          title: "أهم ٥ ميزات يحتاجها كل عرض تقني",
+          badge: "فيديو",
+        },
+        {
+          title: "إتقان دقة جدول الكميات: دليل الدقة",
+          badge: "جديد",
+        },
+        {
+          title: "امتثال طلب العروض: كيف تتجنب الرفض",
+          badge: "نصائح",
+        },
+      ] as const,
+    },
+    community: {
+      titleLine: "جميع مستنداتك.",
+      subtitle:
+        "حمّل ملفاتك وحلّلها وأدرها بأدوات ذكية مصممة لتبسيط سير عملك وتعزيز الإنتاجية.",
+      getStarted: "ابدأ الآن",
+      learnMore: "اعرف المزيد",
+    },
+    footer: {
+      tagline:
+        "الجيل القادم من ذكاء مقترحات الأعمال. من تحليل المستندات إلى التصدير النهائي، جرّب سير عملاً سلساً بالذكاء الاصطناعي مصمماً للمؤسسات الحديثة.",
+      linkHome: "الرئيسية",
+      linkFeatures: "الميزات",
+      linkPricing: "الأسعار",
+      linkTechnical: "العروض التقنية",
+      linkFinancial: "العروض المالية",
+      linkVisualization: "عروض التصور",
+      copyright: "© ٢٠٢٦ Rayyan AI. جميع الحقوق محفوظة.",
+      builtIn: "تم تطويره بواسطة",
+      codgooLogoAlt: "شعار codgoo",
+    },
+  },
+} as const;
 
-export default ar
+export default ar;

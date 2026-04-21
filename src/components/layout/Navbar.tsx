@@ -62,9 +62,13 @@ export default function Navbar() {
       className={`sticky top-0 z-50 transition-[background-color,box-shadow] duration-200 py-2 ${bgClass}`}
     >
       <div className="layout-shell-x flex h-16 items-center justify-between">
-        <span className="font-abril text-xl text-primary dark:text-[#519A91] md:text-2xl lg:text-[28px]">
+        <Link
+          href="/"
+          className="font-abril text-xl text-primary dark:text-[#519A91] md:text-2xl lg:text-[28px]"
+          aria-label={t.home.footer.linkHome}
+        >
           RAYYAN
-        </span>
+        </Link>
 
         {/* Center nav — desktop only */}
         <nav className="hidden items-center gap-6 lg:flex">

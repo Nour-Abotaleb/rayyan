@@ -158,9 +158,13 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
       {/* Main row */}
       <div className="layout-shell-x flex h-16 items-center justify-between">
         {/* Logo */}
-        <span className="font-abril text-xl text-primary md:text-2xl lg:text-[28px]">
+        <Link
+          href="/"
+          className="font-abril text-xl text-primary md:text-2xl lg:text-[28px]"
+          aria-label={t.home.footer.linkHome}
+        >
           RAYYAN
-        </span>
+        </Link>
 
         {/* Center nav — desktop only */}
         <nav

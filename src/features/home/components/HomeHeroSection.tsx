@@ -21,7 +21,10 @@ export default function HomeHeroSection() {
 
   useEffect(() => {
     function onResize() {
-      if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches) {
+      if (
+        typeof window !== "undefined" &&
+        window.matchMedia("(min-width: 1024px)").matches
+      ) {
         setMobileOpen(false);
       }
     }
@@ -40,12 +43,18 @@ export default function HomeHeroSection() {
       className="relative overflow-hidden pt-4 bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${heroBg.src})` }}
     >
-      <div className="layout-shell-x mx-auto flex w-full flex-col items-center pb-10 md:pb-14">
+      {/* Dark shell tint — aligns with dashboard `--bg` / screen-dark (#161616) */}
+      <div className="pointer-events-none" aria-hidden />
+      <div className="relative z-10 layout-shell-x mx-auto flex w-full flex-col items-center pb-10 md:pb-14">
         <div className="mx-auto w-full max-w-[95%] py-1.5 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-4 px-3 pb-2 md:pb-0">
-            <span className="font-abril text-2xl text-primary md:text-3xl">
+            <Link
+              href="/"
+              className="font-abril text-2xl text-primary dark:text-primary-light md:text-3xl"
+              aria-label={t.home.footer.linkHome}
+            >
               RAYYAN
-            </span>
+            </Link>
 
             {/* Full bar — same breakpoint as dashboard navbar (`lg`) */}
             <div className="hidden items-center justify-center gap-3 lg:flex">
@@ -87,16 +96,16 @@ export default function HomeHeroSection() {
                 </button>
               </div>
               <Link
-                href="#"
-                className="rounded-full bg-[#58A19A] px-5 py-[10.5px] text-sm font-medium text-white transition-colors hover:bg-primary-dark"
+                href="/contact"
+                className="rounded-full bg-[#58A19A] px-5 py-[10.5px] text-sm font-medium text-white transition-colors hover:bg-primary-dark dark:bg-[#519A91] dark:hover:bg-primary-dark"
               >
-                Contact Us
+                {t.contact.contactUs}
               </Link>
               <Link
                 href="/login"
-                className="rounded-full border border-white bg-white/50 px-5 py-[10.5px] text-sm font-medium text-zinc-900 transition-colors hover:bg-white"
+                className="rounded-full border border-white bg-white/50 px-5 py-[10.5px] text-sm font-medium text-zinc-900 transition-colors hover:bg-white dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
               >
-                Login Now
+                {t.contact.loginNow}
               </Link>
             </div>
 
@@ -104,7 +113,7 @@ export default function HomeHeroSection() {
             <button
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileOpen ? t.contact.closeMenu : t.contact.openMenu}
               className="flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary lg:hidden dark:bg-white/8 dark:border-white/25 dark:text-white dark:hover:text-primary-light"
             >
               {mobileOpen ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
@@ -151,18 +160,18 @@ export default function HomeHeroSection() {
               </div>
               <div className="flex flex-col gap-2 px-3">
                 <Link
-                  href="#"
-                  className="rounded-full bg-[#58A19A] px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-primary-dark"
+                  href="/contact"
+                  className="rounded-full bg-[#58A19A] px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-primary-dark dark:bg-[#519A91] dark:hover:bg-primary-dark"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Contact Us
+                  {t.contact.contactUs}
                 </Link>
                 <Link
                   href="/login"
-                  className="rounded-full border border-white bg-white/50 px-5 py-2.5 text-center text-sm font-medium text-zinc-900 transition-colors hover:bg-white"
+                  className="rounded-full border border-white bg-white/50 px-5 py-2.5 text-center text-sm font-medium text-zinc-900 transition-colors hover:bg-white dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Login Now
+                  {t.contact.loginNow}
                 </Link>
               </div>
             </div>
@@ -170,28 +179,27 @@ export default function HomeHeroSection() {
         </div>
 
         <div className="mt-12 text-center">
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-[#1A1615] md:text-6xl lg:text-7xl">
-            All Your Documents.
+          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-[#1A1615] md:text-6xl lg:text-7xl dark:text-white">
+            {t.home.hero.titleLine1}
             <br />
-            One Smart Platform
+            {t.home.hero.titleLine2}
           </h1>
-          <p className="mx-auto mt-5 max-w-3xl text-sm text-[#453F3D] md:text-2xl/8">
-            Upload, analyze, and manage your files with intelligent tools
-            designed to simplify your workflow and boost productivity.
+          <p className="mx-auto mt-5 max-w-3xl text-sm text-[#453F3D] md:text-2xl/8 dark:text-zinc-400">
+            {t.home.hero.subtitle}
           </p>
 
           <div className="mt-7 flex items-center justify-center gap-3">
             <Link
               href="/dashboard"
-              className="rounded-full bg-primary px-7 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+              className="rounded-full bg-primary px-7 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark dark:bg-[#519A91] dark:hover:bg-primary-dark"
             >
-              Get Started
+              {t.home.hero.getStarted}
             </Link>
             <Link
-              href="/login"
-              className="rounded-full border border-white bg-white/50 px-7 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white"
+              href="/contact"
+              className="rounded-full border border-white bg-white/50 px-7 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
             >
-              Contact Us
+              {t.contact.contactUs}
             </Link>
           </div>
         </div>
@@ -200,7 +208,7 @@ export default function HomeHeroSection() {
           <div className="">
             <Image
               src={heroPreview}
-              alt="Dashboard preview"
+              alt={t.home.hero.dashboardPreviewAlt}
               className="h-auto w-full object-cover"
               priority
             />
