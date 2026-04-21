@@ -187,7 +187,7 @@ export default function HomeBuiltSection() {
               <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-2 sm:rounded-2xl sm:p-3.5 dark:border-white/15 dark:bg-[#141414]">
                 <div className="flex min-w-0 items-center gap-1 sm:gap-2">
                   <div className="relative h-3 w-6 md:h-4 md:w-8 shrink-0 rounded-full bg-[#00A82D]/15 border border-[#00A82D] sm:h-5 sm:w-10">
-                    <div className="absolute right-0.5 top-0.5 h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-[#00A82D] sm:h-3.5 sm:w-3.5" />
+                    <div className="absolute right-0.5 top-[1.3px] md:top-0.5 h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-[#00A82D] sm:h-3.5 sm:w-3.5" />
                   </div>
                   <span className="truncate text-[9px] leading-tight text-[#1C1C1C] sm:text-xs md:text-sm dark:text-zinc-200">
                     {t.home.built.hideBranding}
@@ -258,9 +258,10 @@ export default function HomeBuiltSection() {
               {t.home.built.rightCardTitle}
             </h4>
 
-            {/* ICON ROWS CONTAINER */}
+            {/* ICON ROWS CONTAINER — dir=ltr isolates marquee from document RTL so translateX animations stay seamless */}
             <div
               className="relative mt-4 space-y-2 sm:mt-8 sm:space-y-4 md:mt-24"
+              dir="ltr"
               style={{
                 WebkitMaskImage:
                   "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
@@ -268,11 +269,10 @@ export default function HomeBuiltSection() {
                   "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
               }}
             >
-                {/* LEFT FADE */}
-                <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-[#EAF4F3] to-transparent dark:from-[#161616]" />
+                {/* EDGE FADES (physical L/R — correct for LTR marquee strip) */}
+                <div className="pointer-events-none absolute start-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-[#EAF4F3] to-transparent dark:from-[#161616]" />
 
-                {/* RIGHT FADE */}
-                <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-[#EAF4F3] to-transparent dark:from-[#161616]" />
+                <div className="pointer-events-none absolute end-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-[#EAF4F3] to-transparent dark:from-[#161616]" />
 
               {/* ROW 1: Slides Left */}
               <div className="relative flex overflow-hidden">
@@ -313,7 +313,7 @@ export default function HomeBuiltSection() {
         <div className="mt-4 grid min-w-0 grid-cols-3 gap-2 sm:mt-5 sm:gap-3 md:gap-5">
           {bottomCards.map((card, cardIndex) => (
             <article key={card.title} className="min-w-0 rounded-2xl border border-transparent bg-[#58A19A]/15 p-2 sm:rounded-3xl sm:p-4 md:p-5 lg:p-7 dark:border-white/10 dark:bg-[#519A91]/15">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-transparent bg-white sm:h-10 sm:w-10 md:h-12 md:w-12 lg:h-14 lg:w-14 dark:border-white/10 dark:bg-[#141414]">
+              <div className="flex items-center justify-center rounded-full border border-transparent bg-white h-10 w-10 md:h-12 md:w-12 lg:h-14 lg:w-14 dark:border-white/10 dark:bg-[#141414]">
                 <BottomCardIcon cardIndex={cardIndex} />
               </div>
               <h5 className="mt-2 text-[10px] font-semibold leading-tight text-[#1A1615] sm:mt-3 sm:text-xs md:text-base dark:text-white">

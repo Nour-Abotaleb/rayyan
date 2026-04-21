@@ -69,14 +69,12 @@ function CapabilityRow({
         {tags.map((tag) => (
           <span
             key={tag}
-            className="flex items-center justify-center gap-3 text-nowrap rounded-full border border-[#E4E2E2] px-3 py-2 text-center text-sm text-[#1A1615] dark:border-white/15 dark:bg-white/[0.06] dark:text-zinc-100"
+            className="flex items-center justify-center gap-1 md:gap-3 text-nowrap rounded-full border border-[#E4E2E2] px-3 py-2 text-center text-xs md:text-sm text-[#1A1615] dark:border-white/15 dark:bg-white/[0.06] dark:text-zinc-100"
           >
             <svg
-              width="24"
-              height="24"
               viewBox="0 0 24 24"
               fill="none"
-              className="shrink-0 text-[#1A1615] dark:text-zinc-400"
+              className="shrink-0 text-[#1A1615] dark:text-zinc-400 w-4 h-4 md:w-5 md:h-5"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path d="M12 12H20.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

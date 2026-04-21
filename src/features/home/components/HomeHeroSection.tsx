@@ -47,7 +47,7 @@ export default function HomeHeroSection() {
       <div className="pointer-events-none" aria-hidden />
       <div className="relative z-10 layout-shell-x mx-auto flex w-full flex-col items-center pb-10 md:pb-14">
         <div className="mx-auto w-full max-w-[95%] py-1.5 backdrop-blur-sm">
-          <div className="flex items-center justify-between gap-4 px-3 pb-2 md:pb-0">
+          <div className="flex items-center justify-between gap-4 px-3 pb-2 lg:pb-0">
             <Link
               href="/"
               className="font-abril text-2xl text-primary dark:text-primary-light md:text-3xl"

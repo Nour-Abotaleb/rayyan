@@ -42,11 +42,10 @@ export default function HomeSecondSection() {
             <span key={`${company}-${idx}`}>{company}</span>
           ))}
         </div> */}
-        {/* --- INFINITE SLIDER START --- */}
-        <div className="relative mt-8 w-full overflow-hidden">
-          {/* Gradients to fade edges (Optional but looks professional) */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#F9F9F9] to-transparent dark:from-[#161616]"></div>
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#F9F9F9] to-transparent dark:from-[#161616]"></div>
+        {/* --- INFINITE SLIDER START — dir=ltr keeps translateX marquee seamless in RTL --- */}
+        <div className="relative mt-8 w-full overflow-hidden" dir="ltr">
+          <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-20 bg-gradient-to-r from-[#F9F9F9] to-transparent dark:from-[#161616]" />
+          <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-20 bg-gradient-to-l from-[#F9F9F9] to-transparent dark:from-[#161616]" />
 
           <div className="flex w-max animate-infinite-scroll items-center gap-10">
             {/* Render list twice for seamless looping */}
@@ -71,24 +70,25 @@ export default function HomeSecondSection() {
         </h2>
 
         {/* 2. Modified Content Area to replicate image structure */}
-        <div className="relative mt-16 w-full min-h-[345px] overflow-hidden rounded-[24px] border border-transparent bg-[#F2F2F2] p-2.5 sm:min-h-0 sm:p-4 md:mt-2 md:p-6 dark:border-white/10 dark:bg-[#141414]">
+        {/* Extra padding-inline-end + top so RFP card + edit stay inside rounded clip */}
+        <div className="relative mt-2 w-full min-h-[345px] overflow-hidden rounded-[24px] border border-transparent bg-[#F2F2F2] p-2.5 pb-4 pe-5 pt-4 ps-4 sm:min-h-0 sm:p-5 md:mt-2 md:pb-6 md:pe-10 md:ps-6 md:pt-5 dark:border-white/10 dark:bg-[#141414]">
           {/* Flatter box on small screens so the mock doesn’t dominate the viewport */}
           <div className="relative aspect-[1.95/1] min-h-[180px] p-2 sm:p-4 md:aspect-[1.56/1] md:min-h-0 md:p-6">
-            {/* The RFP Bid Progress Card component */}
-            <div className="absolute right-5 top-0 z-20 flex w-[min(64vw,190px)] flex-col rounded-2xl px-2 pt-1.5 sm:right-0 sm:max-w-[240px] sm:px-3 sm:pt-3 md:w-[300px] md:max-w-[300px] lg:px-4 lg:pt-4">
+            {/* RFP card — physical right; CardBg mirrored in RTL so notch aligns with edit */}
+            <div className="absolute right-4 top-2 z-20 flex w-[min(64vw,190px)] flex-col overflow-visible rounded-2xl px-2 pt-1.5 sm:right-3 sm:top-3 sm:max-w-[240px] sm:px-3 sm:pt-3 md:right-5 md:top-4 md:w-[300px] md:max-w-[300px] lg:px-4 lg:pt-4">
               <CardBg
-                className="absolute inset-0 z-0 dark:[&_path]:fill-white/[0.12]"
+                className="pointer-events-none absolute inset-0 z-0 h-full w-full origin-center rtl:scale-x-[-1] dark:[&_path]:fill-white/[0.12]"
                 preserveAspectRatio="xMidYMid meet"
               />
               {/* Header: Title and Edit Icon */}
-              <div className="flex items-start justify-between relative z-10">
-                <h4 className="text-[11px] font-semibold text-[#1B1F24] sm:text-sm lg:text-base dark:text-white rtl:ms-12">
+              <div className="relative z-10 flex items-start justify-between gap-2 pt-1 pr-14 sm:pr-16 md:pr-[4.5rem]">
+                <h4 className="min-w-0 flex-1 text-start text-[11px] font-semibold leading-snug text-[#1B1F24] sm:text-sm lg:text-base dark:text-white">
                   {t.home.secondSection.rfpBidProgress}
                 </h4>
-                {/* 3. Replicating the Edit Icon placement */}
+                {/* Physical top-right of card (card sits on physical right); inset avoids overflow clip */}
                 <button
                   type="button"
-                  className="absolute -right-2.5 -top-1.5 rounded-full bg-white/60 p-1.5 sm:-right-2 sm:-top-2 sm:p-2 md:-right-4.5 md:-top-4.5 md:p-3 dark:border dark:border-white/15 dark:bg-white/10"
+                  className="absolute right-2 top-2 z-20 rounded-full bg-white/60 p-1.5 sm:right-2.5 sm:top-2.5 sm:p-2 md:right-3 md:top-3 md:p-3 dark:border dark:border-white/15 dark:bg-white/10"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -157,14 +157,14 @@ export default function HomeSecondSection() {
             </div>
           </div>
 
-          {/* Filter Buttons moved inside/below the card section */}
-          <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-[#AFAFAF]/25 p-1.5 md:bottom-6 dark:bg-white/10">
+          {/* Filter Buttons — rtl: extra horizontal padding for Arabic labels; rounded-full preserved */}
+          <div className="absolute bottom-4 left-1/2 z-10 flex max-w-[calc(100%-1rem)] -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-[#AFAFAF]/25 p-1.5 md:bottom-6 dark:bg-white/10">
             {filterKeys.map((key) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => setActiveFilter(key)}
-                className={`rounded-full px-2 py-[7.9px] text-xs font-semibold transition md:px-4 md:py-[9.9px] ${
+                className={`whitespace-nowrap rounded-full px-2 py-[7.9px] text-xs font-semibold transition md:px-4 md:py-[9.9px] rtl:px-4 rtl:md:px-7 ${
                   activeFilter === key
                     ? "bg-[#58A19A] text-white dark:bg-[#519A91]"
                     : "border border-white/25 bg-white/30 text-black dark:border-white/20 dark:bg-white/8 dark:text-white"

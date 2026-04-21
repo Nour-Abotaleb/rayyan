@@ -177,11 +177,10 @@ export default function HomePricingSection() {
         <p className="text-lg font-semibold text-[#656769] dark:text-[#9CA3AF]">
           {t.home.marketing.trustedBy}
         </p>
-        {/* --- INFINITE SLIDER START --- */}
-        <div className="relative mt-8 w-full overflow-hidden">
-          {/* Gradients to fade edges (Optional but looks professional) */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#F9F9F9] to-transparent dark:from-[#161616]"></div>
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#F9F9F9] to-transparent dark:from-[#161616]"></div>
+        {/* --- INFINITE SLIDER START — dir=ltr keeps translateX marquee seamless in RTL --- */}
+        <div className="relative mt-8 w-full overflow-hidden" dir="ltr">
+          <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-20 bg-gradient-to-r from-[#F9F9F9] to-transparent dark:from-[#161616]" />
+          <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-20 bg-gradient-to-l from-[#F9F9F9] to-transparent dark:from-[#161616]" />
 
           <div className="flex w-max animate-infinite-scroll items-center gap-10">
             {/* Render list twice for seamless looping */}
