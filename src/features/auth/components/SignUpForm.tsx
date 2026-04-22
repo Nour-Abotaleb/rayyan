@@ -96,7 +96,7 @@ export default function SignUpForm() {
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               className="absolute inset-y-0 end-4 flex items-center text-input-icon hover:text-zinc-600 dark:hover:text-zinc-300"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
             >
               {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
             </button>
@@ -123,8 +123,8 @@ export default function SignUpForm() {
               className="absolute inset-y-0 end-4 flex items-center text-input-icon hover:text-zinc-600 dark:hover:text-zinc-300"
               aria-label={
                 showConfirmPassword
-                  ? "Hide confirm password"
-                  : "Show confirm password"
+                  ? t.auth.hideConfirmPassword
+                  : t.auth.showConfirmPassword
               }
             >
               {showConfirmPassword ? (
@@ -154,7 +154,7 @@ export default function SignUpForm() {
         <p className="text-center text-sm tracking-wide text-paragraph dark:text-[#757575]">
           {t.auth.alreadyHaveAccount}{" "}
           <Link
-            href="/"
+            href="/login"
             className="font-semibold text-primary hover:underline dark:text-primary-light"
           >
             {t.auth.login}

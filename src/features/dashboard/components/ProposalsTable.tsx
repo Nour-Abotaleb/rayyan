@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import SearchIcon from "@/icons/SearchIcon";
 import DownloadIcon from "@/icons/DownloadIcon";
 import EyeIcon from "@/icons/EyeIcon";
@@ -58,8 +59,21 @@ const mockProposals = [
 const tabs: (Status | "ALL")[] = ["ALL", "Completed", "Processing", "Failed"];
 
 export default function ProposalsTable() {
+  const { t, dir } = useLanguage();
+  const isRtl = dir === "rtl";
   const [active, setActive] = useState<Status | "ALL">("ALL");
   const [search, setSearch] = useState("");
+  const tabLabelByStatus: Record<Status | "ALL", string> = {
+    ALL: t.dashboard.proposals.tabs.all,
+    Completed: t.dashboard.proposals.tabs.completed,
+    Processing: t.dashboard.proposals.tabs.processing,
+    Failed: t.dashboard.proposals.tabs.failed,
+  };
+  const statusLabelByStatus: Record<Status, string> = {
+    Completed: t.dashboard.proposals.status.completed,
+    Processing: t.dashboard.proposals.status.processing,
+    Failed: t.dashboard.proposals.status.failed,
+  };
 
   const filtered = mockProposals.filter((p) => {
     const matchTab = active === "ALL" || p.status === active;
@@ -78,14 +92,23 @@ export default function ProposalsTable() {
     <div className="relative flex flex-col gap-4 rounded-2xl px-3 md:px-5">
       {/* Active tab background — clip here only so proposal actions can extend above cards */}
       <div className="w-full pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
-        <ProposalTabBgSvg variant={active} className="h-auto w-full" />
+        <ProposalTabBgSvg
+          variant={active}
+          className={`h-auto w-full ${isRtl ? "scale-x-[-1]" : ""}`}
+        />
       </div>
 
       <div className="relative z-10 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-center justify-between gap-6 mt-3">
           {/* Tabs */}
-          <div className="flex items-center gap-1 md:gap-4 lg:gap-6 xl:gap-17">
+          <div
+            className={`flex items-center ${
+              isRtl
+                ? "gap-1 md:gap-2 lg:gap-3 xl:gap-20"
+                : "gap-1 md:gap-4 lg:gap-4 xl:gap-17"
+            }`}
+          >
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -96,7 +119,7 @@ export default function ProposalsTable() {
                     : "text-black dark:text-zinc-100"
                 }`}
               >
-                {tab}
+                {tabLabelByStatus[tab]}
               </button>
             ))}
           </div>
@@ -106,7 +129,7 @@ export default function ProposalsTable() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search here"
+              placeholder={t.dashboard.proposals.searchPlaceholder}
               className="py-2.5 ps-4 text-xs text-zinc-700 placeholder:text-[#A9A9A9] focus:outline-none dark:text-zinc-100"
             />
             <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary dark:bg-[#519A91] border border-white dark:border-[#0D0D0D] text-white dark:text-[#0D0D0D]">
@@ -123,10 +146,10 @@ export default function ProposalsTable() {
             <div className="col-span-full flex flex-col items-center justify-center gap-2 py-10 text-center">
               <SearchIcon size={32} className="text-primary/40" />
               <p className="text-sm font-semibold text-black/50 dark:text-zinc-400">
-                No proposals found
+                {t.dashboard.proposals.emptyTitle}
               </p>
               <p className="text-xs text-black/35 dark:text-zinc-500">
-                Try a different search term or filter
+                {t.dashboard.proposals.emptyDescription}
               </p>
             </div>
           ) : (
@@ -135,10 +158,12 @@ export default function ProposalsTable() {
                 <div className="relative">
                   <button
                     type="button"
-                    className="absolute -top-0.5 right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 text-xs font-medium text-white dark:text-black transition-colors hover:bg-primary-dark"
+                    className={`absolute top-2.5 right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 text-xs font-medium text-white dark:text-black transition-colors hover:bg-primary-dark ${
+                      isRtl ? "flex-row-reverse" : ""
+                    }`}
                   >
                     <EyeIcon size={14} />
-                    View Proposal
+                    {t.dashboard.proposals.viewProposal}
                   </button>
                   <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
                     <StatusBgSvg className="h-full w-full text-white dark:text-[#0D0D0D]" />
@@ -146,13 +171,15 @@ export default function ProposalsTable() {
 
                   <div className="relative z-10 flex flex-col gap-3 p-3">
                     <span
-                      className={`w-fit rounded-full px-3 md:px-4 py-1 md:py-1.5 text-xs font-medium ${statusStyles[p.status]}`}
+                      className={`relative top-3 w-fit rounded-full px-3 md:px-4 py-1 md:py-1.5 text-xs font-medium ${
+                        isRtl ? "self-end" : "self-start"
+                      } ${statusStyles[p.status]}`}
                     >
-                      {p.status}
+                      {statusLabelByStatus[p.status]}
                     </span>
 
                     {/* Title + subtitle + download (download right, circular outline) */}
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 pt-4">
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-base font-semibold leading-snug text-black/80 dark:text-white/80">
                           {p.title}
@@ -163,7 +190,7 @@ export default function ProposalsTable() {
                       </div>
                       <button
                         type="button"
-                        aria-label="Download"
+                        aria-label={t.dashboard.proposals.downloadAriaLabel}
                         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#E4ECEE]/50 dark:bg-[#1B272B]/50 border border-[#F0F0F0] dark:border-[#1C1C1C]/80 text-primary transition-colors hover:bg-primary/10"
                       >
                         <DownloadIcon size={18} />
@@ -175,9 +202,16 @@ export default function ProposalsTable() {
                       <div
                         className="absolute -top-2.5 flex flex-col items-center"
                         style={{
-                          left: `${p.progress}%`,
-                          transform:
-                            p.progress <= 8
+                          ...(isRtl
+                            ? { right: `${p.progress}%` }
+                            : { left: `${p.progress}%` }),
+                          transform: isRtl
+                            ? p.progress <= 8
+                              ? "translateX(0)"
+                              : p.progress >= 92
+                                ? "translateX(100%)"
+                                : "translateX(50%)"
+                            : p.progress <= 8
                               ? "translateX(0)"
                               : p.progress >= 92
                                 ? "translateX(-100%)"
@@ -194,14 +228,16 @@ export default function ProposalsTable() {
                       </div>
                       <div className="h-3.5 w-full overflow-hidden rounded-full bg-[#E3EBEA] dark:bg-[#1F2B29] p-0.5">
                         <div
-                          className="h-full rounded-full bg-primary dark:bg-[#519A91] transition-all"
+                          className={`h-full rounded-full bg-primary dark:bg-[#519A91] transition-all ${
+                            isRtl ? "ml-auto" : ""
+                          }`}
                           style={{ width: `${p.progress}%` }}
                         />
                       </div>
                     </div>
 
                     {/* Footer dates — calendar + DD-MM-YYYY */}
-                    <div className="flex flex-wrap items-center gap-2 py-2">
+                    <div className="flex flex-wrap items-center gap-2 pb-2">
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F5F9] px-2.5 py-1.5 text-[10px] font-medium text-black dark:bg-zinc-800 dark:text-zinc-300">
                         <ProposalCalendarIcon
                           size={14}

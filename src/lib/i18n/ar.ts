@@ -9,6 +9,13 @@ const ar = {
     passwordPlaceholder: "XXXX XXXX XXXX",
     rememberMe: "تذكرني",
     forgotPassword: "نسيت كلمة المرور",
+    showPassword: "إظهار كلمة المرور",
+    hidePassword: "إخفاء كلمة المرور",
+    showConfirmPassword: "إظهار تأكيد كلمة المرور",
+    hideConfirmPassword: "إخفاء تأكيد كلمة المرور",
+    signInFailed: "فشل تسجيل الدخول",
+    networkErrorTryAgain: "خطأ في الشبكة. حاول مرة أخرى.",
+    loading: "جارٍ التحميل...",
     login: "تسجيل الدخول",
     signInWithGoogle: "تسجيل الدخول بـ Google",
     noAccount: "ليس لديك حساب؟",
@@ -29,6 +36,168 @@ const ar = {
     lightMode: "الوضع الفاتح",
     darkMode: "الوضع الداكن",
     language: "اللغة",
+  },
+  dashboard: {
+    nav: {
+      overview: "نظرة عامة",
+      proposal: "العروض",
+      database: "قاعدة البيانات",
+      settings: "الإعدادات",
+    },
+    overview: {
+      welcomeBack: "مرحباً بعودتك",
+      welcomeSubtitle: "أنشئ عروضك بالذكاء الاصطناعي وأدرها وتابعها بسهولة",
+    },
+    leftPanel: {
+      createNewProposalTitle: "أنشئ\nعرضك الجديد",
+      createNewProposalDescription: "أضف التفاصيل ودع RAYAN يتولى الباقي",
+      createCompanyProfileTitle: "أنشئ\nملف شركتك",
+      createCompanyProfileDescription:
+        "أضف بيانات شركتك ودع النظام يتولى الباقي.",
+      createProposalButton: "إنشاء عرض",
+      promotionalCardsRegion: "بطاقات ترويجية",
+    },
+    stats: {
+      totalProposals: "إجمالي العروض",
+      totalProposalsSub: "+٣ هذا الأسبوع",
+      completed: "مكتمل",
+      completedSub: "معدل نجاح ٧٥٪",
+      inProgress: "قيد التنفيذ",
+      inProgressSub: "٢ تحتاج إجراء",
+    },
+    documents: {
+      cvResumeTitle: "السيرة الذاتية",
+      cvResumeDescription: "ارفع سيرتك الذاتية لإنشاء عروض مخصصة",
+      teamDocumentsTitle: "مستندات الفريق",
+      teamDocumentsDescription: "ارفع ملفات أعضاء الفريق ومؤهلاتهم",
+      fromComputer: "من الكمبيوتر",
+      fromGoogleDrive: "من Google Drive",
+    },
+    proposals: {
+      tabs: {
+        all: "الكل",
+        completed: "مكتمل",
+        processing: "قيد المعالجة",
+        failed: "فشل",
+      },
+      searchPlaceholder: "ابحث هنا",
+      emptyTitle: "لم يتم العثور على عروض",
+      emptyDescription: "جرّب مصطلح بحث أو فلتر مختلف",
+      viewProposal: "عرض المقترح",
+      downloadAriaLabel: "تنزيل",
+      status: {
+        completed: "مكتمل",
+        processing: "قيد المعالجة",
+        failed: "فشل",
+      },
+    },
+    createProposalModal: {
+      title: "نوع المقترح",
+      subtitle: "اختر نوع المقترح لبدء رحلتك نحو التميز بخطوات بسيطة.",
+      heroLine1: "حوّل أفكارك إلى",
+      heroLine2: "مقترحات احترافية خلال دقائق",
+      selectProposalAriaPrefix: "اختر",
+      types: {
+        technical: {
+          title: "مقترح تقني",
+          description:
+            "صياغة المفهوم الفني ونطاق العمل وخطة التنفيذ باستخدام الذكاء الاصطناعي.",
+        },
+        visualization: {
+          title: "التصور المرئي",
+          description:
+            "اعرض بياناتك بسهولة واكتشف رؤى تساعدك على اتخاذ قرارات أكثر ذكاءً.",
+        },
+        financial: {
+          title: "مقترح مالي",
+          description:
+            "أنشئ مقترحات مالية واضحة ومنظمة تتوافق مع أهداف أعمالك.",
+        },
+      },
+    },
+    userMenu: {
+      logout: "تسجيل الخروج",
+      loggingOut: "جارٍ تسجيل الخروج...",
+    },
+    newProposal: {
+      steps: {
+        basicInfoTitle: "المعلومات الأساسية",
+        sectionsTitle: "الأقسام",
+        uploadTitle: "الرفع",
+        personalInformationTitle: "المعلومات الشخصية",
+        stepSubtitle: "عرّفنا بنفسك للبدء.",
+      },
+      sidebar: {
+        title: "إنشاء مقترح جديد",
+        description: "أضف بياناتك ودع النظام يتولى الباقي.",
+        stepCompletedAriaPrefix: "الخطوة",
+        stepCompletedAriaSuffix: "مكتملة",
+      },
+      form: {
+        clientNameLabel: "اسم العميل",
+        clientNamePlaceholder: "مثال: أحمد عادل",
+        sectorIndustryLabel: "القطاع/المجال",
+        sectorIndustryPlaceholder: "مثال: الإنشاءات",
+        proposalTypeLabel: "نوع المقترح",
+        proposalTypePlaceholder: "مثال: مقترح تقني",
+        proposalLanguageLabel: "لغة المقترح",
+        proposalLanguagePlaceholder: "مثال: العربية",
+        startDateLabel: "تاريخ البدء",
+        endDateLabel: "تاريخ الانتهاء",
+        datePlaceholder: "مثال: mm/dd/yyyy",
+        additionalDetailsLabel: "تفاصيل إضافية",
+        additionalDetailsPlaceholder: "أي سياق أو متطلبات إضافية...",
+        optionalLabel: "اختياري",
+      },
+      sections: {
+        cards: {
+          projectDeliverables: {
+            title: "مخرجات المشروع",
+            description:
+              "سيقوم الذكاء الاصطناعي باستخراج تقييم مخرجات المشروع تلقائياً من مستندات RFP المرفوعة",
+          },
+          projectTimeline: {
+            title: "الجدول الزمني للمشروع",
+            description:
+              "سيقوم الذكاء الاصطناعي باستخراج تقييم الجدول الزمني للمشروع تلقائياً من مستندات RFP المرفوعة",
+          },
+          proposedTeam: {
+            title: "الفريق المقترح",
+            description:
+              "سيقوم الذكاء الاصطناعي باستخراج تقييم الفريق المقترح تلقائياً من مستندات RFP المرفوعة",
+          },
+        },
+        actions: {
+          enterText: "إدخال نص",
+          uploadFile: "رفع ملف",
+          fromRfp: "من RFP",
+        },
+        proposalComponentsTitle: "مكونات المقترح",
+        proposalTitleChip: "عنوان المقترح",
+        removeChipAriaLabel: "إزالة",
+      },
+      upload: {
+        cards: {
+          rfpDocuments: "مستندات RFP",
+          resumeDocuments: "مستندات السيرة الذاتية",
+          teamDocuments: "مستندات الفريق",
+          certificatesRegistrations: "الشهادات والتسجيلات",
+          otherSupportingDocuments: "مستندات داعمة أخرى",
+        },
+        fromSystem: "من النظام",
+        fromDatabase: "من قاعدة البيانات",
+        dragDropLabel: "اسحب الملفات وأفلتها هنا أو",
+        browseFiles: "استعراض الملفات",
+        fileTypes: "(PDF, DOCX, DOC, TXT, JPG, PNG)",
+      },
+      actions: {
+        openAriaLabel: "فتح",
+        previousBasicInfo: "السابق: المعلومات الأساسية",
+        previousSections: "السابق: الأقسام",
+        nextSections: "التالي: الأقسام",
+        nextPersonalInformation: "التالي: المعلومات الشخصية",
+      },
+    },
   },
   contact: {
     contactUs: "اتصل بنا",

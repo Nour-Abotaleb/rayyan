@@ -4,59 +4,44 @@ import PersonIcon from "@/icons/PersonIcon";
 import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
 import TranslateIcon from "@/icons/TranslateIcon";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useMemo, useState } from "react";
 import ProposalStepsSidebar from "@/features/proposals/components/ProposalStepsSidebar";
 import ProposalSectionsStep from "@/features/proposals/components/ProposalSectionsStep";
 import ProposalUploadStep from "@/features/proposals/components/ProposalUploadStep";
 
-const steps = [
-  {
-    number: 1,
-    title: "Basic Info",
-    subtitle: "Tell us who you are to get started.",
-  },
-  {
-    number: 2,
-    title: "Sections",
-    subtitle: "Tell us who you are to get started.",
-  },
-  {
-    number: 3,
-    title: "Upload",
-    subtitle: "Tell us who you are to get started.",
-  },
-  {
-    number: 4,
-    title: "Personal information",
-    subtitle: "Tell us who you are to get started.",
-  },
-];
-
 function InputField({
   label,
   required,
   optional,
+  optionalLabel,
   placeholder,
   icons,
   endButton,
   value,
   onChange,
+  openAriaLabel,
 }: {
   label: string;
   required?: boolean;
   optional?: boolean;
+  optionalLabel?: string;
   placeholder: string;
   icons: React.ReactNode;
   endButton?: React.ReactNode;
   value: string;
   onChange: (value: string) => void;
+  openAriaLabel?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm md:text-base font-[550] text-black dark:text-white">
         {label} {required && <span className="">*</span>}
         {optional && (
-          <span className="font-[550] text-black dark:text-white"> (Optional)</span>
+          <span className="font-[550] text-black dark:text-white">
+            {" "}
+            ({optionalLabel ?? "Optional"})
+          </span>
         )}
       </label>
       <div className="flex items-center gap-2">
@@ -77,7 +62,7 @@ function InputField({
           <button
             type="button"
             className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors"
-            aria-label="Open"
+            aria-label={openAriaLabel ?? "Open"}
           >
             {endButton}
           </button>
@@ -88,6 +73,29 @@ function InputField({
 }
 
 export default function NewProposalPage() {
+  const { t } = useLanguage();
+  const steps = [
+    {
+      number: 1,
+      title: t.dashboard.newProposal.steps.basicInfoTitle,
+      subtitle: t.dashboard.newProposal.steps.stepSubtitle,
+    },
+    {
+      number: 2,
+      title: t.dashboard.newProposal.steps.sectionsTitle,
+      subtitle: t.dashboard.newProposal.steps.stepSubtitle,
+    },
+    {
+      number: 3,
+      title: t.dashboard.newProposal.steps.uploadTitle,
+      subtitle: t.dashboard.newProposal.steps.stepSubtitle,
+    },
+    {
+      number: 4,
+      title: t.dashboard.newProposal.steps.personalInformationTitle,
+      subtitle: t.dashboard.newProposal.steps.stepSubtitle,
+    },
+  ];
   const [activeStep, setActiveStep] = useState(1);
   const [basicInfo, setBasicInfo] = useState({
     clientName: "",
@@ -117,8 +125,8 @@ export default function NewProposalPage() {
     <div className="layout-shell-x flex h-full min-h-0 flex-1 flex-col gap-3 overflow-x-hidden md:gap-6 lg:flex-row lg:items-stretch lg:overflow-hidden">
       {/* Left stepper — fixed column height, does not scroll (same pattern as dashboard + LeftPanel) */}
       <ProposalStepsSidebar
-        title="Create a New Proposal"
-        description={"just add your details and let the system do the rest."}
+        title={t.dashboard.newProposal.sidebar.title}
+        description={t.dashboard.newProposal.sidebar.description}
         steps={steps}
         activeStep={activeStep}
         progress={progress}
@@ -130,28 +138,31 @@ export default function NewProposalPage() {
           <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <InputField
-                label="Client Name"
+                label={t.dashboard.newProposal.form.clientNameLabel}
                 required
-                placeholder="ex: Ahmed Adel"
+                placeholder={t.dashboard.newProposal.form.clientNamePlaceholder}
                 icons={<PersonIcon size={20} />}
                 value={basicInfo.clientName}
                 onChange={(v) => setBasicInfo((s) => ({ ...s, clientName: v }))}
               />
               <InputField
-                label="Sector/Industry"
+                label={t.dashboard.newProposal.form.sectorIndustryLabel}
                 required
-                placeholder="ex: Construction"
+                placeholder={
+                  t.dashboard.newProposal.form.sectorIndustryPlaceholder
+                }
                 icons={<PersonIcon size={18} />}
                 endButton={<ArrowDownCircleIcon size={20} />}
+                openAriaLabel={t.dashboard.newProposal.actions.openAriaLabel}
                 value={basicInfo.sectorIndustry}
                 onChange={(v) =>
                   setBasicInfo((s) => ({ ...s, sectorIndustry: v }))
                 }
               />
               <InputField
-                label="Proposal Type"
+                label={t.dashboard.newProposal.form.proposalTypeLabel}
                 required
-                placeholder="ex: Technical Proposal"
+                placeholder={t.dashboard.newProposal.form.proposalTypePlaceholder}
                 icons={<PersonIcon size={20} />}
                 value={basicInfo.proposalType}
                 onChange={(v) =>
@@ -159,28 +170,33 @@ export default function NewProposalPage() {
                 }
               />
               <InputField
-                label="Proposal Language"
+                label={t.dashboard.newProposal.form.proposalLanguageLabel}
                 required
-                placeholder="ex: English"
+                placeholder={
+                  t.dashboard.newProposal.form.proposalLanguagePlaceholder
+                }
                 icons={<TranslateIcon size={20} />}
                 endButton={<ArrowDownCircleIcon size={20} />}
+                openAriaLabel={t.dashboard.newProposal.actions.openAriaLabel}
                 value={basicInfo.proposalLanguage}
                 onChange={(v) =>
                   setBasicInfo((s) => ({ ...s, proposalLanguage: v }))
                 }
               />
               <InputField
-                label="Start Date"
+                label={t.dashboard.newProposal.form.startDateLabel}
                 optional
-                placeholder="ex: mm/dd/yyyy"
+                optionalLabel={t.dashboard.newProposal.form.optionalLabel}
+                placeholder={t.dashboard.newProposal.form.datePlaceholder}
                 icons={<DateCalendarIcon size={20} />}
                 value={basicInfo.startDate}
                 onChange={(v) => setBasicInfo((s) => ({ ...s, startDate: v }))}
               />
               <InputField
-                label="End Date"
+                label={t.dashboard.newProposal.form.endDateLabel}
                 optional
-                placeholder="ex: mm/dd/yyyy"
+                optionalLabel={t.dashboard.newProposal.form.optionalLabel}
+                placeholder={t.dashboard.newProposal.form.datePlaceholder}
                 icons={<DateCalendarIcon size={20} />}
                 value={basicInfo.endDate}
                 onChange={(v) => setBasicInfo((s) => ({ ...s, endDate: v }))}
@@ -189,11 +205,13 @@ export default function NewProposalPage() {
 
             <div className="flex flex-col gap-1.5">
               <label className="text-sm md:text-base font-[550] text-black dark:text-white">
-                Additional Details{" "}
-                <span className="font-[550] text-black dark:text-white">(Optional)</span>
+                {t.dashboard.newProposal.form.additionalDetailsLabel}{" "}
+                <span className="font-[550] text-black dark:text-white">
+                  ({t.dashboard.newProposal.form.optionalLabel})
+                </span>
               </label>
               <textarea
-                placeholder="Any Additional context or requirements..."
+                placeholder={t.dashboard.newProposal.form.additionalDetailsPlaceholder}
                 rows={7}
                 value={basicInfo.additionalDetails}
                 onChange={(e) =>
@@ -212,7 +230,7 @@ export default function NewProposalPage() {
                 disabled={!canGoNextFromStep1}
                 onClick={() => setActiveStep(2)}
               >
-                Next: Sections
+                {t.dashboard.newProposal.actions.nextSections}
               </button>
             </div>
           </main>

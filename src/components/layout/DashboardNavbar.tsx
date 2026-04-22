@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LayoutIcon from "@/icons/LayoutIcon";
@@ -23,23 +30,20 @@ interface DashboardNavbarProps {
 }
 
 const navItems = [
-  { Icon: LayoutIcon, key: "layout", label: "Overview", href: "/dashboard" },
+  { Icon: LayoutIcon, key: "layout", href: "/dashboard" },
   {
     Icon: ProposalNavIcon,
     key: "proposal",
-    label: "Proposal",
     href: "/dashboard/proposals",
   },
   {
     Icon: FolderCloudIcon,
     key: "database",
-    label: "Database",
     href: "/dashboard/database",
   },
   {
     Icon: SliderIcon,
     key: "settings",
-    label: "Settings",
     href: "/dashboard/settings",
   },
 ] as const;
@@ -87,6 +91,12 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
     x: number;
     w: number;
   } | null>(null);
+  const navLabelByKey: Record<(typeof navItems)[number]["key"], string> = {
+    layout: t.dashboard.nav.overview,
+    proposal: t.dashboard.nav.proposal,
+    database: t.dashboard.nav.database,
+    settings: t.dashboard.nav.settings,
+  };
 
   const activeKey = useMemo(() => {
     if (isOverviewPath(pathname)) return "layout";
@@ -116,24 +126,32 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
     setMobileOpen(false);
   }, [pathname]);
 
-  useLayoutEffect(() => {
-    function recalc() {
-      if (!activeKey) return setActivePill(null);
-      const navEl = navRef.current;
-      const itemEl = itemRefs.current[activeKey];
-      if (!navEl || !itemEl) return;
-      const navRect = navEl.getBoundingClientRect();
-      const itemRect = itemEl.getBoundingClientRect();
-      setActivePill({
-        x: itemRect.left - navRect.left,
-        w: itemRect.width,
-      });
-    }
+  const recalc = useCallback(() => {
+    if (!activeKey) return setActivePill(null);
+    const navEl = navRef.current;
+    const itemEl = itemRefs.current[activeKey];
+    if (!navEl || !itemEl) return;
+    const navRect = navEl.getBoundingClientRect();
+    const itemRect = itemEl.getBoundingClientRect();
+    setActivePill({
+      x: itemRect.left - navRect.left,
+      w: itemRect.width,
+    });
+  }, [activeKey]);
 
+  useLayoutEffect(() => {
     recalc();
     window.addEventListener("resize", recalc);
-    return () => window.removeEventListener("resize", recalc);
-  }, [activeKey]);
+    return () => {
+      window.removeEventListener("resize", recalc);
+    };
+  }, [recalc]);
+
+  useEffect(() => {
+    // Language switch changes label widths; recalc once layout is painted.
+    const rafId = window.requestAnimationFrame(recalc);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [lang, recalc]);
 
   function cycleLanguage() {
     const idx = languages.findIndex((l) => l.code === lang);
@@ -181,8 +199,9 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
               }}
             />
           )}
-          {navItems.map(({ Icon, key, label, href }) => {
+          {navItems.map(({ Icon, key, href }) => {
             const isActive = isItemActive(key, pathname, href);
+            const label = navLabelByKey[key];
             return (
               <Link
                 key={key}
@@ -251,7 +270,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
         <button
           type="button"
           onClick={() => setMobileOpen((v) => !v)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? t.contact.closeMenu : t.contact.openMenu}
           className="flex items-center justify-center rounded-full p-2 text-paragraph transition-colors hover:text-primary lg:hidden dark:text-zinc-400"
         >
           {mobileOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
@@ -263,8 +282,9 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
         <div className="layout-shell-x flex flex-col gap-4 border-t border-zinc-100 pb-5 pt-4 lg:hidden dark:border-zinc-800">
           {/* Nav items */}
           <nav className="flex items-center gap-3 flex-wrap">
-            {navItems.map(({ Icon, key, label, href }) => {
+            {navItems.map(({ Icon, key, href }) => {
               const isActive = isItemActive(key, pathname, href);
+              const label = navLabelByKey[key];
               return (
                 <Link
                   key={key}

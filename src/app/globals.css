@@ -153,8 +153,12 @@ body {
 }
 
 @keyframes scroll-reverse {
-  from { transform: translateX(-20%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(-20%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .animate-infinite-scroll-reverse {

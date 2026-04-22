@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Step2Bg from "./Step2Bg";
 import SecondRowBg from "./SecondRowBg";
 import UploadCloudIcon from "@/icons/UploadCloudIcon";
@@ -10,22 +11,24 @@ type UploadCard = {
   required?: boolean;
 };
 
-const uploadCards: UploadCard[] = [
-  { title: "RFP Documents", required: true },
-  { title: "Resume Documents" },
-  { title: "Team Documents" },
-  { title: "Certificates & Registrations" },
-  { title: "Other Supporting Documents" },
-];
-
 function UploadBox({
   title,
   required,
   variant = "default",
+  fromSystemLabel,
+  fromDatabaseLabel,
+  dragDropLabel,
+  browseFilesLabel,
+  fileTypesLabel,
 }: {
   title: string;
   required?: boolean;
   variant?: "default" | "compact";
+  fromSystemLabel: string;
+  fromDatabaseLabel: string;
+  dragDropLabel: string;
+  browseFilesLabel: string;
+  fileTypesLabel: string;
 }) {
   const [tab, setTab] = useState<"system" | "db">("system");
   const isCompact = variant === "compact";
@@ -55,8 +58,11 @@ function UploadBox({
             isCompact ? "pb-10 md:pb-12" : "",
           ].join(" ")}
         >
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-sm font-bold text-black dark:text-white">
+          <div className="flex items-center justify-between gap-3" dir="ltr">
+            <h3
+              className="text-left text-sm font-bold text-black dark:text-white"
+              dir="ltr"
+            >
               {title}{" "}
               {required && (
                 <span className="text-black dark:text-white">*</span>
@@ -75,7 +81,7 @@ function UploadBox({
                   : "text-[#939393]",
               ].join(" ")}
             >
-              From System
+              {fromSystemLabel}
               {tab === "system" && (
                 <span className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full bg-primary" />
               )}
@@ -88,7 +94,7 @@ function UploadBox({
                 tab === "db" ? "text-black dark:text-white" : "text-[#939393]",
               ].join(" ")}
             >
-              From Database
+              {fromDatabaseLabel}
               {tab === "db" && (
                 <span className="absolute inset-x-0 -bottom-0.5 h-[2px] rounded-full bg-primary" />
               )}
@@ -100,16 +106,16 @@ function UploadBox({
               <UploadCloudIcon className="text-primary dark:text-[#519A91]" />
             </div>
             <p className="mt-4 text-xs font-normal text-black dark:text-white">
-              Drag and drop files here or{" "}
+              {dragDropLabel}{" "}
               <button
                 type="button"
                 className="rounded-full bg-primary dark:bg-[#519A91] px-4 py-1 ms-1 text-xs font-medium text-white transition-colors hover:bg-primary-dark dark:text-black cursor-pointer"
               >
-                Browse Files
+                {browseFilesLabel}
               </button>
             </p>
             <p className="mt-2 text-[10px] font-normal text-black dark:text-white">
-              (PDF, DOCX, DOC, TXT, JPG, PNG)
+              {fileTypesLabel}
             </p>
           </div>
         </div>
@@ -125,20 +131,63 @@ export default function ProposalUploadStep({
   onBack: () => void;
   onNext: () => void;
 }) {
+  const { t } = useLanguage();
+  const uploadCards: UploadCard[] = [
+    { title: t.dashboard.newProposal.upload.cards.rfpDocuments, required: true },
+    { title: t.dashboard.newProposal.upload.cards.resumeDocuments },
+    { title: t.dashboard.newProposal.upload.cards.teamDocuments },
+    { title: t.dashboard.newProposal.upload.cards.certificatesRegistrations },
+    { title: t.dashboard.newProposal.upload.cards.otherSupportingDocuments },
+  ];
   return (
     <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         <UploadBox
           title={uploadCards[0].title}
           required={uploadCards[0].required}
+          fromSystemLabel={t.dashboard.newProposal.upload.fromSystem}
+          fromDatabaseLabel={t.dashboard.newProposal.upload.fromDatabase}
+          dragDropLabel={t.dashboard.newProposal.upload.dragDropLabel}
+          browseFilesLabel={t.dashboard.newProposal.upload.browseFiles}
+          fileTypesLabel={t.dashboard.newProposal.upload.fileTypes}
         />
-        <UploadBox title={uploadCards[1].title} />
-        <UploadBox title={uploadCards[2].title} />
+        <UploadBox
+          title={uploadCards[1].title}
+          fromSystemLabel={t.dashboard.newProposal.upload.fromSystem}
+          fromDatabaseLabel={t.dashboard.newProposal.upload.fromDatabase}
+          dragDropLabel={t.dashboard.newProposal.upload.dragDropLabel}
+          browseFilesLabel={t.dashboard.newProposal.upload.browseFiles}
+          fileTypesLabel={t.dashboard.newProposal.upload.fileTypes}
+        />
+        <UploadBox
+          title={uploadCards[2].title}
+          fromSystemLabel={t.dashboard.newProposal.upload.fromSystem}
+          fromDatabaseLabel={t.dashboard.newProposal.upload.fromDatabase}
+          dragDropLabel={t.dashboard.newProposal.upload.dragDropLabel}
+          browseFilesLabel={t.dashboard.newProposal.upload.browseFiles}
+          fileTypesLabel={t.dashboard.newProposal.upload.fileTypes}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 mt-4">
-        <UploadBox title={uploadCards[3].title} variant="compact" />
-        <UploadBox title={uploadCards[4].title} variant="compact" />
+        <UploadBox
+          title={uploadCards[3].title}
+          variant="compact"
+          fromSystemLabel={t.dashboard.newProposal.upload.fromSystem}
+          fromDatabaseLabel={t.dashboard.newProposal.upload.fromDatabase}
+          dragDropLabel={t.dashboard.newProposal.upload.dragDropLabel}
+          browseFilesLabel={t.dashboard.newProposal.upload.browseFiles}
+          fileTypesLabel={t.dashboard.newProposal.upload.fileTypes}
+        />
+        <UploadBox
+          title={uploadCards[4].title}
+          variant="compact"
+          fromSystemLabel={t.dashboard.newProposal.upload.fromSystem}
+          fromDatabaseLabel={t.dashboard.newProposal.upload.fromDatabase}
+          dragDropLabel={t.dashboard.newProposal.upload.dragDropLabel}
+          browseFilesLabel={t.dashboard.newProposal.upload.browseFiles}
+          fileTypesLabel={t.dashboard.newProposal.upload.fileTypes}
+        />
       </div>
 
       <div className="mt-2 flex items-center justify-end gap-3">
@@ -146,13 +195,13 @@ export default function ProposalUploadStep({
           className="rounded-full border border-white bg-white/50 px-3 py-2.5 text-sm font-normal text-black dark:text-white cursor-pointer"
           onClick={onBack}
         >
-          Previous: Sections
+          {t.dashboard.newProposal.actions.previousSections}
         </button>
         <button
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
           onClick={onNext}
         >
-          Next: Sections
+          {t.dashboard.newProposal.actions.nextPersonalInformation}
         </button>
       </div>
     </main>

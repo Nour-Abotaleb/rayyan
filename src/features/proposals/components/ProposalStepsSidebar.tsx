@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export type ProposalStep = {
   number: number;
@@ -21,6 +22,7 @@ export default function ProposalStepsSidebar({
   activeStep: number;
   progress: number;
 }) {
+  const { t } = useLanguage();
   return (
     <aside className="hidden shrink-0 overflow-hidden rounded-[24px] border border-[#F1F2F9] bg-white px-7 py-7 shadow-[0px_1px_8px_0px_rgba(25,33,61,0.06)] dark:border-[#171717] dark:bg-[#0D0D0D] lg:flex lg:h-[87vh] lg:min-h-0 lg:max-h-[87vh] lg:w-82 lg:flex-col lg:self-stretch">
       <h2 className="text-lg md:text-xl font-bold text-black dark:text-white">
@@ -53,7 +55,7 @@ export default function ProposalStepsSidebar({
                 {isCompleted ? (
                   <div
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#E4ECEE] bg-white dark:border-[#1B272B] dark:bg-[#0D0D0D]"
-                    aria-label={`Step ${step.number} completed`}
+                    aria-label={`${t.dashboard.newProposal.sidebar.stepCompletedAriaPrefix} ${step.number} ${t.dashboard.newProposal.sidebar.stepCompletedAriaSuffix}`}
                   >
                     <svg
                       width="16"

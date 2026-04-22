@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
 import step2Bg from "@src/assets/dashboard/step2-bg.svg";
 import CloseIcon from "@/icons/CloseIcon";
@@ -185,26 +186,6 @@ function ComponentsIcon() {
 }
 
 // ── Data ───────────────────────────────────────────────────────────
-const sections = [
-  {
-    title: "Project Deliverables",
-    description:
-      "AI will automatically extract Project Deliverables Assessment from your uploaded RFP documents",
-  },
-  {
-    title: "Project Timeline",
-    description:
-      "AI will automatically extract Project Timeline Assessment from your uploaded RFP documents",
-  },
-  {
-    title: "Proposed Team",
-    description:
-      "AI will automatically extract Proposed Team Assessment from your uploaded RFP documents",
-  },
-];
-
-const initialChips = ["Proposal Title", "Proposal Title", "Proposal Title"];
-
 // ── Component ──────────────────────────────────────────────────────
 export default function ProposalSectionsStep({
   onBack,
@@ -213,13 +194,33 @@ export default function ProposalSectionsStep({
   onBack: () => void;
   onNext: () => void;
 }) {
-  const [chips, setChips] = useState(initialChips);
+  const { t } = useLanguage();
+  const sections = [
+    {
+      title: t.dashboard.newProposal.sections.cards.projectDeliverables.title,
+      description:
+        t.dashboard.newProposal.sections.cards.projectDeliverables.description,
+    },
+    {
+      title: t.dashboard.newProposal.sections.cards.projectTimeline.title,
+      description:
+        t.dashboard.newProposal.sections.cards.projectTimeline.description,
+    },
+    {
+      title: t.dashboard.newProposal.sections.cards.proposedTeam.title,
+      description:
+        t.dashboard.newProposal.sections.cards.proposedTeam.description,
+    },
+  ];
+  const [chips, setChips] = useState<string[]>(
+    Array(3).fill(t.dashboard.newProposal.sections.proposalTitleChip),
+  );
   const step2BgUrl = typeof step2Bg === "string" ? step2Bg : step2Bg.src;
 
   return (
     <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
       {/* Section cards */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3" dir="ltr">
         {sections.map((card) => (
           <div key={card.title} className="flex flex-col gap-3">
             <section className="relative flex flex-col gap-3 overflow-hidden p-3 backdrop-blur-sm aspect-316/274">
@@ -257,21 +258,21 @@ export default function ProposalSectionsStep({
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white bg-white/50 p-2 text-xs font-normal text-black transition-colors hover:bg-[#F6F4F0] dark:border-[#0D0D0D] dark:bg-[#0D0D0D]/50 dark:text-white dark:hover:bg-[#141414] cursor-pointer"
               >
                 <EnterTextIcon />
-                Enter Text
+                {t.dashboard.newProposal.sections.actions.enterText}
               </button>
               <button
                 type="button"
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white bg-white/50 p-2 text-xs font-normal text-black transition-colors hover:bg-[#F6F4F0] dark:border-[#0D0D0D] dark:bg-[#0D0D0D]/50 dark:text-white dark:hover:bg-[#141414] cursor-pointer"
               >
                 <UploadFileIcon />
-                Upload File
+                {t.dashboard.newProposal.sections.actions.uploadFile}
               </button>
               <button
                 type="button"
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-primary p-2 text-xs font-normal text-white transition-colors hover:bg-primary-dark dark:bg-[#519A91] dark:text-black cursor-pointer"
               >
                 <FromRFPIcon />
-                From RFP
+                {t.dashboard.newProposal.sections.actions.fromRfp}
               </button>
             </div>
           </div>
@@ -282,7 +283,7 @@ export default function ProposalSectionsStep({
       <div>
         <div className="flex items-center justify-between gap-4 pt-4 pb-2">
           <h3 className="text-sm font-bold text-black dark:text-white tracking-wide">
-            Proposal Components
+            {t.dashboard.newProposal.sections.proposalComponentsTitle}
           </h3>
         </div>
 
@@ -290,13 +291,13 @@ export default function ProposalSectionsStep({
           <div className="relative flex-1">
             <div className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-black  dark:text-zinc-100">
               <div className="flex flex-wrap items-center gap-2">
-                {chips.map((t, idx) => (
+                {chips.map((chip, idx) => (
                   <span
-                    key={`${t}-${idx}`}
+                    key={`${chip}-${idx}`}
                     className="inline-flex items-center gap-2"
                   >
                     <span className="inline-flex items-center rounded-full bg-[#E4ECEE] px-3 py-1.5 text-xs font-normal text-black dark:bg-[#1B272B] dark:text-white">
-                      {t}
+                      {chip}
                     </span>
                     <button
                       type="button"
@@ -304,7 +305,7 @@ export default function ProposalSectionsStep({
                         setChips((prev) => prev.filter((_, j) => j !== idx))
                       }
                       className="-ms-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#E4ECEE] text-sm leading-none text-black transition-colors hover:text-black dark:bg-[#1B272B] dark:text-white dark:hover:text-white cursor-pointer"
-                      aria-label="Remove"
+                      aria-label={t.dashboard.newProposal.sections.removeChipAriaLabel}
                     >
                       <CloseIcon size={12} />
                     </button>
@@ -321,7 +322,7 @@ export default function ProposalSectionsStep({
           <button
             type="button"
             className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
-            aria-label="Open"
+            aria-label={t.dashboard.newProposal.actions.openAriaLabel}
           >
             <ArrowDownCircleIcon size={20} />
           </button>
@@ -334,13 +335,13 @@ export default function ProposalSectionsStep({
           className="rounded-full border border-white bg-white/50 px-3 py-2.5 text-sm font-normal text-black dark:text-white cursor-pointer"
           onClick={onBack}
         >
-          Previous: Basic Info
+          {t.dashboard.newProposal.actions.previousBasicInfo}
         </button>
         <button
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
           onClick={onNext}
         >
-          Next: Sections
+          {t.dashboard.newProposal.actions.nextSections}
         </button>
       </div>
     </main>

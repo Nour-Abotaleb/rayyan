@@ -2,6 +2,7 @@
 
 import { useState, type ComponentType } from "react";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 import cardBg from "@src/assets/dashboard/card-bg.png";
 import leftPanelBg from "@src/assets/dashboard/left-panel-bg.png";
 import leftPanelBgMobile from "@src/assets/dashboard/left-panel-bg-mobile.png";
@@ -15,25 +16,16 @@ interface CardItem {
   Illustration: ComponentType<{ className?: string }>;
 }
 
-const cards: CardItem[] = [
-  {
-    title: "Create Your\nNew Proposal",
-    description: "Add details, let RAYAN do the rest",
-    Illustration: Card1Illustration,
-  },
-  {
-    title: "Create Your\nCompany Profile",
-    description: "Just add your details and let the system do the rest.",
-    Illustration: Card2Illustration,
-  },
-];
-
 function CardBlock({
   card,
   onCreateClick,
+  createProposalLabel,
+  isRtl,
 }: {
   card: CardItem;
   onCreateClick: () => void;
+  createProposalLabel: string;
+  isRtl: boolean;
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -41,7 +33,7 @@ function CardBlock({
         <Image src={cardBg} alt="" fill className="object-fill" priority />
 
         <div className="absolute inset-0 p-5">
-          <div className="">
+          <div className="text-left" dir="ltr" style={{ textAlign: "left" }}>
             <h3 className="w-[65%] whitespace-pre-line text-xl md:text-2xl font-semibold leading-snug text-white">
               {card.title}
             </h3>
@@ -59,18 +51,34 @@ function CardBlock({
       <button
         type="button"
         onClick={onCreateClick}
-        className="relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1 md:px-4 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer"
+        className={`relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-1 md:px-4 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer ${
+          isRtl ? "self-end flex-row-reverse" : "self-start"
+        }`}
       >
         <span className="text-base leading-none">+</span>
-        Create Proposal
+        {createProposalLabel}
       </button>
     </div>
   );
 }
 
 export default function LeftPanel() {
+  const { t, dir } = useLanguage();
+  const isRtl = dir === "rtl";
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
+  const cards: CardItem[] = [
+    {
+      title: t.dashboard.leftPanel.createNewProposalTitle,
+      description: t.dashboard.leftPanel.createNewProposalDescription,
+      Illustration: Card1Illustration,
+    },
+    {
+      title: t.dashboard.leftPanel.createCompanyProfileTitle,
+      description: t.dashboard.leftPanel.createCompanyProfileDescription,
+      Illustration: Card2Illustration,
+    },
+  ];
 
   return (
     <>
@@ -79,7 +87,7 @@ export default function LeftPanel() {
         <div
           className="flex w-full min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="region"
-          aria-label="Promotional cards"
+          aria-label={t.dashboard.leftPanel.promotionalCardsRegion}
         >
           {cards.map((card, i) => (
             <div
@@ -97,7 +105,14 @@ export default function LeftPanel() {
                 />
               </div>
               <div className="relative z-10 flex flex-col gap-5 px-2 lg:px-4 py-2 md:py-4 lg:py-6">
-                <CardBlock card={card} onCreateClick={openModal} />
+                <CardBlock
+                  card={card}
+                  onCreateClick={openModal}
+                  createProposalLabel={
+                    t.dashboard.leftPanel.createProposalButton
+                  }
+                  isRtl={isRtl}
+                />
               </div>
             </div>
           ))}
@@ -118,7 +133,13 @@ export default function LeftPanel() {
         </div>
         <div className="relative z-10 flex flex-col gap-5">
           {cards.map((card, i) => (
-            <CardBlock key={i} card={card} onCreateClick={openModal} />
+            <CardBlock
+              key={i}
+              card={card}
+              onCreateClick={openModal}
+              createProposalLabel={t.dashboard.leftPanel.createProposalButton}
+              isRtl={isRtl}
+            />
           ))}
         </div>
       </aside>

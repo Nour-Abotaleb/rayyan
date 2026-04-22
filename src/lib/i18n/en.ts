@@ -10,6 +10,13 @@ const en = {
     passwordPlaceholder: "XXXX XXXX XXXX",
     rememberMe: "Remember me",
     forgotPassword: "Forgot Password",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
+    showConfirmPassword: "Show confirm password",
+    hideConfirmPassword: "Hide confirm password",
+    signInFailed: "Sign in failed",
+    networkErrorTryAgain: "Network error. Try again.",
+    loading: "Loading...",
     login: "Login",
     signInWithGoogle: "Sign In With Google",
     noAccount: "Don't have an account?",
@@ -30,6 +37,169 @@ const en = {
     lightMode: "Light Mode",
     darkMode: "Dark Mode",
     language: "Language",
+  },
+  dashboard: {
+    nav: {
+      overview: "Overview",
+      proposal: "Proposal",
+      database: "Database",
+      settings: "Settings",
+    },
+    overview: {
+      welcomeBack: "Welcome Back",
+      welcomeSubtitle: "Generate, Manage, And Track Your AI Proposals",
+    },
+    leftPanel: {
+      createNewProposalTitle: "Create Your\nNew Proposal",
+      createNewProposalDescription: "Add details, let RAYAN do the rest",
+      createCompanyProfileTitle: "Create Your\nCompany Profile",
+      createCompanyProfileDescription:
+        "Just add your details and let the system do the rest.",
+      createProposalButton: "Create Proposal",
+      promotionalCardsRegion: "Promotional cards",
+    },
+    stats: {
+      totalProposals: "Total Proposals",
+      totalProposalsSub: "+3 this week",
+      completed: "Completed",
+      completedSub: "75% success rate",
+      inProgress: "In Progress",
+      inProgressSub: "2 need action",
+    },
+    documents: {
+      cvResumeTitle: "CV/Resume",
+      cvResumeDescription: "Upload your CV or resume for personalized proposals",
+      teamDocumentsTitle: "Team Documents",
+      teamDocumentsDescription: "Upload team member profiles and qualifications",
+      fromComputer: "From Computer",
+      fromGoogleDrive: "From Google Drive",
+    },
+    proposals: {
+      tabs: {
+        all: "ALL",
+        completed: "Completed",
+        processing: "Processing",
+        failed: "Failed",
+      },
+      searchPlaceholder: "Search here",
+      emptyTitle: "No proposals found",
+      emptyDescription: "Try a different search term or filter",
+      viewProposal: "View Proposal",
+      downloadAriaLabel: "Download",
+      status: {
+        completed: "Completed",
+        processing: "Processing",
+        failed: "Failed",
+      },
+    },
+    createProposalModal: {
+      title: "Proposal Type",
+      subtitle:
+        "Choose your proposal type to start your journey of excellence in a few simple steps.",
+      heroLine1: "Transform Your Ideas into",
+      heroLine2: "Professional Proposals in Minutes",
+      selectProposalAriaPrefix: "Select",
+      types: {
+        technical: {
+          title: "Technical Proposal",
+          description:
+            "Formulating the artistic concept, scope of work, and implementation plan using artificial intelligence.",
+        },
+        visualization: {
+          title: "Visualization",
+          description:
+            "Visualize your data effortlessly and uncover insights that drive smarter decisions.",
+        },
+        financial: {
+          title: "Financial Proposal",
+          description:
+            "Create clear, structured financial proposals that align with your business goals.",
+        },
+      },
+    },
+    userMenu: {
+      logout: "Logout",
+      loggingOut: "Logging out...",
+    },
+    newProposal: {
+      steps: {
+        basicInfoTitle: "Basic Info",
+        sectionsTitle: "Sections",
+        uploadTitle: "Upload",
+        personalInformationTitle: "Personal information",
+        stepSubtitle: "Tell us who you are to get started.",
+      },
+      sidebar: {
+        title: "Create a New Proposal",
+        description: "just add your details and let the system do the rest.",
+        stepCompletedAriaPrefix: "Step",
+        stepCompletedAriaSuffix: "completed",
+      },
+      form: {
+        clientNameLabel: "Client Name",
+        clientNamePlaceholder: "ex: Ahmed Adel",
+        sectorIndustryLabel: "Sector/Industry",
+        sectorIndustryPlaceholder: "ex: Construction",
+        proposalTypeLabel: "Proposal Type",
+        proposalTypePlaceholder: "ex: Technical Proposal",
+        proposalLanguageLabel: "Proposal Language",
+        proposalLanguagePlaceholder: "ex: English",
+        startDateLabel: "Start Date",
+        endDateLabel: "End Date",
+        datePlaceholder: "ex: mm/dd/yyyy",
+        additionalDetailsLabel: "Additional Details",
+        additionalDetailsPlaceholder: "Any Additional context or requirements...",
+        optionalLabel: "Optional",
+      },
+      sections: {
+        cards: {
+          projectDeliverables: {
+            title: "Project Deliverables",
+            description:
+              "AI will automatically extract Project Deliverables Assessment from your uploaded RFP documents",
+          },
+          projectTimeline: {
+            title: "Project Timeline",
+            description:
+              "AI will automatically extract Project Timeline Assessment from your uploaded RFP documents",
+          },
+          proposedTeam: {
+            title: "Proposed Team",
+            description:
+              "AI will automatically extract Proposed Team Assessment from your uploaded RFP documents",
+          },
+        },
+        actions: {
+          enterText: "Enter Text",
+          uploadFile: "Upload File",
+          fromRfp: "From RFP",
+        },
+        proposalComponentsTitle: "Proposal Components",
+        proposalTitleChip: "Proposal Title",
+        removeChipAriaLabel: "Remove",
+      },
+      upload: {
+        cards: {
+          rfpDocuments: "RFP Documents",
+          resumeDocuments: "Resume Documents",
+          teamDocuments: "Team Documents",
+          certificatesRegistrations: "Certificates & Registrations",
+          otherSupportingDocuments: "Other Supporting Documents",
+        },
+        fromSystem: "From System",
+        fromDatabase: "From Database",
+        dragDropLabel: "Drag and drop files here or",
+        browseFiles: "Browse Files",
+        fileTypes: "(PDF, DOCX, DOC, TXT, JPG, PNG)",
+      },
+      actions: {
+        openAriaLabel: "Open",
+        previousBasicInfo: "Previous: Basic Info",
+        previousSections: "Previous: Sections",
+        nextSections: "Next: Sections",
+        nextPersonalInformation: "Next: Personal information",
+      },
+    },
   },
   contact: {
     contactUs: "Contact Us",

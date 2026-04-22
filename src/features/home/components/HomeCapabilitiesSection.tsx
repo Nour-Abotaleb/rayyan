@@ -65,11 +65,11 @@ function CapabilityRow({
         </div>
       </div>
     {/* Tags */}
-      <div className="mt-6 grid max-w-md grid-cols-2 justify-items-stretch gap-2 md:mt-auto md:w-full md:shrink-0 md:gap-6">
+      <div className="mt-6 grid max-w-md grid-cols-2 justify-items-stretch gap-2 md:mt-auto md:w-full md:shrink-0 md:gap-4 lg:gap-6">
         {tags.map((tag) => (
           <span
             key={tag}
-            className="flex items-center justify-center gap-1 md:gap-3 text-nowrap rounded-full border border-[#E4E2E2] px-3 py-2 text-center text-xs md:text-sm text-[#1A1615] dark:border-white/15 dark:bg-white/[0.06] dark:text-zinc-100"
+            className="flex items-center justify-center gap-1 lg:gap-3 text-nowrap rounded-full border border-[#E4E2E2] px-3 py-2 text-center text-xs lg:text-sm text-[#1A1615] dark:border-white/15 dark:bg-white/[0.06] dark:text-zinc-100"
           >
             <svg
               viewBox="0 0 24 24"
@@ -92,7 +92,7 @@ function CapabilityRow({
   );
 
   return (
-    <div className="flex w-full flex-col items-center gap-8 md:grid md:grid-cols-2 md:items-stretch md:gap-12 lg:gap-18">
+    <div className="flex w-full flex-col items-center gap-8 md:grid md:grid-cols-2 md:items-stretch md:gap-6 lg:gap-18">
       {/* Mobile: always text → image; md+: `order` restores image-left / image-right */}
       <div
         className={`flex w-full max-w-md min-h-0 flex-col md:max-w-none md:h-full ${imageFirst ? "md:order-2" : "md:order-1"}`}

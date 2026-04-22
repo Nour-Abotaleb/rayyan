@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import PopupHero from "@/features/dashboard/components/PopupHero";
 import PopupIcons from "@/features/dashboard/components/PopupIcons";
 import PopupBgTexture from "@/features/dashboard/components/PopupBgTexture";
@@ -14,27 +15,6 @@ interface ProposalType {
   description: string;
   tone: "primary" | "secondary" | "tertiary";
 }
-
-const proposalTypes: ProposalType[] = [
-  {
-    title: "Technical Proposal",
-    description:
-      "Formulating the artistic concept, scope of work, and implementation plan using artificial intelligence.",
-    tone: "primary",
-  },
-  {
-    title: "Visualization",
-    description:
-      "Visualize your data effortlessly and uncover insights that drive smarter decisions.",
-    tone: "secondary",
-  },
-  {
-    title: "Financial Proposal",
-    description:
-      "Create clear, structured financial proposals that align with your business goals.",
-    tone: "tertiary",
-  },
-];
 
 /** PopupBgTexture uses `currentColor` — white in light, #2A2A2A in dark */
 const popupTextureTint = "text-white dark:text-[#2A2A2A]";
@@ -68,8 +48,28 @@ export default function CreateProposalModal({
   onClose,
 }: CreateProposalModalProps) {
   const router = useRouter();
-  const fullHeroTextLine1 = "Transform Your Ideas into";
-  const fullHeroTextLine2 = "Professional Proposals in Minutes";
+  const { t, dir } = useLanguage();
+  const isRtl = dir === "rtl";
+  const fullHeroTextLine1 = t.dashboard.createProposalModal.heroLine1;
+  const fullHeroTextLine2 = t.dashboard.createProposalModal.heroLine2;
+  const proposalTypes: ProposalType[] = [
+    {
+      title: t.dashboard.createProposalModal.types.technical.title,
+      description: t.dashboard.createProposalModal.types.technical.description,
+      tone: "primary",
+    },
+    {
+      title: t.dashboard.createProposalModal.types.visualization.title,
+      description:
+        t.dashboard.createProposalModal.types.visualization.description,
+      tone: "secondary",
+    },
+    {
+      title: t.dashboard.createProposalModal.types.financial.title,
+      description: t.dashboard.createProposalModal.types.financial.description,
+      tone: "tertiary",
+    },
+  ];
   const [heroLine1, setHeroLine1] = useState("");
   const [heroLine2, setHeroLine2] = useState("");
 
@@ -109,18 +109,17 @@ export default function CreateProposalModal({
           <div className="mb-6 flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <h2 className="text-xl font-bold text-black dark:text-white tracking-wide">
-                Proposal Type
+                {t.dashboard.createProposalModal.title}
               </h2>
               <p className="mt-1 text-sm md:text-base text-black/60 dark:text-white/60 tracking-wide font-extralight">
-                Choose your proposal type to start your journey of excellence in
-                a few simple steps.
+                {t.dashboard.createProposalModal.subtitle}
               </p>
             </div>
             <button
               type="button"
               onClick={onClose}
               className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-0 bg-white/50 p-0 text-zinc-400 touch-manipulation [-webkit-tap-highlight-color:transparent] dark:border dark:border-[#0D0D0D] dark:bg-[#0D0D0D]/50 hover:opacity-50 cursor-pointer"
-              aria-label="Close"
+              aria-label={t.contact.closeMenu}
             >
               <CloseIcon
                 size={22}
@@ -147,8 +146,10 @@ export default function CreateProposalModal({
               <button
                 key={type.title}
                 onClick={handleSelect}
-                aria-label={`Select ${type.title}`}
-                className="group relative w-full overflow-visible rounded-2xl p-5 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-primary/40"
+                aria-label={`${t.dashboard.createProposalModal.selectProposalAriaPrefix} ${type.title}`}
+                className={`group relative w-full overflow-visible rounded-2xl p-5 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary/40 ${
+                  isRtl ? "text-right" : "text-left"
+                }`}
               >
                 <div
                   className={`pointer-events-none absolute inset-0 -z-0 overflow-hidden rounded-2xl opacity-40 dark:opacity-35 ${popupTextureTint}`}
@@ -167,13 +168,13 @@ export default function CreateProposalModal({
                 <div className="relative z-10 flex flex-col gap-3">
                   {/* Chip icon */}
                   <div
-                    className={`flex h-12 w-12 md:h-13 md:w-13 items-center justify-center rounded-full ${toneStyles[type.tone].chipBg} ${toneStyles[type.tone].chipText}`}
+                    className={`mr-auto flex h-12 w-12 md:h-13 md:w-13 items-center justify-center rounded-full ${toneStyles[type.tone].chipBg} ${toneStyles[type.tone].chipText}`}
                   >
                     <ChipIcon size={30} />
                   </div>
 
                   {/* Text */}
-                  <div className="mt-2">
+                  <div className={`mt-2 ${isRtl ? "text-right" : "text-left"}`}>
                     <h3 className="text-base font-semibold text-black dark:text-white/80 tracking-wide">
                       {type.title}
                     </h3>

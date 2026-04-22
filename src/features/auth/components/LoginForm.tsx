@@ -32,7 +32,7 @@ export default function LoginForm() {
       });
       const data = (await res.json()) as { redirectTo?: string; error?: string };
       if (!res.ok) {
-        setError(data.error ?? "Sign in failed");
+        setError(data.error ?? t.auth.signInFailed);
         return;
       }
       if (data.redirectTo) {
@@ -40,9 +40,9 @@ export default function LoginForm() {
         router.refresh();
         return;
       }
-      setError("Sign in failed");
+      setError(t.auth.signInFailed);
     } catch {
-      setError("Network error. Try again.");
+      setError(t.auth.networkErrorTryAgain);
     } finally {
       setLoading(false);
     }
@@ -102,7 +102,7 @@ export default function LoginForm() {
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               className="absolute inset-y-0 end-4 flex items-center text-input-icon hover:text-zinc-600 dark:hover:text-zinc-300"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
             >
               {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
             </button>
@@ -140,7 +140,7 @@ export default function LoginForm() {
           disabled={loading}
           className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 disabled:opacity-60 dark:text-black"
         >
-          {loading ? "…" : t.auth.login}
+          {loading ? t.auth.loading : t.auth.login}
         </button>
 
         {/* Google sign in */}
