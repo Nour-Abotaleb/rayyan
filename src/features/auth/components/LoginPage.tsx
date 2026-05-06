@@ -1,6 +1,6 @@
 import Image from "next/image";
 import LoginForm from "./LoginForm";
-import heroImage from "@src/assets/dashboard/hero.png";
+import heroImage from "@src/assets/dashboard/hero-svg.svg";
 import heroDarkImage from "@src/assets/dashboard/hero-dark.png";
 import spinnerImg from "@src/assets/dashboard/spinner.png";
 

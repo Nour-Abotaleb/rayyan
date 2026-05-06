@@ -3,7 +3,6 @@ import { Abril_Fatface } from "next/font/google";
 import Image from "next/image";
 import "./globals.css";
 // import shadowBottomImage from "@src/assets/dashboard/shadow-bottom.png";
-import BottomShadow from "@/components/layout/BottomShadow";
 import AppProviders from "@/providers/AppProviders";
 import AppNavbar from "@/components/layout/AppNavbar";
 import AuthShadowOverlays from "@/components/layout/AuthShadowOverlays";
@@ -47,7 +46,6 @@ export default function RootLayout({
             priority
           />
         </div> */}
-        <BottomShadow />
         <AppProviders>
           <AppNavbar />
           <main className="flex min-h-0 flex-1 flex-col">{children}</main>
