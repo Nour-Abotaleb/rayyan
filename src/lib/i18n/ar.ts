@@ -141,6 +141,8 @@ const ar = {
       companyDocumentsLabel: "مستندات الشركة",
       uploadManual: "رفع يدوي",
       uploadFromDatabase: "رفع من قاعدة البيانات",
+      fromSystem: "من النظام",
+      fromDatabase: "من قاعدة البيانات",
       cancel: "إلغاء",
       done: "تم",
     },

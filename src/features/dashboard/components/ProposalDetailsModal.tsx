@@ -74,25 +74,25 @@ function UploadIcon() {
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
       <path
         d="M5.24935 12.8334H8.74935C11.666 12.8334 12.8327 11.6667 12.8327 8.75008V5.25008C12.8327 2.33341 11.666 1.16675 8.74935 1.16675H5.24935C2.33268 1.16675 1.16602 2.33341 1.16602 5.25008V8.75008C1.16602 11.6667 2.33268 12.8334 5.24935 12.8334Z"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M5.25 5.54761L7 3.79761L8.75 5.54761"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M7 3.79761V8.46427"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M3.5 9.63086C5.76917 10.3892 8.23083 10.3892 10.5 9.63086"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -100,47 +100,48 @@ function UploadIcon() {
   );
 }
 
-function DatabaseIcon() {
+function DatabaseIcon({ active }: { active?: boolean }) {
+  const stroke = active ? "white" : "currentColor";
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
       <path
         d="M4.66602 1.16675V2.91675"
-        stroke="white"
+        stroke={stroke}
         strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M9.33398 1.16675V2.91675"
-        stroke="white"
+        stroke={stroke}
         strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M4.08398 6.41675H8.75065"
-        stroke="white"
+        stroke={stroke}
         strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M4.08398 8.75H7.00065"
-        stroke="white"
+        stroke={stroke}
         strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M8.75 12.8334H5.25C2.33333 12.8334 1.75 11.6317 1.75 9.22842V5.62925C1.75 2.88758 2.72417 2.15258 4.66667 2.04175H9.33333C11.2758 2.14675 12.25 2.88758 12.25 5.62925V9.33342"
-        stroke="white"
+        stroke={stroke}
         strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M12.25 9.33325L8.75 12.8333V11.0833C8.75 9.91659 9.33333 9.33325 10.5 9.33325H12.25Z"
-        stroke="white"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -162,30 +163,31 @@ function PlusIcon() {
   );
 }
 
-function RfpUploadIcon() {
+function RfpUploadIcon({ active }: { active?: boolean }) {
+  const stroke = active ? "white" : "currentColor";
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
       <path
         d="M5.24935 12.8334H8.74935C11.666 12.8334 12.8327 11.6667 12.8327 8.75008V5.25008C12.8327 2.33341 11.666 1.16675 8.74935 1.16675H5.24935C2.33268 1.16675 1.16602 2.33341 1.16602 5.25008V8.75008C1.16602 11.6667 2.33268 12.8334 5.24935 12.8334Z"
-        stroke="black"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M5.25 5.54761L7 3.79761L8.75 5.54761"
-        stroke="black"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M7 3.79761V8.46427"
-        stroke="black"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M3.5 9.63086C5.76917 10.3892 8.23083 10.3892 10.5 9.63086"
-        stroke="black"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -193,24 +195,25 @@ function RfpUploadIcon() {
   );
 }
 
-function AddManualIcon() {
+function AddManualIcon({ active }: { active?: boolean }) {
+  const stroke = active ? "white" : "currentColor";
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
       <path
         d="M4.66602 7H9.33268"
-        stroke="white"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M7 9.33341V4.66675"
-        stroke="white"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M5.24935 12.8334H8.74935C11.666 12.8334 12.8327 11.6667 12.8327 8.75008V5.25008C12.8327 2.33341 11.666 1.16675 8.74935 1.16675H5.24935C2.33268 1.16675 1.16602 2.33341 1.16602 5.25008V8.75008C1.16602 11.6667 2.33268 12.8334 5.24935 12.8334Z"
-        stroke="white"
+        stroke={stroke}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -327,15 +330,19 @@ export default function ProposalDetailsModal({
   const { t, dir } = useLanguage();
   const m = t.dashboard.proposalDetailsModal;
 
+  const [rfpMode, setRfpMode] = useState<"none" | "upload" | "manual">("manual");
+  const [rfpTab, setRfpTab] = useState<"system" | "database">("system");
   const [clientName, setClientName] = useState("");
   const [projectName, setProjectName] = useState("");
   const [language, setLanguage] = useState<"ar" | "en">("en");
   const [sector, setSector] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [docs, setDocs] = useState<UploadDoc[]>(() => mapFilesToDocs(initialFiles, "attached"));
+  const [docsMode, setDocsMode] = useState<"database" | "manual">("database");
+  const [docs, setDocs] = useState<UploadDoc[]>(() => [...mapFilesToDocs(initialFiles, "attached"), ...DB_DOCS]);
   const [selectedDocs, setSelectedDocs] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const rfpFileInputRef = useRef<HTMLInputElement>(null);
   const hasDocs = docs.length > 0;
 
   const arFlagSrc =
@@ -406,25 +413,147 @@ export default function ProposalDetailsModal({
               {m.rfpLabel}
             </span>
             <div className="flex items-center gap-2">
+              <input
+                ref={rfpFileInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files ?? []);
+                  if (files.length) {
+                    setDocs((prev) => [...mapFilesToDocs(files, "rfp"), ...prev]);
+                  }
+                  e.target.value = "";
+                }}
+              />
               <button
                 type="button"
-                className="flex items-center gap-1.5 rounded-full border border-white bg-white/50 px-3 py-2 text-xs font-medium text-black hover:border-primary hover:text-primary cursor-pointer dark:border-white/20 dark:bg-white/5 dark:text-white"
+                onClick={() => setRfpMode(rfpMode === "upload" ? "none" : "upload")}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium cursor-pointer transition-colors ${
+                  rfpMode === "upload"
+                    ? "bg-primary text-white hover:opacity-90"
+                    : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                }`}
               >
-                <RfpUploadIcon />
+                <RfpUploadIcon active={rfpMode === "upload"} />
                 {m.uploadRfp}
               </button>
               <button
                 type="button"
-                className="flex items-center gap-1.5 rounded-full bg-primary px-3 py-2 text-xs font-medium text-white hover:opacity-90 cursor-pointer"
+                onClick={() => setRfpMode(rfpMode === "manual" ? "none" : "manual")}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium cursor-pointer transition-colors ${
+                  rfpMode === "manual"
+                    ? "bg-primary text-white hover:opacity-90"
+                    : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                }`}
               >
-                <AddManualIcon />
+                <AddManualIcon active={rfpMode === "manual"} />
                 {m.addManual}
               </button>
             </div>
           </div>
 
+          {/* RFP Upload panel (tabs + dropzone) */}
+          {rfpMode === "upload" && (
+            <div className="mb-4">
+              {/* Tabs */}
+              <div className="flex">
+                <button
+                  type="button"
+                  onClick={() => setRfpTab("system")}
+                  className={`flex-1 py-2.5 text-center text-sm font-semibold tracking-wide cursor-pointer transition-colors ${
+                    rfpTab === "system"
+                      ? "border-b-2 border-primary text-black"
+                      : "text-[#939393] hover:text-black/70"
+                  }`}
+                >
+                  {m.fromSystem}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRfpTab("database")}
+                  className={`flex-1 py-2.5 text-center text-sm font-semibold tracking-wide cursor-pointer transition-colors ${
+                    rfpTab === "database"
+                      ? "border-b-2 border-primary text-black"
+                      : "text-[#939393] hover:text-black/70"
+                  }`}
+                >
+                  {m.fromDatabase}
+                </button>
+              </div>
+
+              {/* From System dropzone */}
+              {rfpTab === "system" && (
+                <div
+                  className="mt-3 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#488981] py-3 text-center"
+                  style={{
+                    background:
+                      "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)",
+                  }}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const files = Array.from(e.dataTransfer.files);
+                    if (files.length) {
+                      setDocs((prev) => [...mapFilesToDocs(files, "rfp"), ...prev]);
+                    }
+                  }}
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
+                    <DropzoneUploadIcon />
+                  </span>
+                  <p className="text-xs text-black/60 dark:text-white/50">
+                    {t.dashboard.newProposal.upload.dragDropLabel}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => rfpFileInputRef.current?.click()}
+                    className="rounded-full bg-primary px-4 py-1 text-xs font-medium text-white hover:opacity-90 cursor-pointer"
+                  >
+                    {t.dashboard.newProposal.upload.browseFiles}
+                  </button>
+                  <p className="text-[10px] text-black/40 dark:text-white/30">
+                    {t.dashboard.newProposal.upload.fileTypes}
+                  </p>
+                </div>
+              )}
+
+              {/* From Database */}
+              {rfpTab === "database" && (
+                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  {DB_DOCS.map((doc) => (
+                    <label
+                      key={doc.id}
+                      className="flex cursor-pointer items-center gap-2 rounded-[12px] bg-white p-3 hover:border-primary/40 dark:border-white/10 dark:bg-white/5"
+                    >
+                      <Image
+                        src={pdfIconSrc}
+                        alt="PDF"
+                        width={36}
+                        height={36}
+                        className="shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-medium text-black dark:text-white">
+                          {doc.name}
+                        </p>
+                        <p className="text-xs text-[#6B7280]">{doc.size}</p>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={selectedDocs.has(doc.id)}
+                        onChange={() => toggleDoc(doc.id)}
+                        className="size-4 shrink-0 accent-primary cursor-pointer"
+                      />
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Form grid */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${rfpMode === "upload" ? "hidden" : ""}`}>
             {/* Client Name */}
             <Field label={m.clientNameLabel} required>
               <InputWithIcon
@@ -569,37 +698,54 @@ export default function ProposalDetailsModal({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={openFilePicker}
-                  className="flex items-center gap-0.5 md:gap-1.5 rounded-full border border-white bg-white/50 px-3 py-2.5 text-xs font-medium text-black cursor-pointer transition-colors hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white text-nowrap"
+                  onClick={() => setDocsMode("manual")}
+                  className={`flex items-center gap-0.5 md:gap-1.5 rounded-full px-3 py-2.5 text-xs font-medium cursor-pointer transition-colors text-nowrap ${
+                    docsMode === "manual"
+                      ? "bg-primary text-white hover:opacity-90"
+                      : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                  }`}
                 >
                   <UploadIcon />
                   {m.uploadManual}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setDocs(DB_DOCS)}
-                  className="flex items-center gap-0.5 md:gap-1.5 rounded-full bg-primary px-3 py-2.5 text-xs font-medium text-white cursor-pointer transition-colors hover:opacity-90 text-nowrap"
+                  onClick={() => setDocsMode("database")}
+                  className={`flex items-center gap-0.5 md:gap-1.5 rounded-full px-3 py-2.5 text-xs font-medium cursor-pointer transition-colors text-nowrap ${
+                    docsMode === "database"
+                      ? "bg-primary text-white hover:opacity-90"
+                      : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                  }`}
                 >
-                  <DatabaseIcon />
+                  <DatabaseIcon active={docsMode === "database"} />
                   {m.uploadFromDatabase}
                 </button>
               </div>
             </div>
 
-            {/* Empty drop zone */}
-            {!hasDocs && (
+            {/* Manual upload dropzone */}
+            {docsMode === "manual" && (
               <div
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#488981] py-2.5 text-center"
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#488981] py-3 text-center"
                 style={{
                   background:
                     "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)",
+                }}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const files = Array.from(e.dataTransfer.files);
+                  if (files.length) {
+                    setDocs((prev) => [...mapFilesToDocs(files), ...prev]);
+                    setDocsMode("database");
+                  }
                 }}
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
                   <DropzoneUploadIcon />
                 </span>
                 <p className="text-xs text-black/60 dark:text-white/50">
-                  {t.dashboard.newProposal.upload.dragDropLabel}{" "}
+                  {t.dashboard.newProposal.upload.dragDropLabel}
                 </p>
                 <button
                   type="button"
@@ -615,7 +761,7 @@ export default function ProposalDetailsModal({
             )}
 
             {/* Document grid */}
-            {hasDocs && (
+            {docsMode === "database" && hasDocs && (
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                 {docs.map((doc) => (
                   <label

@@ -143,6 +143,8 @@ const en = {
       companyDocumentsLabel: "Company Documents",
       uploadManual: "Upload Manual",
       uploadFromDatabase: "Upload From Database",
+      fromSystem: "From System",
+      fromDatabase: "From Database",
       cancel: "Cancel",
       done: "Done",
     },
