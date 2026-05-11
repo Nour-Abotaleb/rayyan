@@ -27,6 +27,20 @@ const ar = {
     namePlaceholder: "مثال: أحمد عادل",
     confirmPassword: "تأكيد كلمة المرور",
     alreadyHaveAccount: "لديك حساب بالفعل؟",
+    forgotPasswordTitle: "نسيت كلمة المرور؟",
+    forgotPasswordSubtitle:
+      "أدخل البريد الإلكتروني لحسابك، ثم يمكنك تعيين كلمة مرور جديدة في الخطوة التالية.",
+    forgotPasswordSubmit: "متابعة",
+    forgotPasswordContinue: "تعيين كلمة مرور جديدة",
+    resetPasswordTitle: "إنشاء كلمة مرور جديدة",
+    resetPasswordSubtitle: "أدخل كلمة المرور الجديدة وأكدها أدناه.",
+    newPasswordLabel: "كلمة المرور الجديدة",
+    resetPasswordSubmit: "تحديث كلمة المرور",
+    resetPasswordTokenMissing: "أدخل رمز إعادة التعيين للمتابعة.",
+    resetPasswordMismatch: "كلمتا المرور غير متطابقتين.",
+    resetTokenLabel: "رمز إعادة التعيين",
+    resetTokenPlaceholder: "الصق رمز إعادة التعيين",
+    backToLogin: "العودة لتسجيل الدخول",
   },
   nav: {
     layout: "التخطيط",
@@ -43,6 +57,16 @@ const ar = {
       proposal: "العروض",
       database: "قاعدة البيانات",
       settings: "الإعدادات",
+    },
+    search: {
+      placeholder: "بحث (Ctrl+K)",
+      ariaCollapsed: "فتح البحث",
+      ariaClose: "إغلاق البحث",
+    },
+    notifications: {
+      title: "الإشعارات",
+      empty: "لا توجد إشعارات جديدة.",
+      toggleLabel: "الإشعارات",
     },
     overview: {
       welcomeBack: "مرحباً بعودتك",
@@ -147,6 +171,7 @@ const ar = {
       done: "تم",
     },
     userMenu: {
+      profile: "الملف الشخصي",
       logout: "تسجيل الخروج",
       loggingOut: "جارٍ تسجيل الخروج...",
     },

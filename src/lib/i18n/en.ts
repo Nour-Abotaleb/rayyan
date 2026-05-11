@@ -28,6 +28,20 @@ const en = {
     namePlaceholder: "ex: Ahmed Adel",
     confirmPassword: "Confirm Password",
     alreadyHaveAccount: "Already have an account?",
+    forgotPasswordTitle: "Forgot your password?",
+    forgotPasswordSubtitle:
+      "Enter the email for your account. You can choose a new password on the next step.",
+    forgotPasswordSubmit: "Continue",
+    forgotPasswordContinue: "Set new password",
+    resetPasswordTitle: "Create a new password",
+    resetPasswordSubtitle: "Enter and confirm your new password below.",
+    newPasswordLabel: "New password",
+    resetPasswordSubmit: "Reset password",
+    resetPasswordTokenMissing: "Enter the reset token to continue.",
+    resetPasswordMismatch: "Passwords do not match.",
+    resetTokenLabel: "Reset token",
+    resetTokenPlaceholder: "Paste your reset token",
+    backToLogin: "Back to login",
   },
   nav: {
     layout: "Layout",
@@ -44,6 +58,16 @@ const en = {
       proposal: "Proposal",
       database: "Database",
       settings: "Settings",
+    },
+    search: {
+      placeholder: "Search (Ctrl+K)",
+      ariaCollapsed: "Open search",
+      ariaClose: "Close search",
+    },
+    notifications: {
+      title: "Notifications",
+      empty: "You're all caught up. No new notifications.",
+      toggleLabel: "Notifications",
     },
     overview: {
       welcomeBack: "Welcome Back",
@@ -149,6 +173,7 @@ const en = {
       done: "Done",
     },
     userMenu: {
+      profile: "Profile",
       logout: "Logout",
       loggingOut: "Logging out...",
     },

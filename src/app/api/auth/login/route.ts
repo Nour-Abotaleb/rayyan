@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { SignJWT } from "jose";
 import { authenticateDemoUser } from "@/lib/auth/demo-users";
-import { AUTH_SECRET, SESSION_COOKIE } from "@/lib/auth/constants";
-
-const secret = new TextEncoder().encode(AUTH_SECRET);
+import { SESSION_COOKIE } from "@/lib/auth/constants";
+import { mintSessionJwt } from "@/lib/auth/mint-session-jwt";
 
 export async function POST(request: Request) {
   let body: { email?: string; password?: string; remember?: boolean };
@@ -25,20 +23,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const token = await new SignJWT({
-    role: "user",
-    email: user.email,
-  })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(remember ? "30d" : "7d")
-    .setSubject(user.email)
-    .sign(secret);
+  const sessionJwt = await mintSessionJwt(user.email, remember);
 
   const redirectTo = "/dashboard";
 
   const res = NextResponse.json({ redirectTo });
-  res.cookies.set(SESSION_COOKIE, token, {
+  res.cookies.set(SESSION_COOKIE, sessionJwt, {
     httpOnly: true,
     path: "/",
     sameSite: "lax",

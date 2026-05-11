@@ -5,7 +5,6 @@ import { AUTH_SECRET, SESSION_COOKIE } from "@/lib/auth/constants";
 
 const secret = new TextEncoder().encode(AUTH_SECRET);
 
-/** Only client dashboard sessions are valid after sign-in */
 async function isAuthenticatedUser(request: NextRequest): Promise<boolean> {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   if (!token) return false;
@@ -21,7 +20,12 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ok = await isAuthenticatedUser(request);
 
-  if (pathname === "/login") {
+  if (
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password"
+  ) {
     if (ok) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
@@ -42,5 +46,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/dashboard", "/dashboard/:path*"],
+  matcher: [
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+    "/dashboard",
+    "/dashboard/:path*",
+  ],
 };

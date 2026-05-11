@@ -64,7 +64,7 @@ function CapabilityRow({
           </button>
         </div>
       </div>
-    {/* Tags */}
+      {/* Tags */}
       <div className="mt-6 grid max-w-md grid-cols-2 justify-items-stretch gap-2 md:mt-auto md:w-full md:shrink-0 md:gap-4 lg:gap-6">
         {tags.map((tag) => (
           <span
@@ -77,12 +77,48 @@ function CapabilityRow({
               className="shrink-0 text-[#1A1615] dark:text-zinc-400 w-4 h-4 md:w-5 md:h-5"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M12 12H20.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M12 6H20.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M12 18H20.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M3.75 6L5.25 7.5L8.25 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M3.75 12L5.25 13.5L8.25 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M3.75 18L5.25 19.5L8.25 16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M12 12H20.25"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 6H20.25"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M12 18H20.25"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M3.75 6L5.25 7.5L8.25 4.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M3.75 12L5.25 13.5L8.25 10.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M3.75 18L5.25 19.5L8.25 16.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             {tag}
           </span>

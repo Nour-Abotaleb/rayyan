@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/hooks/useAuth";
 import EmailIcon from "@/icons/EmailIcon";
 import EyeIcon from "@/icons/EyeIcon";
 import EyeOffIcon from "@/icons/EyeOffIcon";
@@ -12,39 +13,19 @@ import GoogleIcon from "@/icons/GoogleIcon";
 export default function LoginForm() {
   const { t, dir } = useLanguage();
   const router = useRouter();
+  const { login, loading, error, clearError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, remember }),
-        credentials: "include",
-      });
-      const data = (await res.json()) as { redirectTo?: string; error?: string };
-      if (!res.ok) {
-        setError(data.error ?? t.auth.signInFailed);
-        return;
-      }
-      if (data.redirectTo) {
-        router.push(data.redirectTo);
-        router.refresh();
-        return;
-      }
-      setError(t.auth.signInFailed);
-    } catch {
-      setError(t.auth.networkErrorTryAgain);
-    } finally {
-      setLoading(false);
+    clearError();
+    const res = await login({ email, password, remember });
+    if (res.ok) {
+      router.replace("/dashboard");
+      router.refresh();
     }
   }
 
@@ -109,7 +90,6 @@ export default function LoginForm() {
           </div>
         </div>
 
-        {/* Remember + Forgot */}
         {error ? (
           <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
             {error}
@@ -126,12 +106,12 @@ export default function LoginForm() {
             />
             {t.auth.rememberMe}
           </label>
-          <button
-            type="button"
-            className="text-sm font-semibold text-black hover:text-primary dark:text-white dark:hover:text-primary-light"
+          <Link
+            href="/forgot-password"
+            className="cursor-pointer text-sm font-semibold text-black hover:text-primary hover:underline dark:text-white dark:hover:text-primary-light"
           >
             {t.auth.forgotPassword}
-          </button>
+          </Link>
         </div>
 
         {/* Login button */}

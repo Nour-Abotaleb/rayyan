@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/hooks/useAuth";
 import EmailIcon from "@/icons/EmailIcon";
 import EyeIcon from "@/icons/EyeIcon";
 import EyeOffIcon from "@/icons/EyeOffIcon";
@@ -11,16 +13,29 @@ import UserNameIcon from "@/icons/UserNameIcon";
 
 export default function SignUpForm() {
   const { t, dir } = useLanguage();
+  const router = useRouter();
+  const { register, loading, error, clearError } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [validationError, setValidationError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: connect to auth
+    setValidationError("");
+    clearError();
+    if (password !== confirmPassword) {
+      setValidationError("Passwords do not match");
+      return;
+    }
+    const res = await register({ name, email, password });
+    if (res.ok) {
+      router.replace("/login");
+      router.refresh();
+    }
   }
 
   return (
@@ -136,11 +151,18 @@ export default function SignUpForm() {
           </div>
         </div>
 
+        {validationError || error ? (
+          <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
+            {validationError || error}
+          </p>
+        ) : null}
+
         <button
           type="submit"
-          className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-black transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40"
+          disabled={loading}
+          className="mt-1 w-full cursor-pointer rounded-full bg-primary py-3.5 text-sm font-semibold text-white dark:text-black transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 disabled:opacity-60"
         >
-          {t.auth.signUp}
+          {loading ? t.auth.loading : t.auth.signUp}
         </button>
 
         <button
