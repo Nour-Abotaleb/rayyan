@@ -37,7 +37,9 @@ export default function ForgotPasswordForm() {
   return (
     <div className="mb-6 flex min-w-0 flex-col px-4 py-10 sm:px-8 sm:py-12 md:px-12 md:py-14">
       <div className="mb-8">
-        <h1 className="font-abril font-medium text-primary text-center text-3xl lg:text-4xl mb-6">{t.auth.brandName}</h1>
+        <h1 className="font-abril font-medium text-primary text-center text-3xl lg:text-4xl mb-6">
+          {t.auth.brandName}
+        </h1>
         <h1 className="text-xl font-semibold leading-snug text-black md:text-2xl lg:text-3xl">
           {t.auth.forgotPasswordTitle}{" "}
         </h1>

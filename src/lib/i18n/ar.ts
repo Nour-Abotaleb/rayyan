@@ -67,6 +67,9 @@ const ar = {
       title: "الإشعارات",
       empty: "لا توجد إشعارات جديدة.",
       toggleLabel: "الإشعارات",
+      loading: "جاري التحميل…",
+      loadError: "تعذّر تحميل الإشعارات.",
+      retry: "إعادة المحاولة",
     },
     overview: {
       welcomeBack: "مرحباً بعودتك",
@@ -271,6 +274,8 @@ const ar = {
     yourMessage: "رسالتك",
     messagePlaceholder: "اكتب رسالتك هنا",
     send: "إرسال",
+    sending: "جاري الإرسال…",
+    submitError: "تعذّر إرسال رسالتك. حاول مرة أخرى.",
   },
   home: {
     hero: {

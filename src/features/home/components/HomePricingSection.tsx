@@ -21,7 +21,13 @@ const PLAN_UI = [
   { href: "/login" as const },
 ] as const;
 
-const companies = ["Amsterdam", "SAVANNAH", "MILANO", "Luminous", "Vector"] as const;
+const companies = [
+  "Amsterdam",
+  "SAVANNAH",
+  "MILANO",
+  "Luminous",
+  "Vector",
+] as const;
 
 type BillingCycle = "annual" | "monthly";
 
@@ -50,7 +56,10 @@ export default function HomePricingSection() {
     const centerTrackOnMobile = () => {
       if (window.innerWidth >= 768) return;
       const centeredScrollLeft = (track.scrollWidth - track.clientWidth) / 2;
-      track.scrollTo({ left: Math.max(0, centeredScrollLeft), behavior: "auto" });
+      track.scrollTo({
+        left: Math.max(0, centeredScrollLeft),
+        behavior: "auto",
+      });
     };
 
     centerTrackOnMobile();
@@ -76,7 +85,10 @@ export default function HomePricingSection() {
         >
           <div className="flex items-end gap-2.5 snap-x snap-proximity md:grid md:grid-cols-3 md:gap-5">
             {plans.map((plan) => (
-              <div key={plan.name} className="min-w-0 flex-[0_0_74%] snap-center md:flex-none">
+              <div
+                key={plan.name}
+                className="min-w-0 flex-[0_0_74%] snap-center md:flex-none"
+              >
                 <article
                   className={`relative flex h-full flex-col justify-between rounded-3xl p-5 ${
                     plan.highlighted
@@ -84,89 +96,102 @@ export default function HomePricingSection() {
                       : "border border-transparent bg-white dark:border-white/10 dark:bg-[#141414]"
                   }`}
                 >
-              {plan.highlighted ? (
-                  <div className="mb-2 flex items-center justify-center gap-2 rounded-full bg-white p-1 dark:border dark:border-white/10 dark:bg-[#141414]">
-                    {(
-                      [
-                        { key: "annual" as const, label: t.home.pricing.filterAnnually },
-                        { key: "monthly" as const, label: t.home.pricing.filterMonthly },
-                      ] as const
-                    ).map(({ key, label }) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setBillingCycle(key)}
-                        className={`rounded-full px-4 py-2.5 text-sm font-semibold transition md:px-6 lg:px-9 ${
-                          billingCycle === key
-                            ? "bg-[#58A19A]/15 text-[#1A1615] dark:bg-[#519A91]/25 dark:text-white"
-                            : "bg-white text-[#1A1615] dark:bg-white/8 dark:text-white"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-[#453F3D] dark:text-[#9CA3AF]">{plan.name}</p>
-                )}
-              <div className="mt-2 flex items-center gap-2">
-                <h4
-                  className={`
+                  {plan.highlighted ? (
+                    <div className="mb-2 flex items-center justify-center gap-2 rounded-full bg-white p-1 dark:border dark:border-white/10 dark:bg-[#141414]">
+                      {(
+                        [
+                          {
+                            key: "annual" as const,
+                            label: t.home.pricing.filterAnnually,
+                          },
+                          {
+                            key: "monthly" as const,
+                            label: t.home.pricing.filterMonthly,
+                          },
+                        ] as const
+                      ).map(({ key, label }) => (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setBillingCycle(key)}
+                          className={`rounded-full px-4 py-2.5 text-sm font-semibold transition md:px-6 lg:px-9 ${
+                            billingCycle === key
+                              ? "bg-[#58A19A]/15 text-[#1A1615] dark:bg-[#519A91]/25 dark:text-white"
+                              : "bg-white text-[#1A1615] dark:bg-white/8 dark:text-white"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-[#453F3D] dark:text-[#9CA3AF]">
+                      {plan.name}
+                    </p>
+                  )}
+                  <div className="mt-2 flex items-center gap-2">
+                    <h4
+                      className={`
                   font-semibold
-                  ${plan.highlighted
-                    ? "text-sm text-[#453F3D] dark:text-zinc-200"
-                    : "text-2xl text-[#1A1615] lg:text-3xl dark:text-white"}
+                  ${
+                    plan.highlighted
+                      ? "text-sm text-[#453F3D] dark:text-zinc-200"
+                      : "text-2xl text-[#1A1615] lg:text-3xl dark:text-white"
+                  }
                 `}
-                >
-                  {plan.tier}
-                </h4>
-                {plan.badge && (
-                  <span className="text-nowrap rounded-full border border-[#00A82D] bg-[#EAF3ED] px-5 py-1 text-[10px] font-semibold text-[#00A82D] dark:border-[#22c55e]/50 dark:bg-[#00A82D]/15 dark:text-[#4ade80]">
-                    {plan.badge}
-                  </span>
-                )}
-              </div>
-              <p className="mt-1 text-nowrap text-2xl font-semibold text-[#1A1615] lg:text-3xl dark:text-white">
-                {plan.price}
-              </p>
-              <p className="mt-4 text-sm text-[#453F3D] lg:mt-6 dark:text-[#9CA3AF]">
-                {plan.description}
-              </p>
-
-              <ul className="mt-4 space-y-3 lg:space-y-4">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2 text-sm text-[#453F3D] dark:text-[#9CA3AF]">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="shrink-0 text-[#1A1615] dark:text-zinc-200"
-                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path
-                        d="M6 12.75L9.75 16.5L18.75 7.5"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+                      {plan.tier}
+                    </h4>
+                    {plan.badge && (
+                      <span className="text-nowrap rounded-full border border-[#00A82D] bg-[#EAF3ED] px-5 py-1 text-[10px] font-semibold text-[#00A82D] dark:border-[#22c55e]/50 dark:bg-[#00A82D]/15 dark:text-[#4ade80]">
+                        {plan.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-nowrap text-2xl font-semibold text-[#1A1615] lg:text-3xl dark:text-white">
+                    {plan.price}
+                  </p>
+                  <p className="mt-4 text-sm text-[#453F3D] lg:mt-6 dark:text-[#9CA3AF]">
+                    {plan.description}
+                  </p>
 
-              <Link
-                href={plan.href}
-                className={`mt-5 inline-flex w-full items-center justify-center rounded-full px-4 py-3 text-sm font-[550] tracking-[0.5px] transition-colors md:mt-7 lg:py-3.5 ${
-                  plan.highlighted
-                    ? "bg-[#58A19A] text-white hover:bg-primary-dark dark:bg-[#519A91] dark:hover:bg-primary-dark"
-                    : "bg-[#58A19A]/15 text-[#1A1615] dark:bg-[#519A91]/20 dark:text-white dark:hover:bg-[#519A91]/30"
-                }`}
-              >
-                {plan.cta}
-              </Link>
+                  <ul className="mt-4 space-y-3 lg:space-y-4">
+                    {plan.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-center gap-2 text-sm text-[#453F3D] dark:text-[#9CA3AF]"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className="shrink-0 text-[#1A1615] dark:text-zinc-200"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6 12.75L9.75 16.5L18.75 7.5"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href={plan.href}
+                    className={`mt-5 inline-flex w-full items-center justify-center rounded-full px-4 py-3 text-sm font-[550] tracking-[0.5px] transition-colors md:mt-7 lg:py-3.5 ${
+                      plan.highlighted
+                        ? "bg-[#58A19A] text-white hover:bg-primary-dark dark:bg-[#519A91] dark:hover:bg-primary-dark"
+                        : "bg-[#58A19A]/15 text-[#1A1615] dark:bg-[#519A91]/20 dark:text-white dark:hover:bg-[#519A91]/30"
+                    }`}
+                  >
+                    {plan.cta}
+                  </Link>
                 </article>
               </div>
             ))}
@@ -174,26 +199,26 @@ export default function HomePricingSection() {
         </div>
 
         <div className="pt-16 pb-10 md:pt-24 md:pb-14 text-center">
-        <p className="text-lg font-semibold text-[#656769] dark:text-[#9CA3AF]">
-          {t.home.marketing.trustedBy}
-        </p>
-        {/* --- INFINITE SLIDER START — dir=ltr keeps translateX marquee seamless in RTL --- */}
-        <div className="relative mt-8 w-full overflow-hidden" dir="ltr">
-          <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-20 bg-gradient-to-r from-[#F9F9F9] to-transparent dark:from-[#161616]" />
-          <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-20 bg-gradient-to-l from-[#F9F9F9] to-transparent dark:from-[#161616]" />
+          <p className="text-lg font-semibold text-[#656769] dark:text-[#9CA3AF]">
+            {t.home.marketing.trustedBy}
+          </p>
+          {/* --- INFINITE SLIDER START — dir=ltr keeps translateX marquee seamless in RTL --- */}
+          <div className="relative mt-8 w-full overflow-hidden" dir="ltr">
+            <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-20 bg-gradient-to-r from-[#F9F9F9] to-transparent dark:from-[#161616]" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-20 bg-gradient-to-l from-[#F9F9F9] to-transparent dark:from-[#161616]" />
 
-          <div className="flex w-max animate-infinite-scroll items-center gap-10">
-            {/* Render list twice for seamless looping */}
-            {[...companies, ...companies].map((company, idx) => (
-              <span
-                key={`${company}-${idx}`}
-                className="text-sm font-semibold text-[#6A6C6A] md:text-lg dark:text-[#9CA3AF]"
-              >
-                {company}
-              </span>
-            ))}
+            <div className="flex w-max animate-infinite-scroll items-center gap-10">
+              {/* Render list twice for seamless looping */}
+              {[...companies, ...companies].map((company, idx) => (
+                <span
+                  key={`${company}-${idx}`}
+                  className="text-sm font-semibold text-[#6A6C6A] md:text-lg dark:text-[#9CA3AF]"
+                >
+                  {company}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </section>

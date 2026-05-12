@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { submitContact } from "@/lib/api/contact.service";
 import SunIcon from "@/icons/SunIcon";
 import MoonIcon from "@/icons/MoonIcon";
 import TranslateIcon from "@/icons/TranslateIcon";
@@ -15,6 +16,12 @@ export default function HomeContactHeroSection() {
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t, dir } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     function onResize() {
@@ -35,10 +42,29 @@ export default function HomeContactHeroSection() {
     setLang(next.code as Language);
   }
 
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setFormError(null);
+    setFormSuccess(null);
+    setSubmitting(true);
+    const res = await submitContact({
+      name: fullName.trim(),
+      email: email.trim(),
+      message: message.trim(),
+    });
+    setSubmitting(false);
+    if (!res.ok) {
+      setFormError(res.error || t.contact.submitError);
+      return;
+    }
+    setFormSuccess(res.data.message);
+    setFullName("");
+    setEmail("");
+    setMessage("");
+  }
+
   return (
-    <section
-      className="relative overflow-hidden bg-cover bg-center bg-no-repeat pt-4 bg-gradient-to-b from-[#488981]/80 via-[#50AED4]/50 to-[#51D1B8]/0"
-    >
+    <section className="relative overflow-hidden bg-cover bg-center bg-no-repeat pt-4 bg-gradient-to-b from-[#488981]/80 via-[#50AED4]/50 to-[#51D1B8]/0">
       <div className="layout-shell-x mx-auto flex w-full flex-col items-center pb-12 md:pb-16">
         <div className="mx-auto w-full max-w-[95%] py-1.5 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-4 px-3 pb-2 md:pb-0">
@@ -190,13 +216,35 @@ export default function HomeContactHeroSection() {
           >
             <form
               dir={dir}
+              onSubmit={handleSubmit}
               className={
                 theme === "dark"
                   ? "flex flex-col gap-5 text-start"
                   : "space-y-3 text-start"
               }
             >
-              <div className={theme === "dark" ? "flex flex-col gap-1.5" : undefined}>
+              {(formError || formSuccess) && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className={
+                    formSuccess
+                      ? theme === "dark"
+                        ? "rounded-xl border border-emerald-500/40 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-100"
+                        : "rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900"
+                      : theme === "dark"
+                        ? "rounded-xl border border-red-500/40 bg-red-950/40 px-4 py-3 text-sm text-red-100"
+                        : "rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900"
+                  }
+                >
+                  {formSuccess ?? formError}
+                </div>
+              )}
+              <div
+                className={
+                  theme === "dark" ? "flex flex-col gap-1.5" : undefined
+                }
+              >
                 <label
                   htmlFor="contact-full-name"
                   className={
@@ -209,7 +257,13 @@ export default function HomeContactHeroSection() {
                 </label>
                 <input
                   id="contact-full-name"
+                  name="name"
                   type="text"
+                  autoComplete="name"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  disabled={submitting}
                   placeholder={t.contact.namePlaceholder}
                   className={
                     theme === "dark"
@@ -219,7 +273,11 @@ export default function HomeContactHeroSection() {
                 />
               </div>
 
-              <div className={theme === "dark" ? "flex flex-col gap-1.5" : undefined}>
+              <div
+                className={
+                  theme === "dark" ? "flex flex-col gap-1.5" : undefined
+                }
+              >
                 <label
                   htmlFor="contact-email"
                   className={
@@ -232,7 +290,13 @@ export default function HomeContactHeroSection() {
                 </label>
                 <input
                   id="contact-email"
+                  name="email"
                   type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={submitting}
                   placeholder={t.contact.emailPlaceholder}
                   className={
                     theme === "dark"
@@ -242,7 +306,11 @@ export default function HomeContactHeroSection() {
                 />
               </div>
 
-              <div className={theme === "dark" ? "flex flex-col gap-1.5" : undefined}>
+              <div
+                className={
+                  theme === "dark" ? "flex flex-col gap-1.5" : undefined
+                }
+              >
                 <label
                   htmlFor="contact-message"
                   className={
@@ -255,7 +323,12 @@ export default function HomeContactHeroSection() {
                 </label>
                 <textarea
                   id="contact-message"
+                  name="message"
                   rows={8}
+                  required
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={submitting}
                   placeholder={t.contact.messagePlaceholder}
                   className={
                     theme === "dark"
@@ -267,13 +340,14 @@ export default function HomeContactHeroSection() {
 
               <button
                 type="submit"
+                disabled={submitting}
                 className={
                   theme === "dark"
-                    ? "mt-1 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-primary py-3.5 text-sm font-semibold text-black transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40"
-                    : "mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#58A19A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark md:mt-6"
+                    ? "mt-1 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-primary py-3.5 text-sm font-semibold text-black transition-colors hover:bg-primary-dark focus:outline-none focus:ring-1 focus:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+                    : "mt-4 inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-[#58A19A] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 md:mt-6 cursor-pointer"
                 }
               >
-                {t.contact.send}
+                {submitting ? t.contact.sending : t.contact.send}
               </button>
             </form>
           </div>

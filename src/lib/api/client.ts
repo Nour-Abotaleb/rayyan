@@ -61,6 +61,13 @@ export async function apiRequest<T>(
 }
 
 export const api = {
+  get<T>(
+    path: string,
+    init?: RequestInit,
+    options?: { auth?: boolean },
+  ) {
+    return apiRequest<T>(path, { method: "GET", ...init }, options);
+  },
   post<T>(
     path: string,
     body: unknown,
@@ -70,6 +77,18 @@ export const api = {
     return apiRequest<T>(
       path,
       { method: "POST", body: JSON.stringify(body), ...init },
+      options,
+    );
+  },
+  put<T>(
+    path: string,
+    body: unknown,
+    init?: RequestInit,
+    options?: { auth?: boolean },
+  ) {
+    return apiRequest<T>(
+      path,
+      { method: "PUT", body: JSON.stringify(body), ...init },
       options,
     );
   },

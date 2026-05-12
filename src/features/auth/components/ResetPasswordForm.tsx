@@ -60,7 +60,9 @@ export default function ResetPasswordForm() {
   return (
     <div className="mb-6 flex min-w-0 flex-col px-4 py-10 sm:px-8 sm:py-12 md:px-12 md:py-14">
       <div className="mb-8">
-          <h1 className="font-abril font-medium text-primary text-center text-3xl lg:text-4xl mb-6">{t.auth.brandName}</h1>
+        <h1 className="font-abril font-medium text-primary text-center text-3xl lg:text-4xl mb-6">
+          {t.auth.brandName}
+        </h1>
         <h1 className="text-xl font-semibold leading-snug text-black md:text-2xl lg:text-3xl">
           {t.auth.resetPasswordTitle}{" "}
         </h1>
@@ -105,7 +107,9 @@ export default function ResetPasswordForm() {
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               className="absolute inset-y-0 end-4 flex items-center text-input-icon hover:text-zinc-600 dark:hover:text-zinc-300"
-              aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
+              aria-label={
+                showPassword ? t.auth.hidePassword : t.auth.showPassword
+              }
             >
               {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
             </button>
@@ -130,7 +134,11 @@ export default function ResetPasswordForm() {
               type="button"
               onClick={() => setShowConfirm((v) => !v)}
               className="absolute inset-y-0 end-4 flex items-center text-input-icon hover:text-zinc-600 dark:hover:text-zinc-300"
-              aria-label={showConfirm ? t.auth.hideConfirmPassword : t.auth.showConfirmPassword}
+              aria-label={
+                showConfirm
+                  ? t.auth.hideConfirmPassword
+                  : t.auth.showConfirmPassword
+              }
             >
               {showConfirm ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
             </button>

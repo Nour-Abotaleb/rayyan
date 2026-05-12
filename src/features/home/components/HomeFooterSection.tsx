@@ -83,7 +83,11 @@ export default function HomeFooterSection() {
             <p className="text-nowrap">{t.home.footer.copyright}</p>
             <p className="flex items-center gap-1">
               {t.home.footer.builtIn}
-              <Image src={codgooLogo} alt={t.home.footer.codgooLogoAlt} className="w-16 md:w-20" />
+              <Image
+                src={codgooLogo}
+                alt={t.home.footer.codgooLogoAlt}
+                className="w-16 md:w-20"
+              />
             </p>
           </div>
         </div>

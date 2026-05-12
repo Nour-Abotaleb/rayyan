@@ -68,6 +68,9 @@ const en = {
       title: "Notifications",
       empty: "You're all caught up. No new notifications.",
       toggleLabel: "Notifications",
+      loading: "Loading…",
+      loadError: "Could not load notifications.",
+      retry: "Try again",
     },
     overview: {
       welcomeBack: "Welcome Back",
@@ -273,6 +276,8 @@ const en = {
     yourMessage: "Your Message",
     messagePlaceholder: "Enter your message",
     send: "Send",
+    sending: "Sending…",
+    submitError: "Could not send your message. Please try again.",
   },
   home: {
     hero: {
