@@ -95,7 +95,7 @@ export default function HomeTestimonialsSection() {
                           <Image
                             src={item.avatar}
                             alt={item.name}
-                            className="h-12 w-12 rounded-full border-2 border-white md:h-16 md:w-16 dark:border-white/20"
+                            className="h-12 w-12 rounded-full border-2 border-white md:h-16 md:w-16 dark:border-white/10/20"
                           />
                           <div className="text-center">
                             <p className="text-[11px] font-semibold text-[#1A1615] md:text-xs dark:text-white">
@@ -136,7 +136,7 @@ export default function HomeTestimonialsSection() {
                             <Image
                               src={item.avatar}
                               alt={item.name}
-                              className="h-10 w-10 rounded-full border-2 border-white md:h-12 md:w-12 dark:border-white/20"
+                              className="h-10 w-10 rounded-full border-2 border-white md:h-12 md:w-12 dark:border-white/10/20"
                             />
                             <div className="min-w-0 text-start">
                               <p className="text-sm font-semibold text-[#1A1615] dark:text-white">

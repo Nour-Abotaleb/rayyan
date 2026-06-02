@@ -49,10 +49,10 @@ const navItems = [
 ] as const;
 
 const navIconInactiveLanding =
-  "text-paragraph transition-all duration-200 ease-out hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex shrink-0 items-center justify-center";
+  "text-paragraph transition-all duration-200 ease-out hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex shrink-0 items-center justify-center";
 
 const navIconInactiveOverview =
-  "text-paragraph transition-all duration-200 ease-out hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center";
+  "text-paragraph transition-all duration-200 ease-out hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center";
 
 const navIconActive =
   "bg-primary text-white rounded-full min-h-10 lg:min-h-11 text-sm font-medium transition-all duration-200 ease-out";
@@ -71,7 +71,8 @@ function isItemActive(
     return (
       pathname === "/dashboard/proposals" ||
       (pathname?.startsWith("/dashboard/proposals/") &&
-        !pathname?.startsWith("/dashboard/proposals/new"))
+        !pathname?.startsWith("/dashboard/proposals/new") &&
+        !pathname?.startsWith("/dashboard/proposals/create"))
     );
   }
   if (key === "database") return pathname?.startsWith("/dashboard/database");
@@ -103,7 +104,8 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
     if (
       pathname === "/dashboard/proposals" ||
       (pathname?.startsWith("/dashboard/proposals/") &&
-        !pathname?.startsWith("/dashboard/proposals/new"))
+        !pathname?.startsWith("/dashboard/proposals/new") &&
+        !pathname?.startsWith("/dashboard/proposals/create"))
     ) {
       return "proposal";
     }
@@ -294,7 +296,9 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
                     isActive
                       ? `${navIconActive} grid grid-cols-[18px_1fr] items-center gap-2 px-4 py-2`
                       : `grid grid-cols-[18px_0fr] items-center gap-0 overflow-hidden ${
-                          key === "layout" ? overviewInactiveClass : navIconInactiveLanding
+                          key === "layout"
+                            ? overviewInactiveClass
+                            : navIconInactiveLanding
                         }`,
                   ].join(" ")}
                 >

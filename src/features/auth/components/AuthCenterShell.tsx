@@ -25,7 +25,7 @@ export default function AuthCenterShell({
       </div>
 
       <div className="relative z-0 w-full max-w-xl shrink-0 lg:w-[45%] lg:max-w-2xl">
-        <section className="flex w-full flex-col rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
+        <section className="flex w-full flex-col rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 dark:border-white/10/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
           {children}
         </section>
       </div>

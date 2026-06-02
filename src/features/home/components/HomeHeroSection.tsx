@@ -59,7 +59,7 @@ export default function HomeHeroSection() {
             {/* Full bar — same breakpoint as dashboard navbar (`lg`) */}
             <div className="hidden items-center justify-center gap-3 lg:flex">
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[6px] py-[2.5px] dark:bg-white/8 dark:border-white/25">
+                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[6px] py-[2.5px] dark:bg-white/8 dark:border-white/10/25">
                   <button
                     type="button"
                     onClick={toggleTheme}
@@ -79,7 +79,7 @@ export default function HomeHeroSection() {
                     className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
                       theme === "dark"
                         ? "bg-primary text-white"
-                        : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
+                        : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10/25 dark:hover:text-primary-light"
                     }`}
                   >
                     <MoonIcon size={18} />
@@ -90,7 +90,7 @@ export default function HomeHeroSection() {
                   type="button"
                   onClick={cycleLanguage}
                   aria-label={t.nav.language}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:bg-white/8 dark:border-white/25 dark:text-white dark:hover:text-primary-light"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:bg-white/8 dark:border-white/10/25 dark:text-white dark:hover:text-primary-light"
                 >
                   <TranslateIcon size={20} />
                 </button>
@@ -103,7 +103,7 @@ export default function HomeHeroSection() {
               </Link>
               <Link
                 href="/login"
-                className="rounded-full border border-white bg-white/50 px-5 py-[10.5px] text-sm font-medium text-zinc-900 transition-colors hover:bg-white dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
+                className="rounded-full border border-white bg-white/50 px-5 py-[10.5px] text-sm font-medium text-zinc-900 transition-colors hover:bg-white dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
               >
                 {t.contact.loginNow}
               </Link>
@@ -114,7 +114,7 @@ export default function HomeHeroSection() {
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? t.contact.closeMenu : t.contact.openMenu}
-              className="flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary lg:hidden dark:bg-white/8 dark:border-white/25 dark:text-white dark:hover:text-primary-light"
+              className="flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary lg:hidden dark:bg-white/8 dark:border-white/10/25 dark:text-white dark:hover:text-primary-light"
             >
               {mobileOpen ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
             </button>
@@ -123,7 +123,7 @@ export default function HomeHeroSection() {
           {mobileOpen && (
             <div className="flex flex-col gap-4 border-t border-zinc-200/80 pb-5 pt-4 lg:hidden dark:border-zinc-400/80">
               <div className="flex flex-wrap items-center gap-3 px-3">
-                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[7px] py-[2.5px] dark:bg-white/8 dark:border-white/25">
+                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[7px] py-[2.5px] dark:bg-white/8 dark:border-white/10/25">
                   <button
                     type="button"
                     onClick={toggleTheme}
@@ -143,7 +143,7 @@ export default function HomeHeroSection() {
                     className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
                       theme === "dark"
                         ? "bg-primary text-white"
-                        : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
+                        : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10/25 dark:hover:text-primary-light"
                     }`}
                   >
                     <MoonIcon size={18} />
@@ -153,7 +153,7 @@ export default function HomeHeroSection() {
                   type="button"
                   onClick={cycleLanguage}
                   aria-label={t.nav.language}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:bg-white/8 dark:border-white/25 dark:text-white dark:hover:text-primary-light"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:bg-white/8 dark:border-white/10/25 dark:text-white dark:hover:text-primary-light"
                 >
                   <TranslateIcon size={20} />
                 </button>
@@ -168,7 +168,7 @@ export default function HomeHeroSection() {
                 </Link>
                 <Link
                   href="/login"
-                  className="rounded-full border border-white bg-white/50 px-5 py-2.5 text-center text-sm font-medium text-zinc-900 transition-colors hover:bg-white dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
+                  className="rounded-full border border-white bg-white/50 px-5 py-2.5 text-center text-sm font-medium text-zinc-900 transition-colors hover:bg-white dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
                   onClick={() => setMobileOpen(false)}
                 >
                   {t.contact.loginNow}
@@ -197,7 +197,7 @@ export default function HomeHeroSection() {
             </Link>
             <Link
               href="/contact"
-              className="rounded-full border border-white bg-white/50 px-7 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
+              className="rounded-full border border-white bg-white/50 px-7 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
             >
               {t.contact.contactUs}
             </Link>

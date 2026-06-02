@@ -1,11 +1,11 @@
-export default function StatusBgSvg({ className }: { className?: string }) {
+export default function StatusBgSvg({ className, preserveAspectRatio = "xMidYMid meet" }: { className?: string; preserveAspectRatio?: string }) {
   return (
     <svg
       className={className}
       viewBox="0 0 276 158"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid meet"
+      preserveAspectRatio={preserveAspectRatio}
       aria-hidden
     >
       <path

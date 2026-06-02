@@ -215,7 +215,7 @@ export default function DashboardRightControls({
 
   return (
     <>
-      <div className="flex items-center gap-1 rounded-full bg-white/50 px-[7px] py-[2.5px] dark:bg-white/8 dark:border dark:border-white/25">
+      <div className="flex items-center gap-1 rounded-full bg-white/50 px-[7px] py-[2.5px] dark:bg-white/8 dark:border dark:border-white/10">
         <button
           type="button"
           onClick={toggleTheme}
@@ -235,7 +235,7 @@ export default function DashboardRightControls({
           className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
             theme === "dark"
               ? "bg-primary text-white"
-              : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
+              : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10 dark:hover:text-primary-light"
           }`}
         >
           <MoonIcon size={18} />
@@ -246,7 +246,7 @@ export default function DashboardRightControls({
         type="button"
         onClick={cycleLanguage}
         aria-label={navLabel.language}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10 dark:hover:text-primary-light"
       >
         <TranslateIcon size={20} />
       </button>
@@ -256,7 +256,7 @@ export default function DashboardRightControls({
         className={`flex h-10 shrink-0 items-stretch overflow-hidden rounded-full border transition-[width] duration-300 ease-out motion-reduce:transition-none ${
           searchExpanded
             ? "w-[min(17rem,calc(100vw-10rem))] border-zinc-200 bg-white/60 dark:border-zinc-600 dark:bg-zinc-900"
-            : "w-10 border-transparent bg-white/50 dark:border-white/25 dark:bg-white/8"
+            : "w-10 border-transparent bg-white/50 dark:border-white/10 dark:bg-white/8"
         }`}
       >
         {searchExpanded ? (
@@ -313,7 +313,7 @@ export default function DashboardRightControls({
             setMenuOpen(false);
             setNotificationsOpen((v) => !v);
           }}
-          className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light cursor-pointer"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10 dark:hover:text-primary-light cursor-pointer"
         >
           <NotificationIcon size={20} />
           {unreadCount > 0 ? (
@@ -443,7 +443,7 @@ export default function DashboardRightControls({
             setNotificationsOpen(false);
             setMenuOpen((v) => !v);
           }}
-          className="flex items-center gap-2.5 rounded-full border border-transparent bg-white/50 py-1.5 ps-2 pe-3 transition-colors hover:bg-zinc-100 dark:border-white/25 dark:bg-white/8 dark:hover:bg-white/12"
+          className="flex items-center gap-2.5 rounded-full border border-transparent bg-white/50 py-1.5 ps-2 pe-3 transition-colors hover:bg-zinc-100 dark:border-white/10 dark:bg-white/8 dark:hover:bg-white/12"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
             {user.name.charAt(0)}

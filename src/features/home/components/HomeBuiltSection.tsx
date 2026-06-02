@@ -75,14 +75,8 @@ function BottomCardIcon({ cardIndex }: { cardIndex: number }) {
           d="M24.7 0H1.3C0.583267 0 0 0.583267 0 1.3V25.5667C0 25.8059 0.194133 26 0.433333 26H25.5667C25.8059 26 26 25.8059 26 25.5667V1.3C26 0.583267 25.4167 0 24.7 0ZM1.3 0.866667H24.7C24.9388 0.866667 25.1333 1.06123 25.1333 1.3V3.46667H0.866667V1.3C0.866667 1.06123 1.06123 0.866667 1.3 0.866667ZM8.23333 22.9667V25.1333H4.76667V22.9667H8.23333ZM9.1 22.9667H12.5667V25.1333H9.1V22.9667ZM13.4333 22.9667H16.9V25.1333H13.4333V22.9667ZM17.7667 22.9667H21.2333V25.1333H17.7667V22.9667ZM0.866667 22.1V7.36667H25.1333V22.1H0.866667ZM0.866667 6.5V4.33333H25.1333V6.5H0.866667ZM0.866667 22.9667H3.9V25.1333H0.866667V22.9667ZM22.1 25.1333V22.9667H25.1333V25.1333H22.1Z"
           fill="#58A19A"
         />
-        <path
-          d="M3.89984 1.73333H2.1665V2.6H3.89984V1.73333Z"
-          fill="#58A19A"
-        />
-        <path
-          d="M6.93353 1.73333H5.2002V2.6H6.93353V1.73333Z"
-          fill="#58A19A"
-        />
+        <path d="M3.89984 1.73333H2.1665V2.6H3.89984V1.73333Z" fill="#58A19A" />
+        <path d="M6.93353 1.73333H5.2002V2.6H6.93353V1.73333Z" fill="#58A19A" />
         <path
           d="M6.93343 10.4H6.06676V16.0333H3.46676V10.4H2.6001V16.4667C2.6001 16.7059 2.79423 16.9 3.03343 16.9H6.06676V19.5H6.93343V16.9H8.23343V16.0333H6.93343V10.4Z"
           fill="#58A19A"
@@ -110,16 +104,42 @@ const colors = [
   {
     color: "#F1EBE5",
     icon: (
-      <svg width="15" height="20" viewBox="0 0 16 21" fill="none" className="text-[#453F3D] dark:text-zinc-400" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.65987 19.5056C9.49248 19.5056 11.25 18.7776 12.5459 17.4817C13.8417 16.1858 14.5697 14.4282 14.5697 12.5956C14.5697 10.6213 13.5826 8.74579 11.6084 7.16638C9.63412 5.58696 8.15343 3.21784 7.65987 0.75C7.16631 3.21784 5.68562 5.58696 3.71137 7.16638C1.73712 8.74579 0.75 10.6213 0.75 12.5956C0.74987 13.5031 0.928498 14.4017 1.27571 15.2401C1.62291 16.0785 2.1319 16.8403 2.77356 17.482C3.41523 18.1236 4.17704 18.6326 5.01544 18.9798C5.85384 19.327 6.75242 19.5057 7.65987 19.5056Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <svg
+        width="15"
+        height="20"
+        viewBox="0 0 16 21"
+        fill="none"
+        className="text-[#453F3D] dark:text-zinc-400"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M7.65987 19.5056C9.49248 19.5056 11.25 18.7776 12.5459 17.4817C13.8417 16.1858 14.5697 14.4282 14.5697 12.5956C14.5697 10.6213 13.5826 8.74579 11.6084 7.16638C9.63412 5.58696 8.15343 3.21784 7.65987 0.75C7.16631 3.21784 5.68562 5.58696 3.71137 7.16638C1.73712 8.74579 0.75 10.6213 0.75 12.5956C0.74987 13.5031 0.928498 14.4017 1.27571 15.2401C1.62291 16.0785 2.1319 16.8403 2.77356 17.482C3.41523 18.1236 4.17704 18.6326 5.01544 18.9798C5.85384 19.327 6.75242 19.5057 7.65987 19.5056Z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
   },
   {
     color: "#F1EBE5",
     icon: (
-      <svg width="20" height="20" viewBox="0 0 22 22" fill="none" className="text-[#453F3D] dark:text-zinc-400" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.2498 11.7921C16.8303 10.4812 15.9359 9.24627 14.5697 8.15351C12.5955 6.5741 11.1148 4.20497 10.6212 1.73713C10.4406 2.62161 10.1474 3.47943 9.74862 4.28986M0.75 0.75L20.4925 20.4927M7.45752 7.45956C7.20712 7.70322 6.94522 7.9348 6.67275 8.15351C4.6985 9.73293 3.71137 11.6085 3.71137 13.5828C3.71179 14.7398 4.00267 15.8783 4.55736 16.8938C5.11206 17.9093 5.9128 18.7692 6.88618 19.3948C7.85956 20.0204 8.97441 20.3917 10.1285 20.4745C11.2826 20.5573 12.4391 20.3491 13.4918 19.8688C14.9012 19.2253 16.0533 18.1267 16.7631 16.7495" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 22 22"
+        fill="none"
+        className="text-[#453F3D] dark:text-zinc-400"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M17.2498 11.7921C16.8303 10.4812 15.9359 9.24627 14.5697 8.15351C12.5955 6.5741 11.1148 4.20497 10.6212 1.73713C10.4406 2.62161 10.1474 3.47943 9.74862 4.28986M0.75 0.75L20.4925 20.4927M7.45752 7.45956C7.20712 7.70322 6.94522 7.9348 6.67275 8.15351C4.6985 9.73293 3.71137 11.6085 3.71137 13.5828C3.71179 14.7398 4.00267 15.8783 4.55736 16.8938C5.11206 17.9093 5.9128 18.7692 6.88618 19.3948C7.85956 20.0204 8.97441 20.3917 10.1285 20.4745C11.2826 20.5573 12.4391 20.3491 13.4918 19.8688C14.9012 19.2253 16.0533 18.1267 16.7631 16.7495"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
   },
@@ -156,19 +176,16 @@ export default function HomeBuiltSection() {
         </div>
 
         <div className="mt-5 grid min-w-0 grid-cols-2 gap-2 sm:mt-7 sm:gap-3 md:gap-5">
-
           {/* LEFT CARD */}
           <div className="flex min-w-0 flex-col justify-between rounded-2xl border border-transparent bg-[#58A19A]/16 p-3 sm:p-4 md:rounded-3xl md:p-6 dark:border-white/10 dark:bg-[#519A91]/15">
-            
             <h4 className="max-w-none text-[11px] font-semibold leading-snug text-[#1A1615] sm:max-w-xs sm:text-sm md:text-lg dark:text-white">
               {t.home.built.leftCardTitle}
             </h4>
 
             {/* UI BOX */}
             <div className="mt-4 space-y-2 sm:mt-6 sm:space-y-4 md:mt-24">
-              
               {/* Colors */}
-              <div className="flex w-full items-center justify-center gap-0.5 rounded-xl border border-[#E4E2E2] bg-white p-2 sm:gap-2 sm:rounded-2xl sm:p-3.5 dark:border-white/15 dark:bg-[#141414]">
+              <div className="flex w-full items-center justify-center gap-0.5 rounded-xl border border-[#E4E2E2] bg-white p-2 sm:gap-2 sm:rounded-2xl sm:p-3.5 dark:border-white/10/15 dark:bg-[#141414]">
                 {colors.map((item, i) => (
                   <div
                     key={i}
@@ -176,35 +193,35 @@ export default function HomeBuiltSection() {
                     style={{ backgroundColor: item.color }}
                   >
                     {item.icon && (
-                      <span className="scale-[0.65] sm:scale-90 md:scale-100">{item.icon}</span>
+                      <span className="scale-[0.65] sm:scale-90 md:scale-100">
+                        {item.icon}
+                      </span>
                     )}
                   </div>
                 ))}
               </div>
 
-             <div className="grid min-w-0 grid-cols-[2fr_1fr] md:grid-cols-[2.5fr_0.8fr] gap-1 md:gap-3 lg:gap-5">
-              {/* Toggle */}
-              <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-2 sm:rounded-2xl sm:p-3.5 dark:border-white/15 dark:bg-[#141414]">
-                <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-                  <div className="relative h-3 w-6 md:h-4 md:w-8 shrink-0 rounded-full bg-[#00A82D]/15 border border-[#00A82D] sm:h-5 sm:w-10">
-                    <div className="absolute right-0.5 top-[1.3px] md:top-0.5 h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-[#00A82D] sm:h-3.5 sm:w-3.5" />
+              <div className="grid min-w-0 grid-cols-[2fr_1fr] md:grid-cols-[2.5fr_0.8fr] gap-1 md:gap-3 lg:gap-5">
+                {/* Toggle */}
+                <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-2 sm:rounded-2xl sm:p-3.5 dark:border-white/10/15 dark:bg-[#141414]">
+                  <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+                    <div className="relative h-3 w-6 md:h-4 md:w-8 shrink-0 rounded-full bg-[#00A82D]/15 border border-[#00A82D] sm:h-5 sm:w-10">
+                      <div className="absolute right-0.5 top-[1.3px] md:top-0.5 h-2 w-2 md:h-2.5 md:w-2.5 rounded-full bg-[#00A82D] sm:h-3.5 sm:w-3.5" />
+                    </div>
+                    <span className="truncate text-[9px] leading-tight text-[#1C1C1C] sm:text-xs md:text-sm dark:text-zinc-200">
+                      {t.home.built.hideBranding}
+                    </span>
                   </div>
-                  <span className="truncate text-[9px] leading-tight text-[#1C1C1C] sm:text-xs md:text-sm dark:text-zinc-200">
-                    {t.home.built.hideBranding}
-                  </span>
                 </div>
-                </div>
-                <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-1 sm:rounded-2xl sm:p-1.5 dark:border-white/15 dark:bg-[#141414]">
-                  
+                <div className="flex w-full min-w-0 items-center justify-between rounded-xl border border-[#E4E2E2] bg-white p-1 sm:rounded-2xl sm:p-1.5 dark:border-white/10/15 dark:bg-[#141414]">
                   {/* SUN */}
                   <button
                     type="button"
                     onClick={() => setMode("dark")}
                     className={`flex h-6 w-7 md:h-8 md:w-9 items-center justify-center rounded-lg transition sm:h-10 sm:w-12 sm:rounded-xl
-                      ${mode === "dark" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5] dark:border-white/20 dark:bg-white/10" : "bg-transparent"}
+                      ${mode === "dark" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5] dark:border-white/10/20 dark:bg-white/10" : "bg-transparent"}
                     `}
                   >
-              
                     {/* Moon SVG */}
                     <svg
                       className="h-4 w-4 text-[#1A1615] sm:h-6 sm:w-6 dark:text-zinc-100"
@@ -215,8 +232,10 @@ export default function HomeBuiltSection() {
                       stroke="currentColor"
                       strokeWidth="1.5"
                     >
-                      <path d="M21 12.79A9 9 0 0111.21 3 
-                              7 7 0 1021 12.79z" />
+                      <path
+                        d="M21 12.79A9 9 0 0111.21 3 
+                              7 7 0 1021 12.79z"
+                      />
                     </svg>
                   </button>
 
@@ -225,7 +244,7 @@ export default function HomeBuiltSection() {
                     type="button"
                     onClick={() => setMode("light")}
                     className={`flex h-6 w-7 md:h-8 md:w-9 items-center justify-center rounded-lg transition sm:h-10 sm:w-12 sm:rounded-xl
-                      ${mode === "light" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5] dark:border-white/20 dark:bg-white/10" : "bg-transparent"}
+                      ${mode === "light" ? "border-2 border-[#E4E2E2] bg-[#F1EBE5] dark:border-white/10/20 dark:bg-white/10" : "bg-transparent"}
                     `}
                   >
                     {/* Sun SVG */}
@@ -242,9 +261,8 @@ export default function HomeBuiltSection() {
                       <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
                     </svg>
                   </button>
-
                 </div>
-            </div>
+              </div>
               {/* Description */}
               <p className="mt-3 max-w-sm text-[10px] leading-snug text-[#656769] sm:mt-6 sm:text-sm md:leading-relaxed dark:text-[#9CA3AF]">
                 {t.home.built.leftCardBody}
@@ -269,19 +287,26 @@ export default function HomeBuiltSection() {
                   "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
               }}
             >
-                {/* EDGE FADES (physical L/R — correct for LTR marquee strip) */}
-                <div className="pointer-events-none absolute start-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-[#EAF4F3] to-transparent dark:from-[#161616]" />
+              {/* EDGE FADES (physical L/R — correct for LTR marquee strip) */}
+              <div className="pointer-events-none absolute start-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-[#EAF4F3] to-transparent dark:from-[#161616]" />
 
-                <div className="pointer-events-none absolute end-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-[#EAF4F3] to-transparent dark:from-[#161616]" />
+              <div className="pointer-events-none absolute end-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-[#EAF4F3] to-transparent dark:from-[#161616]" />
 
               {/* ROW 1: Slides Left */}
               <div className="relative flex overflow-hidden">
                 <div className="flex w-max animate-infinite-scroll gap-2 whitespace-nowrap sm:gap-4">
                   {[...Array(2)].map((_, i) => (
                     <div key={i} className="flex gap-2 sm:gap-4">
-                      {[icon1, icon2, icon3, icon4, icon5, icon6].map((icon, idx) => (
-                        <Image key={idx} src={icon} alt="" className="h-8 w-8 shrink-0 sm:h-12 sm:w-12 md:h-14 md:w-14" />
-                      ))}
+                      {[icon1, icon2, icon3, icon4, icon5, icon6].map(
+                        (icon, idx) => (
+                          <Image
+                            key={idx}
+                            src={icon}
+                            alt=""
+                            className="h-8 w-8 shrink-0 sm:h-12 sm:w-12 md:h-14 md:w-14"
+                          />
+                        ),
+                      )}
                     </div>
                   ))}
                 </div>
@@ -292,14 +317,20 @@ export default function HomeBuiltSection() {
                 <div className="flex w-max animate-infinite-scroll-reverse gap-2 whitespace-nowrap sm:gap-4">
                   {[...Array(2)].map((_, i) => (
                     <div key={i} className="flex gap-2 sm:gap-4">
-                      {[icon6, icon5, icon4, icon3, icon2, icon1].map((icon, idx) => (
-                        <Image key={idx} src={icon} alt="" className="h-8 w-8 shrink-0 sm:h-12 sm:w-12 md:h-14 md:w-14" />
-                      ))}
+                      {[icon6, icon5, icon4, icon3, icon2, icon1].map(
+                        (icon, idx) => (
+                          <Image
+                            key={idx}
+                            src={icon}
+                            alt=""
+                            className="h-8 w-8 shrink-0 sm:h-12 sm:w-12 md:h-14 md:w-14"
+                          />
+                        ),
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
-              
             </div>
 
             {/* Description */}
@@ -307,12 +338,14 @@ export default function HomeBuiltSection() {
               {t.home.built.rightCardBody}
             </p>
           </div>
-
         </div>
 
         <div className="mt-4 grid min-w-0 grid-cols-3 gap-2 sm:mt-5 sm:gap-3 md:gap-5">
           {bottomCards.map((card, cardIndex) => (
-            <article key={card.title} className="min-w-0 rounded-2xl border border-transparent bg-[#58A19A]/15 p-2 sm:rounded-3xl sm:p-4 md:p-5 lg:p-7 dark:border-white/10 dark:bg-[#519A91]/15">
+            <article
+              key={card.title}
+              className="min-w-0 rounded-2xl border border-transparent bg-[#58A19A]/15 p-2 sm:rounded-3xl sm:p-4 md:p-5 lg:p-7 dark:border-white/10 dark:bg-[#519A91]/15"
+            >
               <div className="flex items-center justify-center rounded-full border border-transparent bg-white h-10 w-10 md:h-12 md:w-12 lg:h-14 lg:w-14 dark:border-white/10 dark:bg-[#141414]">
                 <BottomCardIcon cardIndex={cardIndex} />
               </div>

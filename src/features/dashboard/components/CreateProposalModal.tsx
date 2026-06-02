@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import PopupHero from "@/features/dashboard/components/PopupHero";
 import PopupIcons from "@/features/dashboard/components/PopupIcons";
 import PopupBgTexture from "@/features/dashboard/components/PopupBgTexture";
@@ -14,6 +15,7 @@ interface ProposalType {
   title: string;
   description: string;
   tone: "primary" | "secondary" | "tertiary";
+  href?: string;
 }
 
 /** PopupBgTexture uses `currentColor` — white in light, #2A2A2A in dark */
@@ -49,6 +51,7 @@ export default function CreateProposalModal({
 }: CreateProposalModalProps) {
   const router = useRouter();
   const { t, dir } = useLanguage();
+  const { theme } = useTheme();
   const isRtl = dir === "rtl";
   const fullHeroTextLine1 = t.dashboard.createProposalModal.heroLine1;
   const fullHeroTextLine2 = t.dashboard.createProposalModal.heroLine2;
@@ -57,6 +60,7 @@ export default function CreateProposalModal({
       title: t.dashboard.createProposalModal.types.technical.title,
       description: t.dashboard.createProposalModal.types.technical.description,
       tone: "primary",
+      href: "/dashboard/proposals/new",
     },
     {
       title: t.dashboard.createProposalModal.types.visualization.title,
@@ -89,9 +93,9 @@ export default function CreateProposalModal({
     return () => window.clearInterval(id);
   }, []);
 
-  function handleSelect() {
+  function handleSelect(href?: string) {
     onClose();
-    router.push("/dashboard/proposals/new");
+    if (href) router.push(href);
   }
 
   return (
@@ -129,15 +133,15 @@ export default function CreateProposalModal({
           </div>
 
           {/* Hero image */}
-          <div className="relative mb-6 h-44 w-full overflow-hidden rounded-2xl">
-            <PopupHero className="absolute inset-0 h-full w-full" />
+          <div className="relative mb-6 h-44 w-full overflow-hidden rounded-2xl" style={{ background: "linear-gradient(135deg, #FFFFFF, #E1FFFE)" }}>
+            {/* <PopupHero className="absolute inset-0 h-full w-full" /> */}
             <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center px-6 text-center">
-              <div className="text-base font-medium text-white md:text-xl lg:text-2xl leading-relaxed tracking-wide">
+              <div className="text-base font-semibold text-black md:text-xl lg:text-2xl leading-relaxed tracking-wide">
                 <p>{heroLine1}</p>
                 <p>{heroLine2}</p>
               </div>
             </div>
-            <PopupIcons className="absolute inset-0 z-20 h-full w-full opacity-0 animate-[fadeIn_2.4s_ease-in_forwards]" />
+            {/* <PopupIcons className="absolute inset-0 z-20 h-full w-full opacity-0 animate-[fadeIn_2.4s_ease-in_forwards]" /> */}
           </div>
 
           {/* Proposal type cards */}
@@ -145,7 +149,7 @@ export default function CreateProposalModal({
             {proposalTypes.map((type) => (
               <button
                 key={type.title}
-                onClick={handleSelect}
+                onClick={() => handleSelect(type.href)}
                 aria-label={`${t.dashboard.createProposalModal.selectProposalAriaPrefix} ${type.title}`}
                 className={`group relative w-full overflow-visible rounded-2xl p-5 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary/40 ${
                   isRtl ? "text-right" : "text-left"

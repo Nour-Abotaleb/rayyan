@@ -10,6 +10,7 @@ import ProposalCalendarIcon from "@/icons/ProposalCalendarIcon";
 import StatusBgSvg from "./StatusBgSvg";
 
 type Status = "Completed" | "Processing" | "Failed";
+type ProposalType = "Technical" | "Financial" | "Visualization";
 
 const statusStyles: Record<Status, string> = {
   Completed: "bg-[#34A853]/12 text-[#34A853]",
@@ -32,6 +33,7 @@ const mockProposals = [
     title: "Dolor sed velit rem - Sunt v...",
     desc: "just add your details and let the syst...",
     status: "Completed" as Status,
+    type: "Technical" as ProposalType,
     progress: 100,
     startDate: "6/11/2025",
     endDate: "9/11/2025",
@@ -41,6 +43,7 @@ const mockProposals = [
     title: "Dolor sed velit rem - Sunt v...",
     desc: "just add your details and let the syst...",
     status: "Processing" as Status,
+    type: "Financial" as ProposalType,
     progress: 63,
     startDate: "6/11/2025",
     endDate: "9/11/2025",
@@ -50,24 +53,34 @@ const mockProposals = [
     title: "Dolor sed velit rem - Sunt v...",
     desc: "just add your details and let the syst...",
     status: "Failed" as Status,
+    type: "Visualization" as ProposalType,
     progress: 0,
     startDate: "6/11/2025",
     endDate: "9/11/2025",
   },
 ];
 
-const tabs: (Status | "ALL")[] = ["ALL", "Completed", "Processing", "Failed"];
+const tabs: (ProposalType | "ALL")[] = [
+  "ALL",
+  "Technical",
+  "Financial",
+  "Visualization",
+];
 
-export default function ProposalsTable() {
+export default function ProposalsTable({
+  variant = "card",
+}: {
+  variant?: "card" | "page";
+}) {
   const { t, dir } = useLanguage();
   const isRtl = dir === "rtl";
-  const [active, setActive] = useState<Status | "ALL">("ALL");
+  const [active, setActive] = useState<ProposalType | "ALL">("ALL");
   const [search, setSearch] = useState("");
-  const tabLabelByStatus: Record<Status | "ALL", string> = {
+  const tabLabel: Record<ProposalType | "ALL", string> = {
     ALL: t.dashboard.proposals.tabs.all,
-    Completed: t.dashboard.proposals.tabs.completed,
-    Processing: t.dashboard.proposals.tabs.processing,
-    Failed: t.dashboard.proposals.tabs.failed,
+    Technical: t.dashboard.proposals.tabs.technical,
+    Financial: t.dashboard.proposals.tabs.financial,
+    Visualization: t.dashboard.proposals.tabs.visualization,
   };
   const statusLabelByStatus: Record<Status, string> = {
     Completed: t.dashboard.proposals.status.completed,
@@ -76,7 +89,7 @@ export default function ProposalsTable() {
   };
 
   const filtered = mockProposals.filter((p) => {
-    const matchTab = active === "ALL" || p.status === active;
+    const matchTab = active === "ALL" || p.type === active;
     const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
     return matchTab && matchSearch;
   });
@@ -90,13 +103,15 @@ export default function ProposalsTable() {
 
   return (
     <div className="relative flex flex-col gap-4 rounded-2xl px-3 md:px-5">
-      {/* Active tab background — clip here only so proposal actions can extend above cards */}
-      <div className="w-full pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
-        <ProposalTabBgSvg
-          variant={active}
-          className={`h-auto w-full ${isRtl ? "scale-x-[-1]" : ""}`}
-        />
-      </div>
+      {/* Active tab background — card variant only */}
+      {variant === "card" && (
+        <div className="w-full pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
+          <ProposalTabBgSvg
+            variant={active}
+            className={`h-auto w-full ${isRtl ? "scale-x-[-1]" : ""}`}
+          />
+        </div>
+      )}
 
       <div className="relative z-10 flex flex-col gap-4">
         {/* Header */}
@@ -104,6 +119,10 @@ export default function ProposalsTable() {
           {/* Tabs */}
           <div
             className={`flex items-center ${
+              variant === "page"
+                ? "border-b border-black/15 dark:border-white/10"
+                : ""
+            } ${
               isRtl
                 ? "gap-1 md:gap-2 lg:gap-3 xl:gap-20"
                 : "gap-1 md:gap-4 lg:gap-4 xl:gap-17"
@@ -113,29 +132,35 @@ export default function ProposalsTable() {
               <button
                 key={tab}
                 onClick={() => setActive(tab)}
-                className={`px-3 lg:px-4 text-sm md:text-base font-medium transition-colors ${
-                  active === tab
-                    ? "text-primary dark:text-[#519A91]"
-                    : "text-black dark:text-zinc-100"
+                className={`pb-3 text-sm md:text-base font-medium transition-colors ${
+                  variant === "page"
+                    ? active === tab
+                      ? "px-4 border-b-[2px] border-primary text-black dark:border-[#519A91] dark:text-[#519A91] -mb-px"
+                      : "px-4 text-black dark:text-zinc-400 hover:text-black dark:hover:text-white"
+                    : active === tab
+                      ? "px-3 lg:px-4 text-primary dark:text-[#519A91]"
+                      : "px-3 lg:px-4 text-black dark:text-zinc-100"
                 }`}
               >
-                {tabLabelByStatus[tab]}
+                {tabLabel[tab]}
               </button>
             ))}
           </div>
 
-          {/* Search */}
-          <div className="hidden md:flex items-center bg-linear-to-r from-white/35 to-white dark:bg-linear-to-r dark:from-white/15 dark:to-white/20 justify-between gap-0 overflow-hidden rounded-full border border-white min-w-52 lg:min-w-70">
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t.dashboard.proposals.searchPlaceholder}
-              className="py-2.5 ps-4 text-xs text-zinc-700 placeholder:text-[#A9A9A9] focus:outline-none dark:text-zinc-100"
-            />
-            <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary dark:bg-[#519A91] border border-white dark:border-[#0D0D0D] text-white dark:text-[#0D0D0D]">
-              <SearchIcon size={16} />
-            </button>
-          </div>
+          {/* Search — card variant only */}
+          {variant === "card" && (
+            <div className="hidden md:flex items-center bg-linear-to-r from-white/35 to-white dark:bg-linear-to-r dark:from-white/15 dark:to-white/20 justify-between gap-0 overflow-hidden rounded-full border border-white dark:border-white/10 min-w-52 lg:min-w-70">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t.dashboard.proposals.searchPlaceholder}
+                className="py-2.5 ps-4 text-xs text-zinc-700 placeholder:text-[#A9A9A9] focus:outline-none dark:text-zinc-100"
+              />
+              <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary dark:bg-[#519A91] border border-white dark:border-[#0D0D0D] text-white dark:text-[#0D0D0D]">
+                <SearchIcon size={16} />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Proposal cards */}
@@ -154,11 +179,14 @@ export default function ProposalsTable() {
             </div>
           ) : (
             filtered.map((p) => (
-              <div key={p.id} className="relative pt-3 lg:pt-6">
+              <div
+                key={p.id}
+                className={`relative ${variant === "page" ? "pt-6 lg:pt-9" : "pt-3 lg:pt-6"}`}
+              >
                 <div className="relative">
                   <button
                     type="button"
-                    className={`absolute top-2.5 right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 text-xs font-medium text-white dark:text-black transition-colors hover:bg-primary-dark ${
+                    className={`absolute ${variant === "page" ? "top-0" : "top-2.5"} right-0 z-20 flex items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 text-xs font-medium text-white dark:text-black transition-colors hover:bg-primary-dark ${
                       isRtl ? "flex-row-reverse" : ""
                     }`}
                   >
@@ -166,12 +194,17 @@ export default function ProposalsTable() {
                     {t.dashboard.proposals.viewProposal}
                   </button>
                   <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
-                    <StatusBgSvg className="h-full w-full text-white dark:text-[#0D0D0D]" />
+                    <StatusBgSvg
+                      className="h-full w-full text-white dark:text-[#0D0D0D]"
+                      preserveAspectRatio={
+                        variant === "page" ? "none" : "xMidYMid meet"
+                      }
+                    />
                   </div>
 
                   <div className="relative z-10 flex flex-col gap-3 p-3">
                     <span
-                      className={`relative top-3 w-fit rounded-full px-3 md:px-4 py-1 md:py-1.5 text-xs font-medium ${
+                      className={`relative ${variant === "page" ? "-top-1" : "top-3"} w-fit rounded-full px-3 md:px-4 py-1 md:py-1.5 text-xs font-medium ${
                         isRtl ? "self-end" : "self-start"
                       } ${statusStyles[p.status]}`}
                     >

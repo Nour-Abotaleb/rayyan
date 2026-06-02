@@ -7,6 +7,7 @@ import overviewBg from "@src/assets/dashboard/overview-bg.png";
 import ProposalTypeIcon from "@/icons/ProposalTypeIcon";
 import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
 import ProposalDetailsModal from "@/features/dashboard/components/ProposalDetailsModal";
+import CreateProposalModal from "@/features/dashboard/components/CreateProposalModal";
 
 // ── Icons ──────────────────────────────────────────────────────────
 function AttachIcon() {
@@ -38,6 +39,7 @@ export default function DashboardPage() {
   const { t } = useLanguage();
   const [prompt, setPrompt] = useState("");
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const attachInputRef = useRef<HTMLInputElement>(null);
 
@@ -142,7 +144,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Type chips */}
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto">
           {types.map((type) => (
             <button
               key={type.key}
@@ -165,6 +167,17 @@ export default function DashboardPage() {
             <ArrowDownCircleIcon size={20} />
           </button>
         </div>
+
+        {/* Create Manual Proposal button */}
+        <div className="mt-5 flex justify-center max-w-lg mx-auto">
+          <button
+            type="button"
+            onClick={() => setShowCreateModal(true)}
+            className="w-full rounded-full bg-primary px-10 py-3 text-sm md:text-[15px] font-semibold tracking-wide text-white transition-colors hover:bg-primary-dark cursor-pointer"
+          >
+            {t.dashboard.overview.createManualProposal}
+          </button>
+        </div>
       </div>
 
       {showDetailsModal && (
@@ -172,6 +185,9 @@ export default function DashboardPage() {
           initialFiles={attachedFiles}
           onClose={() => setShowDetailsModal(false)}
         />
+      )}
+      {showCreateModal && (
+        <CreateProposalModal onClose={() => setShowCreateModal(false)} />
       )}
     </div>
   );

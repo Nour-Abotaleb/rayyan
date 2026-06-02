@@ -1,192 +1,64 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
-import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
-import step2Bg from "@src/assets/dashboard/step2-bg.svg";
+import DateCalendarIcon from "@/icons/DateCalendarIcon";
+import PersonIcon from "@/icons/PersonIcon";
 import CloseIcon from "@/icons/CloseIcon";
-
-// ── Icons ──────────────────────────────────────────────────────────
-function DocIcon({ size = 40 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <path
-        opacity="0.4"
-        d="M20.5 10.19H17.61C15.24 10.19 13.31 8.26 13.31 5.89V3C13.31 2.45 12.86 2 12.31 2H8.07C4.99 2 2.5 4 2.5 7.57V16.43C2.5 20 4.99 22 8.07 22H15.93C19.01 22 21.5 20 21.5 16.43V11.19C21.5 10.64 21.05 10.19 20.5 10.19Z"
-        fill="#488981"
-      />
-      <path
-        d="M15.7997 2.21048C15.3897 1.80048 14.6797 2.08048 14.6797 2.65048V6.14048C14.6797 7.60048 15.9197 8.81048 17.4297 8.81048C18.3797 8.82048 19.6997 8.82048 20.8297 8.82048C21.3997 8.82048 21.6997 8.15048 21.2997 7.75048C19.8597 6.30048 17.2797 3.69048 15.7997 2.21048Z"
-        fill="#488981"
-      />
-      <path
-        d="M11.5275 12.47L9.5275 10.47C9.5175 10.46 9.5075 10.46 9.5075 10.45C9.4475 10.39 9.3675 10.34 9.2875 10.3C9.2775 10.3 9.2775 10.3 9.2675 10.3C9.1875 10.27 9.1075 10.26 9.0275 10.25C8.9975 10.25 8.9775 10.25 8.9475 10.25C8.8875 10.25 8.8175 10.27 8.7575 10.29C8.7275 10.3 8.7075 10.31 8.6875 10.32C8.6075 10.36 8.5275 10.4 8.4675 10.47L6.4675 12.47C6.1775 12.76 6.1775 13.24 6.4675 13.53C6.7575 13.82 7.2375 13.82 7.5275 13.53L8.2475 12.81V17C8.2475 17.41 8.5875 17.75 8.9975 17.75C9.4075 17.75 9.7475 17.41 9.7475 17V12.81L10.4675 13.53C10.6175 13.68 10.8075 13.75 10.9975 13.75C11.1875 13.75 11.3775 13.68 11.5275 13.53C11.8175 13.24 11.8175 12.76 11.5275 12.47Z"
-        fill="#488981"
-      />
-    </svg>
-  );
-}
-
-function EnterTextIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path
-        d="M1.16211 3.46V2.57917C1.16211 1.98417 1.64628 1.5 2.24128 1.5H9.77794C10.3729 1.5 10.8571 1.98417 10.8571 2.57917V3.46"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M6.00684 10.5592V1.9375"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.02441 10.5586H7.27941"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M7.97949 6.03125H12.0687C12.4945 6.03125 12.8387 6.37542 12.8387 6.80125V7.26792"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.37891 12.5018V6.3418"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.12988 12.5H10.6265"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
 
 function UploadFileIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path
-        d="M5.25033 12.8327H8.75033C11.667 12.8327 12.8337 11.666 12.8337 8.74935V5.24935C12.8337 2.33268 11.667 1.16602 8.75033 1.16602H5.25033C2.33366 1.16602 1.16699 2.33268 1.16699 5.24935V8.74935C1.16699 11.666 2.33366 12.8327 5.25033 12.8327Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M5.25 5.54687L7 3.79688L8.75 5.54687"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M7 3.79688V8.46354"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3.5 9.63086C5.76917 10.3892 8.23083 10.3892 10.5 9.63086"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function FromRFPIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path
-        d="M4.66699 1.16602V2.91602"
-        stroke="currentColor"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.33301 1.16602V2.91602"
-        stroke="currentColor"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.08301 6.41602H8.74967"
-        stroke="currentColor"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.08301 8.75H6.99967"
-        stroke="currentColor"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.75 12.8327H5.25C2.33333 12.8327 1.75 11.631 1.75 9.22768V5.62852C1.75 2.88685 2.72417 2.15185 4.66667 2.04102H9.33333C11.2758 2.14602 12.25 2.88685 12.25 5.62852V9.33268"
-        stroke="currentColor"
-        strokeMiterlimit="10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12.25 9.33398L8.75 12.834V11.084C8.75 9.91732 9.33333 9.33398 10.5 9.33398H12.25Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M5.25033 12.8327H8.75033C11.667 12.8327 12.8337 11.666 12.8337 8.74935V5.24935C12.8337 2.33268 11.667 1.16602 8.75033 1.16602H5.25033C2.33366 1.16602 1.16699 2.33268 1.16699 5.24935V8.74935C1.16699 11.666 2.33366 12.8327 5.25033 12.8327Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M5.25 5.54687L7 3.79688L8.75 5.54687" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M7 3.79688V8.46354" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M3.5 9.63086C5.76917 10.3892 8.23083 10.3892 10.5 9.63086" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
 
 function ComponentsIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M22 5.15V8.85C22 11.1 21.1 12 18.85 12H16.15C13.9 12 13 11.1 13 8.85V5.15C13 2.9 13.9 2 16.15 2H18.85C21.1 2 22 2.9 22 5.15Z"
-        stroke="#A0A3BD"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M11 15.15V18.85C11 21.1 10.1 22 7.85 22H5.15C2.9 22 2 21.1 2 18.85V15.15C2 12.9 2.9 12 5.15 12H7.85C10.1 12 11 12.9 11 15.15Z"
-        stroke="#A0A3BD"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M22 15C22 18.87 18.87 22 15 22L16.05 20.25"
-        stroke="#A0A3BD"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M2 9C2 5.13 5.13 2 9 2L7.95 3.75"
-        stroke="#A0A3BD"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M22 5.15V8.85C22 11.1 21.1 12 18.85 12H16.15C13.9 12 13 11.1 13 8.85V5.15C13 2.9 13.9 2 16.15 2H18.85C21.1 2 22 2.9 22 5.15Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M11 15.15V18.85C11 21.1 10.1 22 7.85 22H5.15C2.9 22 2 21.1 2 18.85V15.15C2 12.9 2.9 12 5.15 12H7.85C10.1 12 11 12.9 11 15.15Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M22 15C22 18.87 18.87 22 15 22L16.05 20.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M2 9C2 5.13 5.13 2 9 2L7.95 3.75" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
 
-// ── Data ───────────────────────────────────────────────────────────
-// ── Component ──────────────────────────────────────────────────────
+
+function PlusIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+const WEEKS = [
+  { label: "Week 1", range: "9 – 15 OCT",      days: [9,10,11,12,13,14,15] },
+  { label: "Week 2", range: "16 – 22 OCT",     days: [16,17,18,19,20,21,22] },
+  { label: "Week 3", range: "23 – 29 OCT",     days: [23,24,25,26,27,28,29] },
+  { label: "Week 4", range: "30 OCT – 5 NOV",  days: [30,31,1,2,3,4,5] },
+  { label: "Week 5", range: "6 – 12 NOV",      days: [6,7,8,9,10,11,12] },
+  { label: "Week 6", range: "13 – 19 NOV",     days: [13,14,15,16,17,18,19] },
+];
+
+// Flatten to individual day columns; last 2 days of each week are "weekend" (colored)
+const FLAT_DAYS = WEEKS.flatMap((w, wi) =>
+  w.days.map((d, di) => ({ day: d, weekIdx: wi, dayInWeek: di, isWeekend: di >= 5 }))
+);
+
+const MONTH_GROUPS = [
+  { label: "October 2024", span: 28 },
+  { label: "November 2024", span: 14 },
+];
+
+const GANTT_ROWS = 5;
+
 export default function ProposalSectionsStep({
   onBack,
   onNext,
@@ -195,153 +67,229 @@ export default function ProposalSectionsStep({
   onNext: () => void;
 }) {
   const { t } = useLanguage();
-  const sections = [
-    {
-      title: t.dashboard.newProposal.sections.cards.projectDeliverables.title,
-      description:
-        t.dashboard.newProposal.sections.cards.projectDeliverables.description,
-    },
-    {
-      title: t.dashboard.newProposal.sections.cards.projectTimeline.title,
-      description:
-        t.dashboard.newProposal.sections.cards.projectTimeline.description,
-    },
-    {
-      title: t.dashboard.newProposal.sections.cards.proposedTeam.title,
-      description:
-        t.dashboard.newProposal.sections.cards.proposedTeam.description,
-    },
+  const s = t.dashboard.newProposal.sections;
+  const actions = t.dashboard.newProposal.actions;
+
+  const [cardTitle, setCardTitle] = useState("");
+  const [projectPeriod, setProjectPeriod] = useState("");
+
+  const defaultChip = s.proposalTitleChip;
+  const [sectionChips, setSectionChips] = useState<string[][]>([
+    [defaultChip, defaultChip, defaultChip],
+    [defaultChip, defaultChip, defaultChip],
+    [defaultChip, defaultChip, defaultChip],
+  ]);
+
+  const optionalSections = [
+    s.adminComplianceTitle,
+    s.technicalMethodologyTitle,
+    s.managementResourcesTitle,
   ];
-  const [chips, setChips] = useState<string[]>(
-    Array(3).fill(t.dashboard.newProposal.sections.proposalTitleChip),
-  );
-  const step2BgUrl = typeof step2Bg === "string" ? step2Bg : step2Bg.src;
+
+  function removeChip(si: number, ci: number) {
+    setSectionChips((prev) =>
+      prev.map((row, ri) => (ri === si ? row.filter((_, j) => j !== ci) : row))
+    );
+  }
 
   return (
-    <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
-      {/* Section cards */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3" dir="ltr">
-        {sections.map((card) => (
-          <div key={card.title} className="flex flex-col gap-3">
-            <section className="relative flex flex-col gap-3 overflow-hidden p-3 backdrop-blur-sm aspect-316/274">
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-no-repeat opacity-100 dark:opacity-15"
-                style={{
-                  backgroundImage: `url(${step2BgUrl})`,
-                  backgroundPosition: "top center",
-                  backgroundSize: "100% 100%",
-                }}
-              />
+    <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/10 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
 
-              <div className="relative z-10 flex flex-col gap-3">
-                <h3 className="text-sm font-bold text-black dark:text-white">
-                  {card.title}
-                </h3>
+      {/* Timeline */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm md:text-base font-semibold text-black dark:text-white">
+            {s.createTimelineTitle}
+          </h3>
+          <button
+            type="button"
+            className="flex items-center gap-1.5 rounded-full border border-white bg-white/50 px-3 py-2 text-xs font-medium text-black transition-colors hover:bg-white/80 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 cursor-pointer"
+          >
+            <UploadFileIcon />
+            {s.actions.uploadFile}
+          </button>
+        </div>
 
-                <div className="flex flex-1 items-stretch mt-2">
-                  <div className="flex shrink-0 items-stretch">
-                    <div className="flex w-12 items-center justify-center bg-white dark:bg-[#0D0D0D] rounded-tl-lg rounded-bl-lg border border-[#8DB7B6]/40 min-w-21">
-                      <DocIcon size={34} />
+        {/* Gantt chart */}
+        <div className="relative rounded-xl text-black/15 dark:text-white/10">
+          {/* Custom dash border — longer dashes, wider gaps */}
+          <svg className="pointer-events-none absolute inset-0 h-full w-full" style={{ overflow: "visible" }}>
+            <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none"
+              stroke="currentColor" strokeWidth="1" strokeDasharray="12 7" />
+          </svg>
+        <div className="overflow-x-auto rounded-xl">
+          <table className="min-w-full border-collapse text-xs" style={{ tableLayout: "fixed" }}>
+            <colgroup>
+              {FLAT_DAYS.map((_, i) => (
+                <col key={i} style={{ minWidth: 20 }} />
+              ))}
+            </colgroup>
+            <thead>
+              {/* Month row */}
+              <tr className="border-b border-black/10 bg-primary/[0.03] dark:border-white/10 dark:bg-primary/[0.06]">
+                {MONTH_GROUPS.map((m) => (
+                  <th
+                    key={m.label}
+                    colSpan={m.span}
+                    className="border-e border-black/10 px-2 py-3 text-center text-[10px] font-semibold text-black/40 dark:border-white/10 dark:text-white/35 last:border-e-0"
+                  >
+                    {m.label}
+                  </th>
+                ))}
+              </tr>
+              {/* Week row — each spans 7 day-columns */}
+              <tr className="border-b border-black/10 dark:border-white/10">
+                {WEEKS.map((w) => (
+                  <th
+                    key={w.label}
+                    colSpan={7}
+                    className="border-e border-black/10 px-2 py-2 dark:border-white/10 last:border-e-0"
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-[10px] font-semibold text-black/60 dark:text-white/60">{w.label}</span>
+                      <span className="text-[9px] text-black/30 dark:text-white/25 whitespace-nowrap">{w.range}</span>
                     </div>
-                  </div>
-                  <p className="text-xs font-light leading-relaxed text-black dark:text-white rounded-tr-lg rounded-br-lg border border-[#8DB7B6]/40 bg-[#EBF3F2] dark:bg-[#162422] px-2 py-1">
-                    {card.description}
-                  </p>
-                </div>
-              </div>
-            </section>
+                  </th>
+                ))}
+              </tr>
+              {/* Days row — individual day columns */}
+              <tr>
+                {FLAT_DAYS.map(({ day, isWeekend }, i) => (
+                  <td
+                    key={i}
+                    className={`py-1.5 text-center text-[8px] text-black/25 dark:text-white/20 ${isWeekend ? "bg-primary/[0.02]" : ""}`}
+                  >
+                    {day}
+                  </td>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: GANTT_ROWS }).map((_, row) => (
+                <tr key={row}>
+                  {FLAT_DAYS.map(({ isWeekend }, i) => (
+                    <td
+                      key={i}
+                      className={`h-16 ${isWeekend ? "bg-primary/[0.02]" : ""}`}
+                    />
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </div>
 
-            <div className="flex w-full items-center gap-2">
+      {/* Add Card + Project Period */}
+      <div className="flex items-end gap-2">
+        <div className="flex flex-1 flex-col gap-1.5">
+          <label className="text-sm font-medium text-black dark:text-white">
+            {s.addCardLabel} <span>*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder={s.cardTitlePlaceholder}
+              value={cardTitle}
+              onChange={(e) => setCardTitle(e.target.value)}
+              className="input-style w-full rounded-[44px] py-3 ps-4 pe-10 text-sm text-[#A0A3BD] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD]"
+            />
+            <span className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-input-icon">
+              <PersonIcon size={20} />
+            </span>
+          </div>
+        </div>
+
+        <div className="flex flex-1 flex-col gap-1.5">
+          <label className="text-sm font-medium text-black dark:text-white">
+            {s.projectPeriodLabel} <span>*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder={s.projectPeriodPlaceholder}
+              value={projectPeriod}
+              onChange={(e) => setProjectPeriod(e.target.value)}
+              className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-10 text-sm text-[#A0A3BD] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD]"
+            />
+            <span className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-input-icon">
+              <DateCalendarIcon size={20} />
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="mb-px flex h-[45px] w-[45px] shrink-0 items-center justify-center rounded-full bg-primary text-white cursor-pointer hover:opacity-90 transition-opacity"
+        >
+          <PlusIcon />
+        </button>
+      </div>
+
+      {/* Optional Sections */}
+      <div className="flex flex-col gap-4">
+        <h3 className="text-sm md:text-base font-semibold text-black dark:text-white">
+          {s.optionalSectionsTitle}
+        </h3>
+
+        {optionalSections.map((title, si) => (
+          <div key={title} className="flex flex-col gap-2">
+            <h4 className="text-sm md:text-[15px] font-semibold text-black/90 dark:text-white">
+              {title}
+            </h4>
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <div className="input-style w-full rounded-[44px] py-3 ps-4 pe-11 text-sm font-[300] text-black dark:text-zinc-100">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {sectionChips[si].map((chip, ci) => (
+                      <span
+                        key={ci}
+                        className="inline-flex items-center gap-2"
+                      >
+                        <span className="inline-flex items-center rounded-full bg-[#E4ECEE] px-3 py-1.5 text-xs font-normal text-black dark:bg-[#1B272B] dark:text-white">
+                          {chip}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeChip(si, ci)}
+                          className="-ms-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#E4ECEE] text-sm leading-none text-black hover:opacity-70 dark:bg-[#1B272B] dark:text-white cursor-pointer"
+                          aria-label={s.removeChipAriaLabel}
+                        >
+                          <CloseIcon size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
+                  <ComponentsIcon />
+                </span>
+              </div>
               <button
                 type="button"
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white bg-white/50 p-2 text-xs font-normal text-black transition-colors hover:bg-[#F6F4F0] dark:border-[#0D0D0D] dark:bg-[#0D0D0D]/50 dark:text-white dark:hover:bg-[#141414] cursor-pointer"
+                className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer hover:opacity-70"
               >
-                <EnterTextIcon />
-                {t.dashboard.newProposal.sections.actions.enterText}
-              </button>
-              <button
-                type="button"
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white bg-white/50 p-2 text-xs font-normal text-black transition-colors hover:bg-[#F6F4F0] dark:border-[#0D0D0D] dark:bg-[#0D0D0D]/50 dark:text-white dark:hover:bg-[#141414] cursor-pointer"
-              >
-                <UploadFileIcon />
-                {t.dashboard.newProposal.sections.actions.uploadFile}
-              </button>
-              <button
-                type="button"
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-primary p-2 text-xs font-normal text-white transition-colors hover:bg-primary-dark dark:bg-[#519A91] dark:text-black cursor-pointer"
-              >
-                <FromRFPIcon />
-                {t.dashboard.newProposal.sections.actions.fromRfp}
+                <ArrowDownCircleIcon size={20} />
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Proposal Components */}
-      <div>
-        <div className="flex items-center justify-between gap-4 pt-4 pb-2">
-          <h3 className="text-sm font-bold text-black dark:text-white tracking-wide">
-            {t.dashboard.newProposal.sections.proposalComponentsTitle}
-          </h3>
-        </div>
-
-        <div className="mt-3 flex items-center gap-2">
-          <div className="relative flex-1">
-            <div className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-black  dark:text-zinc-100">
-              <div className="flex flex-wrap items-center gap-2">
-                {chips.map((chip, idx) => (
-                  <span
-                    key={`${chip}-${idx}`}
-                    className="inline-flex items-center gap-2"
-                  >
-                    <span className="inline-flex items-center rounded-full bg-[#E4ECEE] px-3 py-1.5 text-xs font-normal text-black dark:bg-[#1B272B] dark:text-white">
-                      {chip}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setChips((prev) => prev.filter((_, j) => j !== idx))
-                      }
-                      className="-ms-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#E4ECEE] text-sm leading-none text-black transition-colors hover:text-black dark:bg-[#1B272B] dark:text-white dark:hover:text-white cursor-pointer"
-                      aria-label={t.dashboard.newProposal.sections.removeChipAriaLabel}
-                    >
-                      <CloseIcon size={12} />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center gap-1 text-input-icon">
-              <ComponentsIcon />
-            </span>
-          </div>
-
-          <button
-            type="button"
-            className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
-            aria-label={t.dashboard.newProposal.actions.openAriaLabel}
-          >
-            <ArrowDownCircleIcon size={20} />
-          </button>
-        </div>
-      </div>
-
       {/* Navigation */}
       <div className="mt-2 flex items-center justify-end gap-3">
         <button
-          className="rounded-full border border-white bg-white/50 px-3 py-2.5 text-sm font-normal text-black dark:text-white cursor-pointer"
+          className="rounded-full border border-white bg-white/50 px-3 py-2.5 text-sm font-normal text-black dark:border-white/10 dark:bg-white/5 dark:text-white cursor-pointer hover:opacity-80 transition-opacity"
           onClick={onBack}
         >
-          {t.dashboard.newProposal.actions.previousBasicInfo}
+          {actions.previousBasicInfo}
         </button>
         <button
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
           onClick={onNext}
         >
-          {t.dashboard.newProposal.actions.nextSections}
+          {actions.nextUpload}
         </button>
       </div>
     </main>

@@ -78,7 +78,7 @@ export default function HomeContactHeroSection() {
 
             <div className="hidden items-center justify-center gap-3 lg:flex">
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[6px] py-[2.5px] dark:border-white/25 dark:bg-white/8">
+                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[6px] py-[2.5px] dark:border-white/10/25 dark:bg-white/8">
                   <button
                     type="button"
                     onClick={toggleTheme}
@@ -98,7 +98,7 @@ export default function HomeContactHeroSection() {
                     className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
                       theme === "dark"
                         ? "bg-primary text-white"
-                        : "text-zinc-900 hover:text-primary dark:border dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
+                        : "text-zinc-900 hover:text-primary dark:border dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
                     }`}
                   >
                     <MoonIcon size={18} />
@@ -109,7 +109,7 @@ export default function HomeContactHeroSection() {
                   type="button"
                   onClick={cycleLanguage}
                   aria-label={t.nav.language}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
                 >
                   <TranslateIcon size={20} />
                 </button>
@@ -133,7 +133,7 @@ export default function HomeContactHeroSection() {
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? t.contact.closeMenu : t.contact.openMenu}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary md:h-12 md:w-12 lg:hidden dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary md:h-12 md:w-12 lg:hidden dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
             >
               {mobileOpen ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
             </button>
@@ -142,7 +142,7 @@ export default function HomeContactHeroSection() {
           {mobileOpen && (
             <div className="flex flex-col gap-4 border-t border-zinc-200/80 pb-5 pt-4 lg:hidden dark:border-zinc-400/80">
               <div className="flex flex-wrap items-center gap-3 px-3">
-                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[7px] py-[2.5px] dark:border-white/25 dark:bg-white/8">
+                <div className="flex items-center gap-1 rounded-full border border-white bg-white/50 px-[7px] py-[2.5px] dark:border-white/10/25 dark:bg-white/8">
                   <button
                     type="button"
                     onClick={toggleTheme}
@@ -162,7 +162,7 @@ export default function HomeContactHeroSection() {
                     className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
                       theme === "dark"
                         ? "bg-primary text-white"
-                        : "text-zinc-900 hover:text-primary dark:border dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
+                        : "text-zinc-900 hover:text-primary dark:border dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
                     }`}
                   >
                     <MoonIcon size={18} />
@@ -172,7 +172,7 @@ export default function HomeContactHeroSection() {
                   type="button"
                   onClick={cycleLanguage}
                   aria-label={t.nav.language}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
                 >
                   <TranslateIcon size={20} />
                 </button>

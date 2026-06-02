@@ -59,7 +59,7 @@ export default function HomeInsightsSection() {
 
               <div className="mt-6 flex items-center justify-between pe-4">
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full border-2 border-white bg-gray-300 md:h-9 md:w-9 lg:h-10 lg:w-10 dark:border-white/15 dark:bg-zinc-600" />
+                  <div className="h-8 w-8 rounded-full border-2 border-white bg-gray-300 md:h-9 md:w-9 lg:h-10 lg:w-10 dark:border-white/10/15 dark:bg-zinc-600" />
                   <div>
                     <p className="text-sm font-semibold text-[#1A1615] dark:text-white">
                       {t.home.insights.authorName}

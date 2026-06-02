@@ -38,7 +38,9 @@ function UploadBox({
       <div
         className={[
           "relative flex min-h-0 flex-col overflow-hidden backdrop-blur-sm px-4 pt-4",
-          isCompact ? "aspect-[316/274] md:aspect-[481/274]" : "aspect-[316/274] pb-4",
+          isCompact
+            ? "aspect-[316/274] md:aspect-[481/274]"
+            : "aspect-[316/274] pb-4",
         ].join(" ")}
       >
         <div
@@ -102,7 +104,7 @@ function UploadBox({
           </div>
 
           <div className="md:mt-4 flex min-h-0 flex-1 flex-col items-center justify-center px-2 py-6 text-center sm:px-4 sm:py-8">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/50 dark:bg-[#1B272B]/50 border border-white dark:border-white/5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/50 dark:bg-[#1B272B]/50 border border-white dark:border-white/10">
               <UploadCloudIcon className="text-primary dark:text-[#519A91]" />
             </div>
             <p className="mt-4 text-xs font-normal text-black dark:text-white">
@@ -133,14 +135,17 @@ export default function ProposalUploadStep({
 }) {
   const { t } = useLanguage();
   const uploadCards: UploadCard[] = [
-    { title: t.dashboard.newProposal.upload.cards.rfpDocuments, required: true },
+    {
+      title: t.dashboard.newProposal.upload.cards.rfpDocuments,
+      required: true,
+    },
     { title: t.dashboard.newProposal.upload.cards.resumeDocuments },
     { title: t.dashboard.newProposal.upload.cards.teamDocuments },
     { title: t.dashboard.newProposal.upload.cards.certificatesRegistrations },
     { title: t.dashboard.newProposal.upload.cards.otherSupportingDocuments },
   ];
   return (
-    <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/30 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
+    <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/10 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         <UploadBox
           title={uploadCards[0].title}

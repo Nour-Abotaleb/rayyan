@@ -87,7 +87,7 @@ export default function HomeSecondSection() {
                 {/* 3. Replicating the Edit Icon placement */}
                 <button
                   type="button"
-                  className="absolute -right-2.5 -top-1.5 rounded-full bg-white/60 p-1.5 sm:-right-2 sm:-top-2 sm:p-2 md:-right-4.5 md:-top-4.5 md:p-3 dark:border dark:border-white/15 dark:bg-white/10"
+                  className="absolute -right-2.5 -top-1.5 rounded-full bg-white/60 p-1.5 sm:-right-2 sm:-top-2 sm:p-2 md:-right-4.5 md:-top-4.5 md:p-3 dark:border dark:border-white/10/15 dark:bg-white/10"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -166,7 +166,7 @@ export default function HomeSecondSection() {
                 className={`whitespace-nowrap rounded-full px-2 py-[7.9px] text-xs font-semibold transition md:px-4 md:py-[9.9px] rtl:px-4 rtl:md:px-7 ${
                   activeFilter === key
                     ? "bg-[#58A19A] text-white dark:bg-[#519A91]"
-                    : "border border-white/25 bg-white/30 text-black dark:border-white/20 dark:bg-white/8 dark:text-white"
+                    : "border border-white/25 bg-white/30 text-black dark:border-white/10/20 dark:bg-white/8 dark:text-white"
                 }`}
               >
                 {filterLabel[key]}

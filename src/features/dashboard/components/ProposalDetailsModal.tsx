@@ -330,7 +330,9 @@ export default function ProposalDetailsModal({
   const { t, dir } = useLanguage();
   const m = t.dashboard.proposalDetailsModal;
 
-  const [rfpMode, setRfpMode] = useState<"none" | "upload" | "manual">("manual");
+  const [rfpMode, setRfpMode] = useState<"none" | "upload" | "manual">(
+    "manual",
+  );
   const [rfpTab, setRfpTab] = useState<"system" | "database">("system");
   const [clientName, setClientName] = useState("");
   const [projectName, setProjectName] = useState("");
@@ -339,7 +341,10 @@ export default function ProposalDetailsModal({
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [docsMode, setDocsMode] = useState<"database" | "manual">("database");
-  const [docs, setDocs] = useState<UploadDoc[]>(() => [...mapFilesToDocs(initialFiles, "attached"), ...DB_DOCS]);
+  const [docs, setDocs] = useState<UploadDoc[]>(() => [
+    ...mapFilesToDocs(initialFiles, "attached"),
+    ...DB_DOCS,
+  ]);
   const [selectedDocs, setSelectedDocs] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const rfpFileInputRef = useRef<HTMLInputElement>(null);
@@ -421,18 +426,23 @@ export default function ProposalDetailsModal({
                 onChange={(e) => {
                   const files = Array.from(e.target.files ?? []);
                   if (files.length) {
-                    setDocs((prev) => [...mapFilesToDocs(files, "rfp"), ...prev]);
+                    setDocs((prev) => [
+                      ...mapFilesToDocs(files, "rfp"),
+                      ...prev,
+                    ]);
                   }
                   e.target.value = "";
                 }}
               />
               <button
                 type="button"
-                onClick={() => setRfpMode(rfpMode === "upload" ? "none" : "upload")}
+                onClick={() =>
+                  setRfpMode(rfpMode === "upload" ? "none" : "upload")
+                }
                 className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium cursor-pointer transition-colors ${
                   rfpMode === "upload"
                     ? "bg-primary text-white hover:opacity-90"
-                    : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                    : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/10/20 dark:bg-white/5 dark:text-white"
                 }`}
               >
                 <RfpUploadIcon active={rfpMode === "upload"} />
@@ -440,11 +450,13 @@ export default function ProposalDetailsModal({
               </button>
               <button
                 type="button"
-                onClick={() => setRfpMode(rfpMode === "manual" ? "none" : "manual")}
+                onClick={() =>
+                  setRfpMode(rfpMode === "manual" ? "none" : "manual")
+                }
                 className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium cursor-pointer transition-colors ${
                   rfpMode === "manual"
                     ? "bg-primary text-white hover:opacity-90"
-                    : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                    : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/10/20 dark:bg-white/5 dark:text-white"
                 }`}
               >
                 <AddManualIcon active={rfpMode === "manual"} />
@@ -485,7 +497,7 @@ export default function ProposalDetailsModal({
               {/* From System dropzone */}
               {rfpTab === "system" && (
                 <div
-                  className="mt-3 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#488981] py-3 text-center"
+                  className="relative mt-3 flex flex-col items-center justify-center gap-2 rounded-xl py-3 text-center"
                   style={{
                     background:
                       "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)",
@@ -495,10 +507,16 @@ export default function ProposalDetailsModal({
                     e.preventDefault();
                     const files = Array.from(e.dataTransfer.files);
                     if (files.length) {
-                      setDocs((prev) => [...mapFilesToDocs(files, "rfp"), ...prev]);
+                      setDocs((prev) => [
+                        ...mapFilesToDocs(files, "rfp"),
+                        ...prev,
+                      ]);
                     }
                   }}
                 >
+                  <svg className="pointer-events-none absolute inset-0 h-full w-full text-[#488981]" style={{ overflow: "visible" }}>
+                    <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="8 6" />
+                  </svg>
                   <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
                     <DropzoneUploadIcon />
                   </span>
@@ -553,7 +571,9 @@ export default function ProposalDetailsModal({
           )}
 
           {/* Form grid */}
-          <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${rfpMode === "upload" ? "hidden" : ""}`}>
+          <div
+            className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${rfpMode === "upload" ? "hidden" : ""}`}
+          >
             {/* Client Name */}
             <Field label={m.clientNameLabel} required>
               <InputWithIcon
@@ -591,7 +611,9 @@ export default function ProposalDetailsModal({
                       height={20}
                       className="rounded-full"
                     />
-                    <span className="text-black dark:text-white">{m.arabic}</span>
+                    <span className="text-black dark:text-white">
+                      {m.arabic}
+                    </span>
                     <span
                       className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${language === "ar" ? "border-primary" : "border-[#D0D5DD]"}`}
                     >
@@ -702,7 +724,7 @@ export default function ProposalDetailsModal({
                   className={`flex items-center gap-0.5 md:gap-1.5 rounded-full px-3 py-2.5 text-xs font-medium cursor-pointer transition-colors text-nowrap ${
                     docsMode === "manual"
                       ? "bg-primary text-white hover:opacity-90"
-                      : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                      : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/10/20 dark:bg-white/5 dark:text-white"
                   }`}
                 >
                   <UploadIcon />
@@ -714,7 +736,7 @@ export default function ProposalDetailsModal({
                   className={`flex items-center gap-0.5 md:gap-1.5 rounded-full px-3 py-2.5 text-xs font-medium cursor-pointer transition-colors text-nowrap ${
                     docsMode === "database"
                       ? "bg-primary text-white hover:opacity-90"
-                      : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/20 dark:bg-white/5 dark:text-white"
+                      : "border border-white bg-white/50 text-black hover:border-primary hover:text-primary dark:border-white/10/20 dark:bg-white/5 dark:text-white"
                   }`}
                 >
                   <DatabaseIcon active={docsMode === "database"} />
@@ -726,7 +748,7 @@ export default function ProposalDetailsModal({
             {/* Manual upload dropzone */}
             {docsMode === "manual" && (
               <div
-                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#488981] py-3 text-center"
+                className="relative flex flex-col items-center justify-center gap-2 rounded-xl py-3 text-center"
                 style={{
                   background:
                     "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)",
@@ -741,6 +763,9 @@ export default function ProposalDetailsModal({
                   }
                 }}
               >
+                <svg className="pointer-events-none absolute inset-0 h-full w-full text-[#488981]" style={{ overflow: "visible" }}>
+                  <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="8 6" />
+                </svg>
                 <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
                   <DropzoneUploadIcon />
                 </span>

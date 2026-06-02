@@ -25,7 +25,7 @@ export default function HomeCommunitySection() {
             </Link>
             <Link
               href="/login"
-              className="rounded-full border border-white bg-white/50 px-7 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white dark:border-white/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
+              className="rounded-full border border-white bg-white/50 px-7 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-white dark:border-white/10/25 dark:bg-white/8 dark:text-white dark:hover:bg-white/15"
             >
               {t.home.community.learnMore}
             </Link>

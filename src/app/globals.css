@@ -131,6 +131,12 @@ body {
   }
 }
 
+@utility status-proposal-bg {
+  background-color: white;
+  border-radius: 1rem;
+  opacity: 0.92;
+}
+
 @keyframes scroll {
   0% {
     transform: translateX(0);

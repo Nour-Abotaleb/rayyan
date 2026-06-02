@@ -58,7 +58,7 @@ function CapabilityRow({
           </Link>
           <button
             type="button"
-            className="rounded-full border border-[#F0F0F0] bg-[#F0F0F0]/50 px-5 py-2 text-sm font-medium text-black transition-colors hover:text-primary md:tracking-[1px] dark:border-white/20 dark:bg-white/8 dark:text-white dark:hover:bg-white/15 dark:hover:text-primary-light"
+            className="rounded-full border border-[#F0F0F0] bg-[#F0F0F0]/50 px-5 py-2 text-sm font-medium text-black transition-colors hover:text-primary md:tracking-[1px] dark:border-white/10/20 dark:bg-white/8 dark:text-white dark:hover:bg-white/15 dark:hover:text-primary-light"
           >
             {t.home.capabilities.watchDemo}
           </button>
@@ -69,7 +69,7 @@ function CapabilityRow({
         {tags.map((tag) => (
           <span
             key={tag}
-            className="flex items-center justify-center gap-1 lg:gap-3 text-nowrap rounded-full border border-[#E4E2E2] px-3 py-2 text-center text-xs lg:text-sm text-[#1A1615] dark:border-white/15 dark:bg-white/[0.06] dark:text-zinc-100"
+            className="flex items-center justify-center gap-1 lg:gap-3 text-nowrap rounded-full border border-[#E4E2E2] px-3 py-2 text-center text-xs lg:text-sm text-[#1A1615] dark:border-white/10/15 dark:bg-white/[0.06] dark:text-zinc-100"
           >
             <svg
               viewBox="0 0 24 24"

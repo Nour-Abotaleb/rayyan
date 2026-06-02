@@ -24,7 +24,7 @@ const navIcons = [
 ] as const;
 
 const navIconInactive =
-  "text-paragraph transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center shrink-0";
+  "text-paragraph transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10/25 dark:hover:text-primary-light bg-white/50 rounded-full p-2 h-10 w-10 lg:h-11 lg:w-11 flex items-center justify-center shrink-0";
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
@@ -180,7 +180,7 @@ function LandingControls({
 }) {
   return (
     <>
-      <div className="flex items-center gap-1 rounded-full bg-white/50 dark:bg-white/8 dark:border dark:border-white/25 px-[7px] py-[2.5px]">
+      <div className="flex items-center gap-1 rounded-full bg-white/50 dark:bg-white/8 dark:border dark:border-white/10/25 px-[7px] py-[2.5px]">
         <button
           type="button"
           onClick={toggleTheme}
@@ -200,7 +200,7 @@ function LandingControls({
           className={`flex h-9 w-9 items-center justify-center rounded-full p-2 transition-colors ${
             theme === "dark"
               ? "bg-primary text-white"
-              : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
+              : "text-zinc-900 hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10/25 dark:hover:text-primary-light"
           }`}
         >
           <MoonIcon size={18} />
@@ -211,7 +211,7 @@ function LandingControls({
         type="button"
         onClick={cycleLanguage}
         aria-label={navLabel.language}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/25 dark:hover:text-primary-light"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white/50 p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:bg-white/8 dark:border dark:border-white/10/25 dark:hover:text-primary-light"
       >
         <TranslateIcon size={20} />
       </button>
