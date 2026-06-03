@@ -31,14 +31,20 @@ export async function apiRequest<T>(
   const url = `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
   const useAuth = options?.auth !== false;
 
-  const res = await fetch(url, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(useAuth ? bearerHeaders() : {}),
-      ...(init.headers as Record<string, string>),
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        ...(useAuth ? bearerHeaders() : {}),
+        ...(init.headers as Record<string, string>),
+      },
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Network error";
+    return { ok: false, error: message, status: 0 };
+  }
 
   if (!res.ok) {
     let error = res.statusText;

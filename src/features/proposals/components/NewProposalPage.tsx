@@ -12,6 +12,7 @@ import pdfIcon from "@src/assets/dashboard/pdf.svg";
 import ProposalStepsSidebar from "@/features/proposals/components/ProposalStepsSidebar";
 import ProposalSectionsStep from "@/features/proposals/components/ProposalSectionsStep";
 import ProposalUploadStep from "@/features/proposals/components/ProposalUploadStep";
+import ProposalFinalReviewStep from "@/features/proposals/components/ProposalFinalReviewStep";
 
 function InputField({
   label,
@@ -406,6 +407,13 @@ export default function NewProposalPage() {
           <ProposalUploadStep
             onBack={() => setActiveStep(2)}
             onNext={() => setActiveStep(4)}
+          />
+        )}
+
+        {activeStep === 4 && (
+          <ProposalFinalReviewStep
+            onBack={() => setActiveStep(3)}
+            onSubmit={() => {}}
           />
         )}
       </div>
