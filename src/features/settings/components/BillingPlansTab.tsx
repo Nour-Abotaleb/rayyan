@@ -78,8 +78,8 @@ export default function BillingPlansTab() {
               onClick={() => setActivePlan(idx)}
               className={`w-full md:max-w-xs flex flex-col justify-between rounded-3xl border cursor-pointer transition-all ${
                 isActive
-                  ? "px-5 pt-6 pb-5 border-[#58A19A] bg-gradient-to-b from-[#50AED4]/30 to-[#58A19A]/15 dark:border-[#519A91] dark:from-[#50AED4]/15 dark:to-[#519A91]/12"
-                  : "p-5 min-h-[410px] border-transparent bg-white hover:border-[#58A19A]/30 dark:bg-[#141414]"
+                  ? "px-5 pt-6 pb-5 min-h-[440px] border-[#58A19A] bg-gradient-to-b from-[#50AED4]/30 to-[#58A19A]/15 dark:border-[#519A91] dark:from-[#50AED4]/15 dark:to-[#519A91]/12"
+                  : "p-5 min-h-[440px] border-transparent bg-white hover:border-[#58A19A]/30 dark:bg-[#141414]"
               }`}
             >
               <div>
@@ -114,7 +114,7 @@ export default function BillingPlansTab() {
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); setActivePlan(idx); }}
-                className={`mt-5 w-full rounded-full px-4 py-3 text-sm font-[550] tracking-[0.5px] transition-colors cursor-pointer ${
+                className={`mt-12 w-full rounded-full px-4 py-3 text-sm font-[550] tracking-[0.5px] transition-colors cursor-pointer ${
                   isActive
                     ? "bg-[#58A19A] text-white hover:opacity-90 dark:bg-[#519A91]"
                     : "bg-[#58A19A]/15 text-[#1A1615] hover:bg-[#58A19A]/25 dark:bg-[#519A91]/20 dark:text-white dark:hover:bg-[#519A91]/30"
@@ -146,7 +146,7 @@ export default function BillingPlansTab() {
             <thead>
               <tr className="bg-[#F8F8F8] dark:bg-white/5">
                 {[s.colInvoiceId, s.colIssueDate, s.colPlan, s.colAmount, s.colBillingPeriod, s.colStatus, s.colActions].map((col) => (
-                  <th key={col} className="px-3 py-3 text-[13.5px] font-semibold tracking-wider text-[#586064] uppercase first:rounded-s-lg last:rounded-e-lg last:text-center">
+                  <th key={col} className="px-3 py-3 text-[13.5px] font-semibold tracking-wider text-[#586064] dark:text-white/90 uppercase first:rounded-s-lg last:rounded-e-lg last:text-center">
                     {col}
                   </th>
                 ))}
@@ -155,11 +155,11 @@ export default function BillingPlansTab() {
             <tbody>
               {MOCK_INVOICES.map((inv, i) => (
                 <tr key={i}>
-                  <td className="py-4 pe-4 text-sm text-black dark:text-white">{inv.id}</td>
-                  <td className="py-4 pe-4 text-sm text-black dark:text-white">{inv.date}</td>
-                  <td className="py-4 pe-4 text-sm text-black dark:text-white">{inv.plan}</td>
-                  <td className="py-4 pe-4 text-sm text-black dark:text-white"><FormatWithCurrency amount={inv.amount.toFixed(2)} /></td>
-                  <td className="py-4 pe-4 text-sm text-[#808080]">{inv.period}</td>
+                  <td className="py-4 pe-4 text-sm text-black dark:text-white/80">{inv.id}</td>
+                  <td className="py-4 pe-4 text-sm text-black dark:text-white/80">{inv.date}</td>
+                  <td className="py-4 pe-4 text-sm text-black dark:text-white/80">{inv.plan}</td>
+                  <td className="py-4 pe-4 text-sm text-black dark:text-white/80"><FormatWithCurrency amount={inv.amount.toFixed(2)} /></td>
+                  <td className="py-4 pe-4 text-sm text-[#808080] dark:text-white/80">{inv.period}</td>
                   <td className="py-4 pe-4">
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${STATUS_STYLES[inv.status]}`}>
                       <span className={`size-1.5 rounded-full ${STATUS_DOT[inv.status]}`} />
@@ -167,7 +167,7 @@ export default function BillingPlansTab() {
                     </span>
                   </td>
                   <td className="py-4 text-center">
-                    <button type="button" className="transition-colors text-primary cursor-pointer">
+                    <button type="button" className="transition-colors text-primary dark:text-white cursor-pointer">
                       <DownloadIcon size={18} />
                     </button>
                   </td>
@@ -179,7 +179,7 @@ export default function BillingPlansTab() {
 
         {/* Pagination */}
         <div className="mt-4 flex items-center justify-between gap-4">
-          <p className="text-[13px] text-[#3F4947]">
+          <p className="text-[13px] text-[#3F4947] dark:text-gray-400">
             {s.showing} {(page - 1) * PER_PAGE + 1} {s.to} {Math.min(page * PER_PAGE, TOTAL)} {s.of} {TOTAL} {s.results}
           </p>
           <div className="flex items-center gap-1">
@@ -187,7 +187,7 @@ export default function BillingPlansTab() {
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="flex size-8 items-center justify-center rounded-[12px] border border-[#BFC9C6] text-[#1A1C1C] transition-colors hover:border-primary hover:text-primary disabled:opacity-40 cursor-pointer dark:border-white/10"
+              className="flex size-8 items-center justify-center rounded-[12px] border border-[#BFC9C6] dark:border-white/80 text-[#1A1C1C] dark:text-white/90 transition-colors hover:border-primary hover:text-primary disabled:opacity-40 cursor-pointer dark:border-white/10 dark:hover:border-white dark:hover:text-white"
             >
               <ChevronIcon dir="left" />
             </button>
@@ -199,7 +199,7 @@ export default function BillingPlansTab() {
                 className={`flex size-8 items-center justify-center rounded-[12px] text-xs font-medium transition-colors cursor-pointer ${
                   page === p
                     ? "bg-primary text-white dark:text-black"
-                    : "border border-[#BFC9C6] text-[#1A1C1C] hover:border-primary hover:text-primary dark:border-white/10"
+                    : "border border-[#BFC9C6] dark:border-white/60 text-[#1A1C1C] dark:text-white/70 text-[#1A1C1C] hover:border-primary dark:hover:border-white dark:hover:text-white hover:text-primary"
                 }`}
               >
                 {p}
@@ -209,7 +209,7 @@ export default function BillingPlansTab() {
               type="button"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="flex size-8 items-center justify-center rounded-[12px] border border-[#BFC9C6] text-[#1A1C1C] transition-colors hover:border-primary hover:text-primary disabled:opacity-40 cursor-pointer dark:border-white/10"
+              className="flex size-8 items-center justify-center rounded-[12px] border border-[#BFC9C6] dark:border-white/80 text-[#1A1C1C] dark:text-white/90 transition-colors hover:border-primary dark:hover:border-white dark:hover:text-white hover:text-primary disabled:opacity-40 cursor-pointer dark:border-white/10"
             >
               <ChevronIcon dir="right" />
             </button>

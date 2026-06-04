@@ -16,24 +16,27 @@
 4. [🗄️ Database / Files API](#️-database--files-api)
 5. [📊 Dashboard Stats API](#-dashboard-stats-api)
 6. [👤 User & Profile API](#-user--profile-api)
-7. [✉️ Contact API](#️-contact-api)
-8. [📄 Pages & Screens](#-pages--screens)
-   - [🏠 Landing Page](#-landing-page)
-   - [🔑 Login](#-login-page)
-   - [📝 Register](#-register-page)
-   - [🔒 Forgot Password](#-forgot-password)
-   - [📊 Dashboard Overview](#-dashboard-overview)
-   - [✨ AI Proposal Entry (Create)](#-ai-proposal-entry-create)
-   - [🧭 New Proposal Wizard](#-new-proposal-wizard-step-by-step)
-   - [📋 Proposals List](#-proposals-list)
-   - [🗄️ Database Page](#️-database-page)
-   - [📋 Proposal Details Modal](#-proposal-details-modal)
-   - [⚙️ Settings Page](#️-settings-page)
-   - [✉️ Contact Us](#️-contact-us)
-9. [🧩 Data Types](#-data-types)
-10. [🗺️ Route Protection](#️-route-protection)
-11. [🌐 Internationalization](#-internationalization)
-12. [🚧 Not Yet Implemented](#-not-yet-implemented)
+7. [🏢 Company & Settings API](#-company--settings-api)
+8. [💳 Billing API](#-billing-api)
+9. [✉️ Contact API](#️-contact-api)
+10. [📄 Pages & Screens](#-pages--screens)
+    - [🏠 Landing Page](#-landing-page)
+    - [🔑 Login](#-login-page)
+    - [📝 Register](#-register-page)
+    - [🔒 Forgot Password](#-forgot-password)
+    - [📊 Dashboard Overview](#-dashboard-overview)
+    - [✨ AI Proposal Entry (Create)](#-ai-proposal-entry-create)
+    - [🧭 Technical Proposal Wizard](#-technical-proposal-wizard-step-by-step)
+    - [💰 Financial Proposal Wizard](#-financial-proposal-wizard)
+    - [📋 Proposals List](#-proposals-list)
+    - [🗄️ Database Page](#️-database-page)
+    - [📋 Proposal Details Modal](#-proposal-details-modal)
+    - [⚙️ Settings Page](#️-settings-page)
+    - [✉️ Contact Us](#️-contact-us)
+11. [🧩 Data Types](#-data-types)
+12. [🗺️ Route Protection](#️-route-protection)
+13. [🌐 Internationalization](#-internationalization)
+14. [🚧 Not Yet Implemented](#-not-yet-implemented)
 
 ---
 
@@ -522,6 +525,166 @@ Client polls:
 
 ---
 
+## 🏢 Company & Settings API
+
+### `GET /api/settings/company` _(not yet created)_
+
+**Response `200 OK`**
+
+```json
+{
+  "companyName": "ACME Corp",
+  "companyEmail": "info@acme.com",
+  "phone": "+966 50 000 0000",
+  "landline": "+966 11 000 0000",
+  "address": "123 King Fahd Rd, Riyadh",
+  "website": "https://acme.com",
+  "logoUrl": "https://storage.example.com/logos/acme.png"
+}
+```
+
+---
+
+### `PUT /api/settings/company` _(not yet created)_
+
+**Request**: `multipart/form-data`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `companyName` | `string` | ❌ | Legal company name |
+| `companyEmail` | `string` | ❌ | Official contact email |
+| `phone` | `string` | ❌ | Mobile with country dial code |
+| `landline` | `string` | ❌ | Landline with country dial code |
+| `address` | `string` | ❌ | Physical address |
+| `website` | `string` | ❌ | Company website URL |
+| `companyLogo` | `File` | ❌ | Logo image (PNG / JPG / SVG) |
+| `commercialRegister` | `File` | ❌ | Commercial registration document |
+| `taxCard` | `File` | ❌ | Tax card document |
+
+**Response `200 OK`**: Updated company object
+
+---
+
+### `GET /api/settings/profile` _(not yet created)_
+
+**Response `200 OK`**
+
+```json
+{
+  "fullName": "Ahmed Mohamed",
+  "email": "ahmed@example.com",
+  "phone": "+966 50 000 0000",
+  "avatarUrl": "https://storage.example.com/avatars/user_abc.png"
+}
+```
+
+---
+
+### `PUT /api/settings/profile` _(not yet created)_
+
+**Request**: `multipart/form-data`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `fullName` | `string` | ❌ | Display name |
+| `email` | `string` | ❌ | Login email |
+| `phone` | `string` | ❌ | Phone with country dial code |
+| `password` | `string` | ❌ | New password (omit to keep current) |
+| `avatar` | `File` | ❌ | Profile picture (PNG / JPG) |
+
+**Response `200 OK`**: Updated profile object
+
+| Status | Body |
+|--------|------|
+| `409 Conflict` | `{ "error": "Email already in use" }` |
+
+---
+
+## 💳 Billing API
+
+### `GET /api/billing/plans` _(not yet created)_
+
+**Response `200 OK`**
+
+```json
+{
+  "plans": [
+    {
+      "id": "premium",
+      "name": "Dreelio",
+      "tier": "Premium",
+      "price": 299,
+      "description": "For growing teams...",
+      "features": ["Feature A", "Feature B"],
+      "cta": "Current Plan",
+      "active": true,
+      "renewalDate": "Sep 30, 2025"
+    }
+  ],
+  "currentPlanId": "premium"
+}
+```
+
+---
+
+### `POST /api/billing/plans/:id/subscribe` _(not yet created)_
+
+> Initiates a plan subscription or upgrade.
+
+**Response `200 OK`**
+
+```json
+{ "ok": true, "checkoutUrl": "https://payment-gateway.example.com/checkout/..." }
+```
+
+| Status | Body |
+|--------|------|
+| `404` | `{ "error": "Plan not found" }` |
+
+---
+
+### `GET /api/billing/invoices` _(not yet created)_
+
+**Query Parameters**
+
+| Param | Type | Description |
+|-------|------|-------------|
+| `page` | `number` | Page index (default: 1) |
+| `limit` | `number` | Results per page (default: 4) |
+
+**Response `200 OK`**
+
+```json
+{
+  "invoices": [
+    {
+      "id": "INV-001",
+      "date": "2025-01-15",
+      "plan": "Premium",
+      "amount": 299,
+      "period": "Jan 2025",
+      "status": "Paid"
+    }
+  ],
+  "total": 240,
+  "page": 1,
+  "limit": 4
+}
+```
+
+---
+
+### `GET /api/billing/invoices/:id/download` _(not yet created)_
+
+> Returns the invoice as a downloadable PDF.
+
+| Status | Body |
+|--------|------|
+| `200 OK` | Binary PDF stream |
+| `404` | `{ "error": "Invoice not found" }` |
+
+---
+
 ## ✉️ Contact API
 
 ### `POST /api/contact` _(not yet created)_
@@ -700,7 +863,7 @@ User types prompt + attaches files → Send
 
 ---
 
-### 🧭 New Proposal Wizard (Step by Step)
+### 🧭 Technical Proposal Wizard (Step by Step)
 
 **Route**: `/dashboard/proposals/new`
 **Page file**: `src/app/dashboard/proposals/new/page.tsx`
@@ -710,7 +873,7 @@ User types prompt + attaches files → Send
 
 **Progress**: `Math.round((activeStep / 4) * 100)` — shown in sidebar
 
-**Step names** (from i18n + sidebar)
+**Step names**
 
 | # | Title | Subtitle |
 |---|-------|----------|
@@ -725,41 +888,34 @@ User types prompt + attaches files → Send
 
 **Component**: inline in `NewProposalPage.tsx`
 
-**Layout order** (top to bottom):
-
-1. RFP Documents upload section (with System / Database tabs)
-2. Two-column form grid
-3. Additional Details textarea
-4. Next button
-
 **RFP Documents section**
 
 | Tab | UI |
 |-----|----|
-| `system` | Drag-and-drop dropzone with SVG custom-dashed border (`strokeDasharray="8 6"`), gradient bg |
-| `database` | Checkbox file list (3 mock items — to be replaced by `GET /api/database/files`) |
+| `system` | Drag-and-drop dropzone — SVG dashed border (`strokeDasharray="8 6"`), gradient bg |
+| `database` | Checkbox file list (3 mock items — replace with `GET /api/database/files`) |
 
-**Form Fields** (two-column grid, full-width on mobile)
+**Form Fields** (two-column grid)
 
 | Field | Type | Required | State Key | Notes |
 |-------|------|----------|-----------|-------|
-| Client Name | `text` | ✅ | `basicInfo.clientName` | |
-| Project Name | `text` | ✅ | `basicInfo.projectName` | |
-| Sector / Industry | `text` + dropdown | ✅ | `basicInfo.sectorIndustry` | `ArrowDownCircleIcon` button |
-| Proposal Type | `text` + dropdown | ✅ | `basicInfo.proposalType` | |
-| Proposal Language | AR / EN radio buttons | ✅ | `basicInfo.proposalLanguage` | `sm:col-span-2`; two flag buttons side by side + `ArrowDownCircleIcon` |
-| Start Date | `text` | ❌ (Optional) | `basicInfo.startDate` | |
-| End Date | `text` | ❌ (Optional) | `basicInfo.endDate` | |
+| Client Name | `text` | ✅ | `basicInfo.clientName` | PersonIcon |
+| Project Name | `text` | ✅ | `basicInfo.projectName` | PersonIcon |
+| Sector / Industry | `text` + dropdown | ✅ | `basicInfo.sectorIndustry` | SectorIcon + ArrowDownCircleIcon |
+| Proposal Type | `text` | ✅ | `basicInfo.proposalType` | PersonIcon |
+| Proposal Language | AR / EN toggle | ✅ | `basicInfo.proposalLanguage` | `col-span-2`; flag buttons + ArrowDownCircleIcon |
+| Start Date | `text` | ❌ | `basicInfo.startDate` | DateCalendarIcon |
+| End Date | `text` | ❌ | `basicInfo.endDate` | DateCalendarIcon |
 
 **Additional Details**: full-width `textarea` (7 rows), optional
 
 **Navigation**
 
-| Button | Text | Action |
-|--------|------|--------|
-| Next | "Next: Scope & Timeline" | `setActiveStep(2)` |
+| Button | Action |
+|--------|--------|
+| Next: Scope & Timeline | `setActiveStep(2)` |
 
-> Note: `canGoNextFromStep1 = true` (validation disabled for testing — all fields optional in current code)
+> `canGoNextFromStep1 = true` — validation not enforced yet
 
 ---
 
@@ -767,35 +923,26 @@ User types prompt + attaches files → Send
 
 **Component**: `src/features/proposals/components/ProposalSectionsStep.tsx`
 
-**Sections (top to bottom):**
-
-1. **Gantt Timeline**
-2. **Add Card + Project Period inputs**
-3. **Optional Sections**
-
----
-
 **Gantt Timeline**
 
 | Detail | Value |
 |--------|-------|
-| Outer border | SVG `<rect>` overlay with `strokeDasharray="12 7"` for custom dashed border |
-| Table structure | 42 day-level columns (6 weeks × 7 days) |
-| Month header row | `bg-primary/[0.03]`, `border-b`, vertical `border-e` separators; `colSpan=28` (Oct), `colSpan=14` (Nov) |
-| Week header row | `border-b`, vertical `border-e` separators; `colSpan=7` each; shows label + date range |
-| Day header row | No borders; day numbers shown |
-| Body rows | 5 placeholder rows, `h-16`, no row borders |
-| Weekend columns | Last 2 days of each 7-day week — `bg-primary/[0.02]` tint |
-| "Upload File" button | Top-right header button; opens file picker for timeline attachments |
+| Border | SVG `<rect>` overlay `strokeDasharray="12 7"` |
+| Columns | 42 day columns (6 weeks × 7 days) |
+| Month row | `colSpan=28` (Oct), `colSpan=14` (Nov) |
+| Week row | `colSpan=7` each — label + date range |
+| Body rows | 5 placeholder rows, `h-16` |
+| Weekends | Last 2 days of each week — `bg-primary/[0.02]` tint |
+| Upload File | Top-right button — opens file picker for timeline attachment |
 
 **Add Card / Project Period**
 
-| Field | Type | State Key |
-|-------|------|-----------|
-| Card Title | `text` input | `cardTitle` |
-| Project Period | `text` input | `projectPeriod` |
+| Field | State Key |
+|-------|-----------|
+| Card Title | `cardTitle` |
+| Project Period | `projectPeriod` |
 
-A circular `+` (PlusIcon) button sits at the end of this row — adds a new card to the timeline.
+PlusIcon `+` button appends a new Gantt card.
 
 **Optional Sections** (3 sections)
 
@@ -805,24 +952,22 @@ A circular `+` (PlusIcon) button sits at the end of this row — adds a new card
 | Technical Methodology & Scope | 3 × "Proposal Title" |
 | Management & Resources | 3 × "Proposal Title" |
 
-Each section is a pill-shaped (`rounded-[44px]`) `input-style` container showing removable chips. A `ComponentsIcon` is pinned to the end. An `ArrowDownCircleIcon` button sits outside the pill to the right.
-
-> **i18n planned (not yet rendered)**: `sections.cards` in `en.ts` defines `projectDeliverables`, `projectTimeline`, and `proposedTeam` AI-extracted summary cards, and `proposalComponentsTitle = "Proposal Components"`. These are expected to appear in this step once the AI integration is built.
+Each section renders as a pill input with removable chips. `ArrowDownCircleIcon` button opens options.
 
 **State**
 
-| Key | Type | Default |
-|-----|------|---------|
-| `cardTitle` | `string` | `""` |
-| `projectPeriod` | `string` | `""` |
-| `sectionChips` | `string[3][]` | 3 rows × 3 chips each |
+| Key | Type |
+|-----|------|
+| `cardTitle` | `string` |
+| `projectPeriod` | `string` |
+| `sectionChips` | `string[3][]` |
 
 **Navigation**
 
-| Button | Text | Action |
-|--------|------|--------|
-| Back | "Previous: Project Identity" | `setActiveStep(1)` |
-| Next | "Next: Team & Expertise" | `setActiveStep(3)` |
+| Button | Action |
+|--------|--------|
+| Previous: Project Identity | `setActiveStep(1)` |
+| Next: Team & Expertise | `setActiveStep(3)` |
 
 ---
 
@@ -830,9 +975,7 @@ Each section is a pill-shaped (`rounded-[44px]`) `input-style` container showing
 
 **Component**: `src/features/proposals/components/ProposalUploadStep.tsx`
 
-**Upload Cards**
-
-Row 1 — 3-column grid (`md:grid-cols-2 lg:grid-cols-3`), `variant="default"`:
+**Upload Cards — Row 1** (3-column, `variant="default"`)
 
 | Card | Required |
 |------|----------|
@@ -840,41 +983,283 @@ Row 1 — 3-column grid (`md:grid-cols-2 lg:grid-cols-3`), `variant="default"`:
 | Resume Documents | ❌ |
 | Team Documents | ❌ |
 
-Row 2 — 2-column grid (`lg:grid-cols-2`), `variant="compact"`:
+**Upload Cards — Row 2** (2-column, `variant="compact"`)
 
 | Card | Required |
 |------|----------|
 | Certificates & Registrations | ❌ |
 | Other Supporting Documents | ❌ |
 
-**UploadBox component** (per card)
+Each card has "From System" (dropzone) and "From Database" tabs. Database tab needs `GET /api/database/files`.
 
-| Element | Detail |
-|---------|--------|
-| Background | Decorative SVG (`Step2Bg` for default, `SecondRowBg` for compact) |
-| Tabs | "From System" / "From Database" (tab state local to each card) |
-| Upload area | Cloud icon + "Drag and drop files here or" text + "Browse Files" button |
-| File types note | `(PDF, DOCX, DOC, TXT, JPG, PNG)` |
+**Team Member form** (manual tab)
 
-> The "From Database" tab UI is present but not yet wired to an API — will need `GET /api/database/files`.
+| Field | Type | Required |
+|-------|------|----------|
+| `name` | `text` | ✅ |
+| `role` | `text` | ✅ |
+| `yearsOfExperience` | `text` | ✅ |
+| `keySkills` | `text` | ✅ |
+| CV/Resume | `file` | ❌ |
 
 **Navigation**
 
-| Button | Text | Action |
-|--------|------|--------|
-| Back | "Previous: Sections" | `setActiveStep(2)` |
-| Next | "Next: Personal information" | `setActiveStep(4)` |
+| Button | Action |
+|--------|--------|
+| Previous: Scope & Timeline | `setActiveStep(2)` |
+| Next: Final Review | `setActiveStep(4)` |
 
 ---
 
 #### Step 4 — Final Review
 
-**Component**: Placeholder — not yet implemented
+**Component**: `src/features/proposals/components/ProposalFinalReviewStep.tsx`
 
-**Planned content**:
-- Review all entered data before submission
-- Preview generated sections
-- Export/submit button → triggers `POST /api/proposals/generate`
+Renders a read-only proposal preview document:
+
+**Header block**
+
+| Element | Content |
+|---------|---------|
+| Title | `(Deliverable-Based) Proposal` |
+| Subtitle | `As requested by [name], [role]` |
+| Body | Auto-generated introduction paragraph |
+
+**Project Timeline section**
+
+| Element | Detail |
+|---------|--------|
+| Date markers | Absolute-positioned labels above the bar |
+| Timeline bar | Flex row of phase blocks (fixed width or `flex:1`) |
+| Duration badge | Right-aligned — `12 Weeks / Timeline` |
+
+**Project Price section**
+
+| Element | Detail |
+|---------|--------|
+| Phase rows | Phase label + numbered items + description + price |
+| Total badge | Right-aligned — sum of all item prices |
+
+**Navigation**
+
+| Button | Action |
+|--------|--------|
+| Previous: Team & Expertise | `onBack()` |
+| Create Proposal | `onSubmit()` → future: `POST /api/proposals/generate` |
+
+---
+
+### 💰 Financial Proposal Wizard
+
+**Route**: `/dashboard/proposals/financial`
+**Page file**: `src/app/dashboard/proposals/financial/page.tsx`
+**Component**: `src/features/proposals/components/FinancialProposalPage.tsx`
+**Middleware**: Auth required
+**Trigger**: Selecting "Financial Proposal" in `CreateProposalModal`
+
+**Phases**
+
+| Phase | Component | Condition |
+|-------|-----------|-----------|
+| Readiness check | `FinancialReadinessStep` | Always first — must score ≥ 6/7 to proceed |
+| 4-step wizard | `FinancialProposalPage` (with sidebar) | After readiness passes |
+
+**Progress**: `Math.round((activeStep / 4) * 100)`
+
+**Sidebar steps**
+
+| # | Title | Subtitle |
+|---|-------|----------|
+| 1 | Project Information | Set core project details and goals. |
+| 2 | Deliverables & Cost Planning | Plan phases and delivery schedule. |
+| 3 | Payment Terms | Assign roles and highlight skills. |
+| 4 | Final Review | Audit and export your proposal. |
+
+---
+
+#### Readiness Phase
+
+**Component**: `src/features/proposals/components/FinancialReadinessStep.tsx`
+
+A checklist of 7 yes/no questions. User must check **at least 6** to unlock the wizard.
+
+**Questions**
+
+| # | Question |
+|---|----------|
+| 1 | I have read and understood the scope |
+| 2 | This project is within our mandate |
+| 3 | I have aligned internally that I will do pricing |
+| 4 | The contract type is understood (Fixed, Deliverables-Based, or Framework) |
+| 5 | I have checked if there is an existing rate card or similar past proposal |
+| 6 | I understand whether this is a monthly resource BoQ or milestone BoQ |
+| 7 | I know the expected duration of the project or agreement |
+
+**State**
+
+| Key | Type | Default |
+|-----|------|---------|
+| `checked` | `boolean[7]` | `[false × 7]` |
+| `failed` | `boolean` | `false` |
+
+**Logic**: `score = checked.filter(Boolean).length` — if `score >= 6` → advance; else show fail message.
+
+---
+
+#### Step 1 — Project Information
+
+**Component**: `src/features/proposals/components/FinancialProjectInfoStep.tsx`
+
+**RFP Documents section** — same as technical proposal (System / Database tabs)
+
+**Form Fields** (two-column grid)
+
+| Field | Type | Required | State Key | Notes |
+|-------|------|----------|-----------|-------|
+| Client Name | `text` | ✅ | `clientName` | PersonIcon |
+| Project Name | `text` | ✅ | `projectName` | PersonIcon |
+| Number of Deliverables | `number` spinner | ✅ | `numDeliverables` | SectorIcon + up/down buttons |
+| BOQ Type | `text` + dropdown | ✅ | `boqType` | SectorIcon + ArrowDownCircleIcon |
+| Project Type | `text` + dropdown | ✅ | `projectType` | SectorIcon + ArrowDownCircleIcon |
+| Sector / Industry | `text` + dropdown | ✅ | `sectorIndustry` | SectorIcon + ArrowDownCircleIcon |
+| Proposal Language | AR / EN toggle | ✅ | `proposalLanguage` | Flag buttons + ArrowDownCircleIcon |
+| Tax Configuration | `number` | ✅ | `taxRate` | TaxIcon — Tax Rate % |
+| Start Date | `text` | ❌ | `startDate` | DateCalendarIcon |
+| End Date | `text` | ❌ | `endDate` | DateCalendarIcon |
+| Terms & Conditions | `textarea` | ❌ | `terms` | 7 rows |
+
+**Navigation**
+
+| Button | Action |
+|--------|--------|
+| Previous: Readiness Assessment | `setPhase("readiness")` |
+| Next: Deliverables & Cost Planning | `setActiveStep(2)` |
+
+---
+
+#### Step 2 — Deliverables & Cost Planning
+
+**Component**: `src/features/proposals/components/FinancialDeliverablesStep.tsx`
+
+**Form Fields**
+
+| Field | Type | Required | State Key | Layout | Notes |
+|-------|------|----------|-----------|--------|-------|
+| Service Catalog | `text` + dropdown | ✅ | `serviceCatalog` | Full width | SectorIcon + ArrowDownCircleIcon |
+| Deliverable Name | `text` | ✅ | `deliverableName` | 3-col | PersonIcon |
+| Due Date | `text` | ✅ | `dueDate` | 3-col | DateCalendarIcon |
+| Quantity | `text` | ✅ | `quantity` | 3-col | PersonIcon |
+| Unit Price (SAR) | `number` spinner | ✅ | `unitPrice` | 2-col | SectorIcon + up/down |
+| Salary Costs (SAR) | `number` spinner | ✅ | `salaryCosts` | 2-col | SectorIcon + up/down |
+| Tools/Software Costs (SAR) | `number` spinner | ❌ | `toolsCosts` | 2-col | SectorIcon + up/down |
+| Other Expenses (SAR) | `number` spinner | ❌ | `otherExpenses` | 2-col | SectorIcon + up/down |
+
+**Navigation**
+
+| Button | Action |
+|--------|--------|
+| Previous: Project Information | `setActiveStep(1)` |
+| Next: Payment Terms | `setActiveStep(3)` |
+
+---
+
+#### Step 3 — Payment Terms
+
+**Component**: `src/features/proposals/components/FinancialPaymentTermsStep.tsx`
+
+Dynamic list of payment term cards. Starts with one card. "Add Payment Term" button appends new cards.
+
+**Payment Term card**
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| Payment Description | `text` | ✅ | PersonIcon |
+| Percentage (%) | `number` spinner (0–100, float) | ✅ | SectorIcon + up/down |
+
+**State**
+
+```typescript
+type PaymentTerm = { id: number; description: string; percentage: string };
+
+terms: PaymentTerm[]   // starts with [{ id:1, description:"", percentage:"" }]
+nextId: number         // auto-increment for new cards
+```
+
+Each card has a `×` (CloseIcon) remove button. Cards cannot be reduced below zero (UI allows removing all).
+
+**Navigation**
+
+| Button | Action |
+|--------|--------|
+| Previous: Deliverables & Cost Planning | `setActiveStep(2)` |
+| Next: Final Review | `setActiveStep(4)` |
+
+---
+
+#### Step 4 — Final Review
+
+**Component**: `src/features/proposals/components/FinancialFinalReviewStep.tsx`
+
+Identical layout to the technical proposal's final review — same proposal preview document with Project Timeline and Project Price sections.
+
+**Navigation**
+
+| Button | Action |
+|--------|--------|
+| Previous: Payment Terms | `onBack()` |
+| Create Proposal | `onSubmit()` → future: `POST /api/proposals/financial/generate` |
+
+**Future API**
+
+```
+POST /api/proposals/financial/generate   (multipart)
+  └─► 202 { jobId }
+        └─► poll GET /api/proposals/generate/:jobId/status
+```
+
+---
+
+### `POST /api/proposals/financial/generate` _(not yet created)_
+
+> Submits all financial wizard data for AI-powered proposal generation.
+
+**Request**: `multipart/form-data`
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `clientName` | `string` | ✅ | |
+| `projectName` | `string` | ✅ | |
+| `numDeliverables` | `number` | ✅ | |
+| `boqType` | `string` | ✅ | e.g. `"Monthly Resource"`, `"Milestone"` |
+| `projectType` | `string` | ✅ | |
+| `sectorIndustry` | `string` | ✅ | |
+| `proposalLanguage` | `"ar"` \| `"en"` | ✅ | |
+| `taxRate` | `number` | ✅ | Percentage, e.g. `15` |
+| `startDate` | `string (ISO)` | ❌ | |
+| `endDate` | `string (ISO)` | ❌ | |
+| `terms` | `string` | ❌ | Terms & conditions text |
+| `rfpFiles` | `File[]` | ❌ | |
+| `rfpDatabaseIds` | `string[]` | ❌ | |
+| `serviceCatalog` | `string` | ✅ | |
+| `deliverableName` | `string` | ✅ | |
+| `dueDate` | `string (ISO)` | ✅ | |
+| `quantity` | `number` | ✅ | |
+| `unitPrice` | `number` | ✅ | SAR |
+| `salaryCosts` | `number` | ✅ | SAR |
+| `toolsCosts` | `number` | ❌ | SAR |
+| `otherExpenses` | `number` | ❌ | SAR |
+| `paymentTerms[].description` | `string` | ✅ | Per term |
+| `paymentTerms[].percentage` | `number` | ✅ | 0–100, must sum to 100 |
+
+**Response `202 Accepted`**
+
+```json
+{
+  "jobId": "job_fin_abc123",
+  "estimatedSeconds": 30,
+  "message": "Financial proposal generation started"
+}
+```
 
 ---
 
@@ -1040,7 +1425,124 @@ Documents list is pre-populated from `initialFiles` (attached in the chat textar
 
 **Route**: `/dashboard/settings`
 **File**: `src/app/dashboard/settings/page.tsx`
-**Status**: Placeholder — renders "Settings / coming soon." text only
+**Component**: `src/features/settings/components/SettingsPage.tsx`
+**Middleware**: Auth required
+
+Three tabs rendered inside `SettingsPage`. The tab bar sits outside the horizontal padding (`layout-shell-x`); content has `md:px-16`.
+
+---
+
+#### Tab 1 — Personal Profile
+
+**Component**: `src/features/settings/components/PersonalProfileTab.tsx`
+
+**Header**: Avatar (circular image) + display name + email + Cancel / Save buttons
+
+**Form Fields** (two-column grid)
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| Full Name | `text` | ✅ | PersonIcon |
+| Email | `email` | ✅ | EmailIcon |
+| Phone | `tel` | ✅ | Country dropdown (dial code) + PhoneIcon |
+| Password | `password` | ✅ | Visibility toggle |
+
+**Avatar upload**: click avatar → hidden `<input type="file" accept="image/*">` 
+
+**API**
+
+| Action | Endpoint |
+|--------|----------|
+| Load profile | `GET /api/settings/profile` |
+| Save changes | `PUT /api/settings/profile` (multipart — includes `avatar` file if changed) |
+
+---
+
+#### Tab 2 — Company Management
+
+**Component**: `src/features/settings/components/CompanyManagementTab.tsx`
+
+**Header**: Company logo (circle) + company name + company email + Cancel / Save buttons
+
+**Form Fields** (two-column grid)
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| Company Name | `text` | ✅ | PersonIcon |
+| Company Email | `email` | ✅ | EmailIcon |
+| Phone | `tel` | ✅ | Country dropdown + PhoneIcon |
+| Landline | `tel` | ✅ | Country dropdown + PhoneIcon |
+| Address | `text` | ✅ | AddressIcon (map/compass SVG) |
+| Website | `url` | ✅ | WebsiteIcon (globe SVG) |
+
+**Upload sections** (below form)
+
+| Section | Required |
+|---------|----------|
+| Company Logo | ✅ |
+| Commercial Register | ✅ |
+| Tax Card | ✅ |
+
+Each section uses the same dropzone UI (dashed SVG border, gradient bg, "Browse Files" button).
+
+**API**
+
+| Action | Endpoint |
+|--------|----------|
+| Load company | `GET /api/settings/company` |
+| Save changes | `PUT /api/settings/company` (multipart) |
+
+---
+
+#### Tab 3 — Billing & Plans
+
+**Component**: `src/features/settings/components/BillingPlansTab.tsx`
+
+**Plans section**
+
+Three plan cards in a flex-wrap row (`items-end`). The active plan card is taller. Inactive cards have `border-4 border-transparent` to maintain equal box dimensions.
+
+| Plan | Tier | Default Active |
+|------|------|----------------|
+| Dreelio | Premium | ✅ |
+| Dreelio | Basic | ❌ |
+| Dreelio | Enterprise | ❌ |
+
+Each card shows: tier badge, price (`FormatWithCurrency` — Saudi Riyal SVG + amount), description, feature list, CTA button, and renewal date badge (active plan only).
+
+**Billing History section**
+
+Filter icon (top-left) + DownloadIcon export button (top-right).
+
+**Table columns**
+
+| Column | Notes |
+|--------|-------|
+| Invoice ID | String |
+| Issue Date | `DD-MM-YYYY` |
+| Plan | Plan tier name |
+| Amount | `FormatWithCurrency` (SAR) |
+| Billing Period | Month string |
+| Status | `Paid` / `Pending` / `Failed` — colored dot badge |
+| Actions | Download button → `GET /api/billing/invoices/:id/download` |
+
+**Pagination**: Previous / Next chevrons + "Showing X to Y of Z results" label.
+
+**State**
+
+| Key | Type | Default |
+|-----|------|---------|
+| `activePlan` | `number` | `0` (Premium) |
+| `page` | `number` | `1` |
+
+**API**
+
+| Action | Endpoint |
+|--------|----------|
+| Load plans | `GET /api/billing/plans` |
+| Subscribe / upgrade | `POST /api/billing/plans/:id/subscribe` |
+| Load invoices | `GET /api/billing/invoices?page=&limit=4` |
+| Download invoice | `GET /api/billing/invoices/:id/download` |
 
 ---
 
@@ -1117,9 +1619,98 @@ type BasicInfo = {
 
 // New Proposal Wizard — Step 2
 type TimelineSection = {
-  title: string;       // card title
-  period: string;      // project period string
-  chips: string[];     // optional section component labels
+  title: string;
+  period: string;
+  chips: string[];
+};
+
+// New Proposal Wizard — Step 3 (team member)
+type TeamMember = {
+  id: number;
+  name: string;
+  role: string;
+  yearsOfExperience: string;
+  keySkills: string;
+  cvFile?: File;
+};
+
+// Financial Proposal — Step 1
+type FinancialProjectInfo = {
+  clientName: string;
+  projectName: string;
+  numDeliverables: number;
+  boqType: string;
+  projectType: string;
+  sectorIndustry: string;
+  proposalLanguage: "ar" | "en";
+  taxRate: number;
+  startDate?: string;
+  endDate?: string;
+  terms?: string;
+};
+
+// Financial Proposal — Step 2
+type FinancialDeliverables = {
+  serviceCatalog: string;
+  deliverableName: string;
+  dueDate: string;
+  quantity: number;
+  unitPrice: number;
+  salaryCosts: number;
+  toolsCosts?: number;
+  otherExpenses?: number;
+};
+
+// Financial Proposal — Step 3
+type PaymentTerm = {
+  id: number;
+  description: string;
+  percentage: number;   // 0–100; all terms should sum to 100
+};
+
+// Settings — Personal Profile
+type PersonalProfile = {
+  fullName: string;
+  email: string;
+  phone: string;
+  avatarUrl?: string;
+};
+
+// Settings — Company
+type CompanyProfile = {
+  companyName: string;
+  companyEmail: string;
+  phone: string;
+  landline: string;
+  address: string;
+  website: string;
+  logoUrl?: string;
+  commercialRegisterUrl?: string;
+  taxCardUrl?: string;
+};
+
+// Billing
+type BillingPlan = {
+  id: string;
+  name: string;
+  tier: string;
+  price: number;
+  description: string;
+  features: string[];
+  cta: string;
+  active: boolean;
+  renewalDate?: string;
+};
+
+type InvoiceStatus = "Paid" | "Pending" | "Failed";
+
+type Invoice = {
+  id: string;
+  date: string;           // "DD-MM-YYYY"
+  plan: string;
+  amount: number;
+  period: string;
+  status: InvoiceStatus;
 };
 
 // Documents
@@ -1205,26 +1796,47 @@ Handled by `src/middleware.ts` — validates `rayyan_session` JWT on every reque
 
 ## 🚧 Not Yet Implemented
 
-| Feature | Missing |
-|---------|---------|
+### APIs
+
+| Feature | Missing endpoint |
+|---------|-----------------|
 | Register | `POST /api/auth/register` |
-| Forgot / Reset Password | `POST /api/auth/forgot-password` + `POST /api/auth/reset-password` |
+| Forgot Password | `POST /api/auth/forgot-password` |
+| Reset Password | `POST /api/auth/reset-password` |
 | Google OAuth | Buttons exist, not wired |
-| AI Proposal Generation | `POST /api/proposals/generate` + polling endpoint |
+| Technical proposal generation | `POST /api/proposals/generate` + polling |
+| Financial proposal generation | `POST /api/proposals/financial/generate` + polling |
 | Proposals list (real data) | `GET /api/proposals` — table uses mock data |
 | Proposal download | `GET /api/proposals/:id/download` |
-| Dashboard stats (real) | `GET /api/dashboard/stats` — `StatsCards` commented out on Overview; hardcoded on Proposals page |
+| Dashboard stats (real) | `GET /api/dashboard/stats` — hardcoded on Proposals page; commented out on Overview |
 | Database files (real) | `GET /api/database/files` — grid uses mock data |
-| File upload storage | `POST /api/database/files/upload` — no backend storage |
+| File upload storage | `POST /api/database/files/upload` — no backend |
 | Notifications | `GET /api/user/notifications` — bell icon is UI only |
-| Search | `GET /api/proposals?search=` — filter is client-side only |
-| Contact form submit | `POST /api/contact` — form has no submit handler |
-| Step 3 database tab | "From Database" tab in UploadBox not wired — needs `GET /api/database/files` |
-| Step 2 AI section cards | `sections.cards` i18n keys (projectDeliverables, projectTimeline, proposedTeam) defined but not rendered |
-| Step 4 (Final Review) | Page stub, not yet implemented |
-| Settings page | `/dashboard/settings` — "coming soon" stub exists, no content |
-| User profile management | `GET/PUT /api/user/profile` |
+| Search | `GET /api/proposals?search=` — client-side only |
+| Contact form | `POST /api/contact` — no submit handler |
+| Personal profile (real data) | `GET /api/settings/profile` + `PUT /api/settings/profile` |
+| Company profile (real data) | `GET /api/settings/company` + `PUT /api/settings/company` |
+| Billing plans (real data) | `GET /api/billing/plans` — hardcoded |
+| Billing subscribe | `POST /api/billing/plans/:id/subscribe` |
+| Billing invoices (real data) | `GET /api/billing/invoices` — hardcoded mock rows |
+| Invoice download | `GET /api/billing/invoices/:id/download` |
+
+### UI / Wiring gaps
+
+| Feature | Detail |
+|---------|--------|
+| Technical Step 4 submit | `onSubmit()` is a no-op — needs `POST /api/proposals/generate` |
+| Financial Step 4 submit | `onSubmit()` is a no-op — needs `POST /api/proposals/financial/generate` |
+| Technical Step 3 database tab | "From Database" in UploadBox not wired — needs `GET /api/database/files` |
+| Technical Step 2 AI cards | `sections.cards` i18n keys defined but not yet rendered |
+| Financial Step 2 database tab | "From Database" in RfpUploadSection uses mock docs |
+| Financial Step 1 — BOQ/Project Type/Sector dropdowns | Inputs only — no dropdown options list |
+| Settings Personal — save | Cancel / Save buttons have no submit handler |
+| Settings Company — save | Cancel / Save buttons have no submit handler |
+| Billing filter icon | UI only — no filter logic |
+| Billing export button | UI only — no export handler |
+| Proposals table download | DownloadIcon column button not wired |
 
 ---
 
-*Last updated: 2026-06-02 · Project: Rayyan*
+*Last updated: 2026-06-03 · Project: Rayyan*

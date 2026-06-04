@@ -72,6 +72,7 @@ export default function CreateProposalModal({
       title: t.dashboard.createProposalModal.types.financial.title,
       description: t.dashboard.createProposalModal.types.financial.description,
       tone: "tertiary",
+      href: "/dashboard/proposals/financial",
     },
   ];
   const [heroLine1, setHeroLine1] = useState("");

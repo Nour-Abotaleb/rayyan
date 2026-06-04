@@ -24,7 +24,7 @@ export default function SettingsPage({
   ];
 
   return (
-    <div className="layout-shell-x scrollbar-hide flex min-h-0 flex-1 flex-col overflow-y-auto pb-6 md:px-16">
+    <div className="layout-shell-x scrollbar-hide flex min-h-0 flex-1 flex-col overflow-y-auto pb-6">
       {/* Tab bar */}
       <div className="flex w-fit items-center border-b border-black/15 dark:border-white/10">
         {tabs.map((tab) => (
@@ -44,7 +44,7 @@ export default function SettingsPage({
       </div>
 
       {/* Content */}
-      <div className="mt-6">
+      <div className="mt-6 md:px-16">
         {activeTab === "personal" && <PersonalProfileTab user={user} />}
         {activeTab === "company" && <CompanyManagementTab />}
         {activeTab === "billing" && <BillingPlansTab />}
