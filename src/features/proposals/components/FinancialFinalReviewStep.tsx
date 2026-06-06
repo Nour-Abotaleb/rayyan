@@ -1,6 +1,9 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
+import type { ProjectInfoStepData } from "@/features/proposals/components/FinancialProjectInfoStep";
+import type { DeliverablesStepData } from "@/features/proposals/components/FinancialDeliverablesStep";
+import type { PaymentTermsStepData } from "@/features/proposals/components/FinancialPaymentTermsStep";
 
 const TIMELINE_PHASES = [
   { label: "Discovery Phase", sub: "3-4 days", flex: false, width: "12%", color: "#FFFFFF" },
@@ -52,9 +55,14 @@ const TOTAL = PRICE_PHASES.flatMap((p) => p.items).reduce((s, i) => s + i.price,
 export default function FinancialFinalReviewStep({
   onBack,
   onSubmit,
+  loading = false,
 }: {
+  projectInfo: ProjectInfoStepData | null;
+  deliverable: DeliverablesStepData | null;
+  paymentTerms: PaymentTermsStepData[] | null;
   onBack: () => void;
   onSubmit: () => void;
+  loading?: boolean;
 }) {
   const { t } = useLanguage();
   const fp = t.dashboard.financialProposal;
@@ -192,9 +200,10 @@ export default function FinancialFinalReviewStep({
         <button
           type="button"
           onClick={onSubmit}
-          className="rounded-full bg-primary px-5 py-2.5 text-sm font-normal text-white hover:opacity-90 transition-opacity cursor-pointer dark:text-black"
+          disabled={loading}
+          className="rounded-full bg-primary px-5 py-2.5 text-sm font-normal text-white hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-60 dark:text-black"
         >
-          {actions.createProposal}
+          {loading ? "…" : actions.createProposal}
         </button>
       </div>
     </main>
