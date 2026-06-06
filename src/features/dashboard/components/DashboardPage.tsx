@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
-import overviewBg from "@src/assets/dashboard/overview-bg.png";
+import OverviewBg from "./OverviewBg";
 import ProposalTypeIcon from "@/icons/ProposalTypeIcon";
 import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
 import ProposalDetailsModal from "@/features/dashboard/components/ProposalDetailsModal";
@@ -38,6 +37,7 @@ function SendIcon() {
 export default function DashboardPage() {
   const { t } = useLanguage();
   const [prompt, setPrompt] = useState("");
+  const [selectedType, setSelectedType] = useState<string | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
@@ -48,8 +48,6 @@ export default function DashboardPage() {
     { key: "financial", label: t.dashboard.overview.typesFinancial },
     { key: "visualization", label: t.dashboard.overview.typesVisualization },
   ];
-
-  const bgSrc = typeof overviewBg === "string" ? overviewBg : overviewBg.src;
 
   function openAttachPicker() {
     attachInputRef.current?.click();
@@ -65,16 +63,7 @@ export default function DashboardPage() {
   return (
     <div className="relative flex h-full min-h-0 flex-1 items-center justify-center">
       {/* Background — fixed so it extends behind the sticky navbar */}
-      <div
-        aria-hidden="true"
-        className="fixed inset-0 z-0"
-        style={{
-          backgroundImage: `url(${bgSrc})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
+      <OverviewBg className="fixed inset-0 z-0 h-full w-full" />
 
       {/* Centered content */}
       <div className="relative z-10 w-full max-w-4xl px-4">
@@ -108,13 +97,13 @@ export default function DashboardPage() {
               "linear-gradient(to top right, rgba(255, 255, 255, 0.2) 0%, rgba(88, 161, 154, 0.2) 100%), linear-gradient(to bottom, rgba(230, 230, 230, 0.7) 0%, rgba(81, 209, 184, 0.7) 100%)",
           }}
         >
-          <div className="relative rounded-[23px] bg-white shadow-sm dark:bg-black/30">
+          <div className="relative rounded-[23px] bg-white shadow-sm dark:bg-[#111]">
             <textarea
               rows={2}
               placeholder={t.dashboard.overview.promptPlaceholder}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="block w-full resize-none rounded-[23px] bg-[#F6F6F6] !font-[300] tracking-wide px-4 pb-14 pt-4 text-sm text-black placeholder:text-[#A0A3BD] focus:outline-none dark:text-white dark:placeholder:text-[#A0A3BD]"
+              className="block w-full resize-none rounded-[23px] bg-[#F6F6F6] dark:bg-[#1a1a1a] !font-[300] tracking-wide px-4 pb-14 pt-4 text-sm text-black placeholder:text-[#A0A3BD] focus:outline-none dark:text-white dark:placeholder:text-[#A0A3BD]"
             />
 
             {/* Actions inside textarea */}
@@ -122,7 +111,7 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={openAttachPicker}
-                className="flex h-8 w-8 md:h-10 md:w-10 bg-white rounded-full items-center justify-center text-[#A0A3BD] transition-colors hover:text-primary cursor-pointer"
+                className="flex h-8 w-8 md:h-10 md:w-10 bg-white dark:bg-white/10 rounded-full items-center justify-center text-[#A0A3BD] transition-colors hover:text-primary cursor-pointer"
                 aria-label={
                   attachedFiles.length
                     ? `Attach file (${attachedFiles.length} selected)`
@@ -145,23 +134,27 @@ export default function DashboardPage() {
 
         {/* Type chips */}
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto">
-          {types.map((type) => (
-            <button
-              key={type.key}
-              type="button"
-              className="flex items-center gap-1.5 rounded-full border border-[#D8E9E780] bg-transparent px-4 py-2 text-sm lg:text-base font-[450] text-black backdrop-blur-sm transition-colors hover:border-primary hover:text-primary dark:border-white/10 dark:text-white dark:hover:border-primary dark:hover:text-primary cursor-pointer"
-              style={{
-                background:
-                  "linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, rgba(248, 250, 255, 0.8) 33%, rgba(245, 248, 255, 0.9) 58%, rgba(255, 255, 255, 0.2) 100%)",
-              }}
-            >
-              <ProposalTypeIcon />
-              {type.label}
-            </button>
-          ))}
+          {types.map((type) => {
+            const active = selectedType === type.key;
+            return (
+              <button
+                key={type.key}
+                type="button"
+                onClick={() => setSelectedType(active ? null : type.key)}
+                className={`chip-btn flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm lg:text-base font-[450] backdrop-blur-sm transition-colors cursor-pointer ${
+                  active
+                    ? "border-primary text-primary"
+                    : "border-[#D8E9E780] text-black hover:border-primary hover:text-primary dark:text-white dark:hover:border-primary dark:hover:text-primary"
+                }`}
+              >
+                <ProposalTypeIcon />
+                {type.label}
+              </button>
+            );
+          })}
           <button
             type="button"
-            className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border border-[#D8E9E7] bg-white/70 text-[#A0A3BD] backdrop-blur-sm transition-colors hover:border-primary hover:text-primary dark:border-white/10 dark:bg-black/20 cursor-pointer"
+            className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border border-[#D8E9E7] bg-white/70 text-[#A0A3BD] backdrop-blur-sm transition-colors hover:border-primary hover:text-primary dark:border-[rgba(72,137,129,0.45)] dark:bg-[rgba(72,137,129,0.12)] dark:text-[#8DB7B6] dark:hover:border-primary dark:hover:text-primary cursor-pointer"
             aria-label="More"
           >
             <ArrowDownCircleIcon size={20} />
@@ -182,7 +175,9 @@ export default function DashboardPage() {
 
       {showDetailsModal && (
         <ProposalDetailsModal
+          prompt={prompt}
           initialFiles={attachedFiles}
+          proposalType={selectedType ?? undefined}
           onClose={() => setShowDetailsModal(false)}
         />
       )}

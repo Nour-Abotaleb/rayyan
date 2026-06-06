@@ -1,14 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { documentsService, type Document as ApiDocument } from "@/lib/api/documents.service";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PersonIcon from "@/icons/PersonIcon";
 import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
+import DropdownSelect from "@/components/DropdownSelect";
 import arFlag from "@src/assets/dashboard/ar.svg";
 import enFlag from "@src/assets/dashboard/en.svg";
 import pdfIcon from "@src/assets/dashboard/pdf.svg";
+import { useOptions } from "@/hooks/useOptions";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 
@@ -62,18 +65,51 @@ function TaxIcon() {
 
 // ── Reusable field components ────────────────────────────────────────────────
 
-const DB_MOCK_DOCS = [
-  { id: "1", name: "Assets.Zip", size: "5.3MB" },
-  { id: "2", name: "RFP_Brief.pdf", size: "2.1MB" },
-  { id: "3", name: "Scope_Doc.docx", size: "1.4MB" },
-];
-
-function RfpUploadSection({ label }: { label: string }) {
+function RfpUploadSection({
+  label,
+  onFilesChange,
+  onDocIdsChange,
+}: {
+  label: string;
+  onFilesChange: (files: File[]) => void;
+  onDocIdsChange: (ids: string[]) => void;
+}) {
   const { t } = useLanguage();
   const up = t.dashboard.newProposal.upload;
   const modal = t.dashboard.proposalDetailsModal;
   const [tab, setTab] = useState<"system" | "database">("system");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
+  const [dbDocs, setDbDocs] = useState<ApiDocument[]>([]);
+  const [dbLoading, setDbLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (tab !== "database") return;
+    if (dbDocs.length || dbLoading) return;
+    setDbLoading(true);
+    documentsService.getDocuments("rfp").then((res) => {
+      if (res.ok) setDbDocs(res.data.documents);
+      setDbLoading(false);
+    });
+  }, [tab]);
+
+  function handleFileAdd(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+    const next = [...selectedFiles, ...files];
+    setSelectedFiles(next);
+    onFilesChange(next);
+    e.target.value = "";
+  }
+
+  function toggleDoc(id: string) {
+    const next = selectedDocIds.includes(id)
+      ? selectedDocIds.filter((x) => x !== id)
+      : [...selectedDocIds, id];
+    setSelectedDocIds(next);
+    onDocIdsChange(next);
+  }
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -100,12 +136,12 @@ function RfpUploadSection({ label }: { label: string }) {
 
       {tab === "system" && (
         <>
-          <input ref={fileInputRef} type="file" multiple className="hidden" />
+          <input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileAdd} />
           <div
             className="relative mt-1 flex flex-col items-center justify-center gap-2 rounded-xl py-5 text-center cursor-pointer"
             style={{ background: "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)" }}
             onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => e.preventDefault()}
+            onDrop={(e) => { e.preventDefault(); const files = Array.from(e.dataTransfer.files); if (files.length) { const next = [...selectedFiles, ...files]; setSelectedFiles(next); onFilesChange(next); } }}
             onClick={() => fileInputRef.current?.click()}
           >
             <svg
@@ -134,18 +170,30 @@ function RfpUploadSection({ label }: { label: string }) {
       )}
 
       {tab === "database" && (
-        <div className="mt-1 grid grid-cols-1 gap-2 sm:grid-cols-3">
-          {DB_MOCK_DOCS.map((doc) => (
-            <label key={doc.id} className="flex cursor-pointer items-center gap-2 rounded-xl bg-white p-3 dark:bg-white/5">
-              <Image src={pdfIcon} alt="PDF" width={36} height={36} className="shrink-0" />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-medium text-black dark:text-white">{doc.name}</p>
-                <p className="text-xs text-[#6B7280]">{doc.size}</p>
-              </div>
-              <input type="checkbox" className="size-4 shrink-0 accent-primary cursor-pointer" />
-            </label>
-          ))}
-        </div>
+        dbLoading ? (
+          <div className="flex justify-center py-6">
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          </div>
+        ) : dbDocs.length === 0 ? (
+          <p className="py-4 text-center text-xs text-black/40 dark:text-white/30">No RFP documents found.</p>
+        ) : (
+          <div className="mt-1 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {dbDocs.map((doc) => (
+              <label key={doc.id} className="flex cursor-pointer items-center gap-2 rounded-xl bg-white p-3 dark:bg-white/5">
+                <Image src={pdfIcon} alt="PDF" width={36} height={36} className="shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-xs font-medium text-black dark:text-white">{doc.name}</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={selectedDocIds.includes(doc.id)}
+                  onChange={() => toggleDoc(doc.id)}
+                  className="size-4 shrink-0 accent-primary cursor-pointer"
+                />
+              </label>
+            ))}
+          </div>
+        )
       )}
     </div>
   );
@@ -284,6 +332,21 @@ function LanguageField({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const { options, loading } = useOptions("proposal-language");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handle(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [open]);
+
+  const isOther = value && value !== "ar" && value !== "en";
+
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm md:text-base font-[550] text-black dark:text-white">
@@ -313,14 +376,48 @@ function LanguageField({
               {value === "en" && <span className="size-2 rounded-full bg-primary" />}
             </span>
           </button>
+          {isOther && (
+            <button
+              type="button"
+              className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white dark:bg-white/5 px-3 py-2.5 text-xs cursor-pointer"
+            >
+              <span className="text-black dark:text-white">{value}</span>
+              <span className="ms-auto flex size-4 items-center justify-center rounded-full border-2 border-primary">
+                <span className="size-2 rounded-full bg-primary" />
+              </span>
+            </button>
+          )}
         </div>
-        <button
-          type="button"
-          className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
-          aria-label="Open language options"
-        >
-          <ArrowDownCircleIcon size={20} />
-        </button>
+        <div className="relative shrink-0" ref={dropdownRef}>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            className="input-style flex h-[44px] w-[44px] items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
+            aria-label="Open language options"
+          >
+            <ArrowDownCircleIcon size={20} />
+          </button>
+          {open && (
+            <div className="absolute end-0 top-full z-50 mt-2 min-w-44 max-h-52 overflow-y-auto rounded-xl border border-black/8 bg-white dark:bg-[#1A1A1A] shadow-lg">
+              {loading ? (
+                <div className="flex items-center justify-center py-3">
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                </div>
+              ) : options.map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => { onChange(opt); setOpen(false); }}
+                  className={`w-full px-4 py-2.5 text-start text-xs transition-colors hover:bg-primary/8 dark:hover:bg-white/5 ${
+                    value === opt ? "font-semibold text-primary dark:text-[#519A91]" : "text-black/70 dark:text-white/60"
+                  }`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -328,17 +425,36 @@ function LanguageField({
 
 // ── Step component ───────────────────────────────────────────────────────────
 
+export interface ProjectInfoStepData {
+  rfpMode: "upload" | "none";
+  rfpFiles: File[];
+  rfpDocIds: string[];
+  clientName: string;
+  projectName: string;
+  numDeliverables: number;
+  boqType: string;
+  projectType: string;
+  sectorIndustry: string;
+  language: string;
+  taxRate: number;
+  startDate: string;
+  endDate: string;
+  terms: string;
+}
+
 export default function FinancialProjectInfoStep({
   onBack,
   onNext,
 }: {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (data: ProjectInfoStepData) => void;
 }) {
   const { t } = useLanguage();
   const fp = t.dashboard.financialProposal;
   const f = fp.form;
 
+  const [rfpFiles, setRfpFiles] = useState<File[]>([]);
+  const [rfpDocIds, setRfpDocIds] = useState<string[]>([]);
   const [form, setForm] = useState({
     clientName: "",
     projectName: "",
@@ -359,7 +475,7 @@ export default function FinancialProjectInfoStep({
 
   return (
     <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/10 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
-      <RfpUploadSection label={f.rfpDocumentsLabel} />
+      <RfpUploadSection label={f.rfpDocumentsLabel} onFilesChange={setRfpFiles} onDocIdsChange={setRfpDocIds} />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <InputField
@@ -385,34 +501,31 @@ export default function FinancialProjectInfoStep({
           value={form.numDeliverables}
           onChange={set("numDeliverables")}
         />
-        <InputField
+        <DropdownSelect
           label={f.boqTypeLabel}
           required
           placeholder={f.boqTypePlaceholder}
-          icons={<SectorIcon />}
-          endButton={<ArrowDownCircleIcon size={20} />}
-          openAriaLabel={fp.actions.openAriaLabel}
+          icon={<SectorIcon />}
+          optionType="boq-type"
           value={form.boqType}
           onChange={set("boqType")}
         />
 
-        <InputField
+        <DropdownSelect
           label={f.projectTypeLabel}
           required
           placeholder={f.projectTypePlaceholder}
-          icons={<SectorIcon />}
-          endButton={<ArrowDownCircleIcon size={20} />}
-          openAriaLabel={fp.actions.openAriaLabel}
+          icon={<SectorIcon />}
+          optionType="project-type"
           value={form.projectType}
           onChange={set("projectType")}
         />
-        <InputField
+        <DropdownSelect
           label={f.sectorIndustryLabel}
           required
           placeholder={f.sectorIndustryPlaceholder}
-          icons={<SectorIcon />}
-          endButton={<ArrowDownCircleIcon size={20} />}
-          openAriaLabel={fp.actions.openAriaLabel}
+          icon={<SectorIcon />}
+          optionType="sector-industry"
           value={form.sectorIndustry}
           onChange={set("sectorIndustry")}
         />
@@ -476,7 +589,24 @@ export default function FinancialProjectInfoStep({
         </button>
         <button
           type="button"
-          onClick={onNext}
+          onClick={() =>
+            onNext({
+              rfpMode: rfpFiles.length || rfpDocIds.length ? "upload" : "none",
+              rfpFiles,
+              rfpDocIds,
+              clientName: form.clientName,
+              projectName: form.projectName,
+              numDeliverables: Number(form.numDeliverables) || 0,
+              boqType: form.boqType,
+              projectType: form.projectType,
+              sectorIndustry: form.sectorIndustry,
+              language: form.proposalLanguage || "",
+              taxRate: Number(form.taxRate) || 0,
+              startDate: form.startDate,
+              endDate: form.endDate,
+              terms: form.terms,
+            })
+          }
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
         >
           {fp.actions.nextDeliverables}

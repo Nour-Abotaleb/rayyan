@@ -191,54 +191,44 @@ Client polls:
 
 ---
 
-### `POST /api/proposals/generate` _(not yet created)_
+### `POST /proposals/generate`
 
-> Submits all wizard data for AI-powered proposal generation.
+> Submits prompt + metadata for AI-powered proposal generation.  
+> **Base URL:** `https://demo.togaar.com/api` — All endpoints require `Authorization: Bearer <token>`.  
+> **Service:** `proposalsService.generateProposal()` · **File:** `src/lib/api/proposals.service.ts`
 
 **Request**: `multipart/form-data`
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
+| `prompt` | `string` | ✅ | Free-text AI prompt from the textarea |
+| `proposalType` | `string` | ❌ | Chip selection: `"technical"` \| `"financial"` \| `"visualization"` |
+| `rfpMode` | `"upload"` \| `"manual"` \| `"none"` | ✅ | Whether RFP documents are provided |
 | `clientName` | `string` | ✅ | Client / organization name |
 | `projectName` | `string` | ✅ | Name of the project |
-| `proposalLanguage` | `"ar"` \| `"en"` | ✅ | Output language |
-| `sectorIndustry` | `string` | ✅ | Sector / industry domain |
-| `proposalType` | `string` | ✅ | e.g. `"Technical"`, `"Financial"` |
+| `language` | `"ar"` \| `"en"` | ✅ | Output language |
+| `sector` | `string` | ✅ | Sector / industry domain |
 | `startDate` | `string (ISO)` | ❌ | Project start date |
 | `endDate` | `string (ISO)` | ❌ | Project end date |
-| `additionalDetails` | `string` | ❌ | Free-text context or requirements |
-| `rfpFiles` | `File[]` | ❌ | RFP documents uploaded from system |
-| `rfpDatabaseIds` | `string[]` | ❌ | IDs of RFP docs selected from database |
-| `sections[].title` | `string` | ❌ | Timeline card title (Step 2) |
-| `sections[].period` | `string` | ❌ | e.g. `"Week 1–3"` (Step 2) |
-| `sections[].chips` | `string[]` | ❌ | Optional section component labels (Step 2) |
-| `resumeFiles` | `File[]` | ❌ | Team CV/resume documents (Step 3) |
-| `teamFiles` | `File[]` | ❌ | Team profile documents (Step 3) |
-| `certificateFiles` | `File[]` | ❌ | Certificates and registrations (Step 3) |
-| `otherFiles` | `File[]` | ❌ | Other supporting documents (Step 3) |
-| `companyDocIds` | `string[]` | ❌ | IDs of company docs from database |
-| `aiPrompt` | `string` | ❌ | Optional user prompt guiding AI tone/focus |
+| `promptFiles` | `File[]` | ❌ | Files attached via the attach button in the textarea |
+| `rfpFiles` | `File[]` | ❌ | RFP documents uploaded from system (rfpMode=upload, system tab) |
+| `rfpDocIds` | `string[]` | ❌ | IDs of RFP docs selected from database (rfpMode=upload, database tab) |
+| `companyDocFiles` | `File[]` | ❌ | Company docs uploaded manually |
+| `companyDocIds` | `string[]` | ❌ | IDs of company docs selected from database |
 
-> ℹ️ At least one of `rfpFiles` or `rfpDatabaseIds` should be provided for meaningful AI generation.
+> ℹ️ At least one of `rfpFiles` or `rfpDocIds` should be provided for meaningful AI generation.
 
-**Response `202 Accepted`**
+**Response `200 OK`**
 
 ```json
 {
-  "jobId": "job_abc123",
-  "estimatedSeconds": 30,
-  "message": "Proposal generation started"
+  "proposalId": "string",
+  "status": "Processing",
+  "message": "string"
 }
 ```
 
-**Response `400 Bad Request`**
-
-```json
-{
-  "error": "Validation failed",
-  "fields": { "clientName": "Required", "proposalLanguage": "Required" }
-}
-```
+On success the frontend redirects to `/dashboard/proposals?generated={proposalId}`.
 
 ---
 
@@ -296,7 +286,7 @@ Client polls:
     {
       "id": "prop_xyz",
       "title": "Infrastructure Upgrade Proposal",
-      "desc": "Short description...",
+      "description": "Short description...",
       "status": "Completed",
       "type": "Technical",
       "progress": 100,
@@ -369,7 +359,56 @@ Client polls:
 
 ## 🗄️ Database / Files API
 
-### `GET /api/database/files` _(not yet created)_
+### `GET /documents`
+
+**Used by:** `DocumentsSection`, database-tab pickers in proposal wizards and modal.  
+**Service:** `documentsService.getDocuments(category?)`  
+**File:** `src/lib/api/documents.service.ts`
+
+**Query Parameters**
+
+| Param | Type | Required | Description |
+|-------|------|----------|-------------|
+| `category` | `"team"` \| `"cv_resume"` \| `"rfp"` \| `"company_doc"` | ❌ | Filter by document category. Omit to return all. |
+
+**Response `200 OK`**
+
+```json
+{
+  "documents": [
+    {
+      "id": "string",
+      "name": "string",
+      "category": "team | cv_resume | rfp | company_doc",
+      "url": "string",
+      "createdAt": "ISO 8601 string"
+    }
+  ],
+  "total": 0
+}
+```
+
+**Category usage**
+
+| Category | Where used |
+|----------|------------|
+| `team` | `DocumentsSection` — Team Documents panel |
+| `cv_resume` | `DocumentsSection` — CV/Resume panel; `ProposalUploadStep` database tab |
+| `rfp` | `NewProposalPage` RFP database tab; `FinancialProjectInfoStep` RFP database tab; `ProposalDetailsModal` RFP database tab |
+| `company_doc` | `ProposalDetailsModal` Company Documents database panel |
+
+---
+
+### `GET /documents/:id/view`
+
+**Used by:** View buttons in `DocumentsSection`.  
+**Service:** `documentsService.viewDocument(id)`
+
+Streams the file as a blob and opens it in a new browser tab. No JSON response body — the response is the raw file content.
+
+---
+
+### `GET /api/database/files` _(legacy placeholder — not implemented)_
 
 **Query Parameters**
 
@@ -602,39 +641,63 @@ Client polls:
 
 ## 💳 Billing API
 
-### `GET /api/billing/plans` _(not yet created)_
+> Plans are currently static (from translation data). No billing API is integrated yet.
 
-**Response `200 OK`**
+**GET** `GET /billing/plans`
 
 ```json
 {
   "plans": [
     {
-      "id": "premium",
-      "name": "Dreelio",
-      "tier": "Premium",
-      "price": 299,
-      "description": "For growing teams...",
-      "features": ["Feature A", "Feature B"],
-      "cta": "Current Plan",
+      "name": "Dreelio Premium",
+      "tier": "Dreelio Premium",
+      "price": "189/mo",
+      "description": "For pro use with light needs.",
+      "features": [
+        "Everything in Basic",
+        "Invoices & payments",
+        "Expense tracking",
+        "Income tracking",
+        "Scheduling"
+      ],
+      "cta": "Package renewal",
       "active": true,
-      "renewalDate": "Sep 30, 2025"
+      "renewalDate": "20 Nov 2026"
+    },
+    {
+      "name": "Dreelio Basic",
+      "tier": "Free",
+      "price": "",
+      "description": "For solo use with light needs.",
+      "features": [
+        "Unlimited projects",
+        "Unlimited clients",
+        "Time tracking",
+        "CRM",
+        "iOS & Android app"
+      ],
+      "cta": "Change package",
+      "active": false,
+      "renewalDate": null
+    },
+    {
+      "name": "Dreelio Enterprise",
+      "tier": "",
+      "price": "20/mo",
+      "description": "For team use with light needs.",
+      "features": [
+        "Everything in Premium",
+        "Custom data import",
+        "Advanced onboarding",
+        "Hubspot integration",
+        "Timesheets"
+      ],
+      "cta": "Change package",
+      "active": false,
+      "renewalDate": null
     }
-  ],
-  "currentPlanId": "premium"
+  ]
 }
-```
-
----
-
-### `POST /api/billing/plans/:id/subscribe` _(not yet created)_
-
-> Initiates a plan subscription or upgrade.
-
-**Response `200 OK`**
-
-```json
-{ "ok": true, "checkoutUrl": "https://payment-gateway.example.com/checkout/..." }
 ```
 
 | Status | Body |
@@ -658,11 +721,35 @@ Client polls:
 {
   "invoices": [
     {
-      "id": "INV-001",
-      "date": "2025-01-15",
-      "plan": "Premium",
-      "amount": 299,
-      "period": "Jan 2025",
+      "id": "#INV-2026-001",
+      "date": "20 Nov 2026",
+      "plan": "Pro Plan",
+      "amount": 49.00,
+      "period": "2 hours ago",
+      "status": "Paid"
+    },
+    {
+      "id": "#INV-2026-001",
+      "date": "20 Nov 2026",
+      "plan": "Pro Plan",
+      "amount": 49.00,
+      "period": "2 hours ago",
+      "status": "Pending"
+    },
+    {
+      "id": "#INV-2026-001",
+      "date": "20 Nov 2026",
+      "plan": "Pro Plan",
+      "amount": 49.00,
+      "period": "2 hours ago",
+      "status": "Failed"
+    },
+    {
+      "id": "#INV-2026-001",
+      "date": "20 Nov 2026",
+      "plan": "Pro Plan",
+      "amount": 49.00,
+      "period": "2 hours ago",
       "status": "Paid"
     }
   ],
@@ -671,6 +758,8 @@ Client polls:
   "limit": 4
 }
 ```
+
+**Status values**: `"Paid"` · `"Pending"` · `"Failed"`
 
 ---
 
@@ -836,6 +925,7 @@ POST /api/auth/reset-password   { token, newPassword }
 | State | Type | Default |
 |-------|------|---------|
 | `prompt` | `string` | `""` |
+| `selectedType` | `string \| null` | `null` |
 | `attachedFiles` | `File[]` | `[]` |
 | `showDetailsModal` | `boolean` | `false` |
 | `showCreateModal` | `boolean` | `false` |
@@ -846,8 +936,8 @@ POST /api/auth/reset-password   { token, newPassword }
 |---------|-------------|
 | Textarea | Free-text AI prompt |
 | Attach button | Opens `<input type="file" multiple>` |
-| Proposal type chips | Technical / Financial / Visualization (UI filter only) |
-| Send button | Opens `ProposalDetailsModal` with `attachedFiles` |
+| Proposal type chips | Technical / Financial / Visualization — toggle active state; selected key stored in `selectedType`; passed as `proposalType` to `ProposalDetailsModal` |
+| Send button | Opens `ProposalDetailsModal` with `prompt`, `attachedFiles`, `selectedType` |
 | "Create Manual Proposal" | Opens `CreateProposalModal` |
 
 **Future API flow**
@@ -1360,21 +1450,37 @@ POST /api/proposals/financial/generate   (multipart)
 **Trigger**: Send button on `/dashboard/proposals/create`
 **File**: `src/features/dashboard/components/ProposalDetailsModal.tsx`
 
+**Props**
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `prompt` | `string` | AI prompt from the textarea |
+| `initialFiles` | `File[]` | Files attached via the attach button |
+| `proposalType` | `string \| undefined` | Selected chip key (`"technical"` / `"financial"` / `"visualization"`) |
+| `onClose` | `() => void` | Dismiss callback |
+
 **Full Local State**
 
 ```typescript
 {
-  rfpMode:      "none" | "upload" | "manual";  // default: "manual"
-  rfpTab:       "system" | "database";          // default: "system"
-  clientName:   string;
-  projectName:  string;
-  language:     "ar" | "en";                    // default: "en"
-  sector:       string;
-  startDate:    string;
-  endDate:      string;
-  docsMode:     "database" | "manual";          // default: "database"
-  docs:         UploadDoc[];                    // initialFiles + DB_DOCS mock
-  selectedDocs: Set<string>;
+  rfpMode:         "none" | "upload" | "manual";  // default: "manual"
+  rfpTab:          "system" | "database";          // default: "system"
+  rfpFiles:        File[];                         // uploaded RFP files
+  rfpDbSelected:   Set<string>;                    // selected DB RFP doc IDs
+  rfpDbDocs:       ApiDocument[];                  // fetched from GET /documents?category=rfp
+  rfpDbLoading:    boolean;
+  clientName:      string;
+  projectName:     string;
+  language:        "ar" | "en";                    // default: "en"
+  sector:          string;
+  startDate:       string;
+  endDate:         string;
+  docsMode:        "database" | "manual";          // default: "database"
+  localDocs:       UploadDoc[];                    // user-uploaded company docs (display only)
+  companyDocFiles: File[];                         // actual File objects for upload
+  companyDbDocs:   ApiDocument[];                  // fetched from GET /documents?category=company_doc
+  companyDbLoading:boolean;
+  selectedDocs:    Set<string>;                    // selected company DB doc IDs
 }
 ```
 
@@ -1416,8 +1522,8 @@ Documents list is pre-populated from `initialFiles` (attached in the chat textar
 
 | Button | Action |
 |--------|--------|
-| Cancel | Close modal |
-| Done | Close modal (future: trigger `POST /api/proposals/generate`) |
+| Cancel | Close modal (`onClose()`) |
+| Done | `generateProposal(payload)` → `POST /proposals/generate` → redirect to `/dashboard/proposals?generated={proposalId}` |
 
 ---
 
@@ -1436,25 +1542,53 @@ Three tabs rendered inside `SettingsPage`. The tab bar sits outside the horizont
 
 **Component**: `src/features/settings/components/PersonalProfileTab.tsx`
 
-**Header**: Avatar (circular image) + display name + email + Cancel / Save buttons
+**Header**: Circular avatar (`avatarUrl` from API, fallback to local SVG) + display name (`fullName`) + email + Cancel / Save buttons (top-right)
 
-**Form Fields** (two-column grid)
+**Form Fields** (two-column grid, pre-filled from GET response)
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| Full Name | `text` | ✅ | PersonIcon |
-| Email | `email` | ✅ | EmailIcon |
-| Phone | `tel` | ✅ | Country dropdown (dial code) + PhoneIcon |
-| Password | `password` | ✅ | Visibility toggle |
+| Field | Key | Type | Required | Notes |
+|-------|-----|------|----------|-------|
+| Full Name | `fullName` | `text` | ✅ | PersonIcon suffix |
+| Email | `email` | `email` | ✅ | EmailIcon suffix |
+| Phone | `phone` | `tel` | ✅ | Country dial-code dropdown (flag + code) + PhoneIcon suffix |
+| Password | `password` | `password` | ✅ | EyeOffIcon when hidden, EyeIcon when visible |
 
-**Avatar upload**: click avatar → hidden `<input type="file" accept="image/*">` 
+**Image upload** (spans full width, below form): drag-and-drop zone with dashed SVG border, gradient background, "Browse Files" button. Accepts `.pdf, .docx, .doc, .txt, .jpg, .png`.
 
-**API**
+**GET** `GET /settings/profile`
 
-| Action | Endpoint |
-|--------|----------|
-| Load profile | `GET /api/settings/profile` |
-| Save changes | `PUT /api/settings/profile` (multipart — includes `avatar` file if changed) |
+Response:
+```json
+{
+  "fullName": "string",
+  "email": "string",
+  "phone": "string",
+  "avatarUrl": "string | null"
+}
+```
+
+**UPDATE** `PUT /settings/profile`
+
+Request body (multipart/form-data):
+```json
+{
+  "fullName": "string",
+  "email": "string",
+  "phone": "string",
+  "password": "string (optional, omit if unchanged)",
+  "avatar": "File (optional, omit if unchanged)"
+}
+```
+
+Response:
+```json
+{
+  "fullName": "string",
+  "email": "string",
+  "phone": "string",
+  "avatarUrl": "string | null"
+}
+```
 
 ---
 
@@ -1462,35 +1596,75 @@ Three tabs rendered inside `SettingsPage`. The tab bar sits outside the horizont
 
 **Component**: `src/features/settings/components/CompanyManagementTab.tsx`
 
-**Header**: Company logo (circle) + company name + company email + Cancel / Save buttons
+**Header**: Circular company logo (fallback to local SVG) + company name + company email + Cancel / Save buttons (top-right)
 
-**Form Fields** (two-column grid)
+**Form Fields** (two-column grid, pre-filled from GET response)
 
-| Field | Type | Required | Notes |
-|-------|------|----------|-------|
-| Company Name | `text` | ✅ | PersonIcon |
-| Company Email | `email` | ✅ | EmailIcon |
-| Phone | `tel` | ✅ | Country dropdown + PhoneIcon |
-| Landline | `tel` | ✅ | Country dropdown + PhoneIcon |
-| Address | `text` | ✅ | AddressIcon (map/compass SVG) |
-| Website | `url` | ✅ | WebsiteIcon (globe SVG) |
+| Field | Key | Type | Required | Notes |
+|-------|-----|------|----------|-------|
+| Company Name | `companyName` | `text` | ✅ | PersonIcon suffix |
+| Company Email | `companyEmail` | `email` | ✅ | EmailIcon suffix |
+| Phone | `phone` | `tel` | ✅ | Country dial-code dropdown (flag + code) + PhoneIcon suffix |
+| Landline | `landline` | `tel` | ✅ | Country dial-code dropdown (flag + code) + PhoneIcon suffix |
+| Address | `address` | `text` | ✅ | AddressIcon suffix |
+| Website | `website` | `url` | ✅ | WebsiteIcon suffix |
 
-**Upload sections** (below form)
+**Upload sections** (below form, each is a drag-and-drop zone with dashed SVG border, gradient bg, "Browse Files" button, accepts `.pdf, .docx, .doc, .txt, .jpg, .png`)
 
-| Section | Required |
-|---------|----------|
-| Company Logo | ✅ |
-| Commercial Register | ✅ |
-| Tax Card | ✅ |
+| Section | Key | Required |
+|---------|-----|----------|
+| Company Logo | `logo` | ✅ |
+| Commercial Register | `commercialRegister` | ✅ |
+| Tax Card | `taxCard` | ✅ |
 
-Each section uses the same dropzone UI (dashed SVG border, gradient bg, "Browse Files" button).
+**GET** `GET /settings/company`
 
-**API**
+Response:
+```json
+{
+  "companyName": "string",
+  "companyEmail": "string",
+  "phone": "string",
+  "landline": "string",
+  "address": "string",
+  "website": "string",
+  "logoUrl": "string | null",
+  "commercialRegisterUrl": "string | null",
+  "taxCardUrl": "string | null"
+}
+```
 
-| Action | Endpoint |
-|--------|----------|
-| Load company | `GET /api/settings/company` |
-| Save changes | `PUT /api/settings/company` (multipart) |
+**UPDATE** `PUT /settings/company`
+
+Request body (multipart/form-data):
+```json
+{
+  "companyName": "string",
+  "companyEmail": "string",
+  "phone": "string",
+  "landline": "string",
+  "address": "string",
+  "website": "string",
+  "logo": "File (optional)",
+  "commercialRegister": "File (optional)",
+  "taxCard": "File (optional)"
+}
+```
+
+Response:
+```json
+{
+  "companyName": "string",
+  "companyEmail": "string",
+  "phone": "string",
+  "landline": "string",
+  "address": "string",
+  "website": "string",
+  "logoUrl": "string | null",
+  "commercialRegisterUrl": "string | null",
+  "taxCardUrl": "string | null"
+}
+```
 
 ---
 
@@ -1500,19 +1674,22 @@ Each section uses the same dropzone UI (dashed SVG border, gradient bg, "Browse 
 
 **Plans section**
 
-Three plan cards in a flex-wrap row (`items-end`). The active plan card is taller. Inactive cards have `border-4 border-transparent` to maintain equal box dimensions.
+Four plan cards in a CSS grid (`grid-cols-1 sm:grid-cols-2 xl:grid-cols-4`). All cards are equal height — content area is `flex-1`, button is always pinned to the bottom. Active plan is highlighted with a teal gradient border; inactive cards have a transparent border.
 
-| Plan | Tier | Default Active |
-|------|------|----------------|
-| Dreelio | Premium | ✅ |
-| Dreelio | Basic | ❌ |
-| Dreelio | Enterprise | ❌ |
+| Plan | Tier | Price | Default Active |
+|------|------|-------|----------------|
+| Free | Basic | 0 | ❌ |
+| Starter | Pro | 99 | ❌ |
+| Dreelio | Premium | 299 | ❌ |
+| Enterprise | Enterprise | 999 | ❌ |
 
-Each card shows: tier badge, price (`FormatWithCurrency` — Saudi Riyal SVG + amount), description, feature list, CTA button, and renewal date badge (active plan only).
+Each card shows: plan name, tier, price (`FormatWithCurrency` — Saudi Riyal SVG + amount, hidden when price is 0), description, feature list with check icons, CTA button, and renewal date badge (when present).
+
+CTA button labels come from static translation data (`plan.cta`). No API key is required for button actions.
 
 **Billing History section**
 
-Filter icon (top-left) + DownloadIcon export button (top-right).
+Filter button (top-right). Table with mock invoice data.
 
 **Table columns**
 
@@ -1522,9 +1699,9 @@ Filter icon (top-left) + DownloadIcon export button (top-right).
 | Issue Date | `DD-MM-YYYY` |
 | Plan | Plan tier name |
 | Amount | `FormatWithCurrency` (SAR) |
-| Billing Period | Month string |
+| Billing Period | Period string |
 | Status | `Paid` / `Pending` / `Failed` — colored dot badge |
-| Actions | Download button → `GET /api/billing/invoices/:id/download` |
+| Actions | Download icon button |
 
 **Pagination**: Previous / Next chevrons + "Showing X to Y of Z results" label.
 
@@ -1532,15 +1709,13 @@ Filter icon (top-left) + DownloadIcon export button (top-right).
 
 | Key | Type | Default |
 |-----|------|---------|
-| `activePlan` | `number` | `0` (Premium) |
+| `activePlan` | `number` | index of plan with `active: true`, else `0` |
 | `page` | `number` | `1` |
 
 **API**
 
 | Action | Endpoint |
 |--------|----------|
-| Load plans | `GET /api/billing/plans` |
-| Subscribe / upgrade | `POST /api/billing/plans/:id/subscribe` |
 | Load invoices | `GET /api/billing/invoices?page=&limit=4` |
 | Download invoice | `GET /api/billing/invoices/:id/download` |
 
@@ -1586,7 +1761,7 @@ type ProposalType   = "Technical" | "Financial" | "Visualization";
 type Proposal = {
   id: string;
   title: string;
-  desc: string;
+  description: string;
   status: ProposalStatus;
   type: ProposalType;
   progress: number;           // 0–100
@@ -1804,39 +1979,23 @@ Handled by `src/middleware.ts` — validates `rayyan_session` JWT on every reque
 | Forgot Password | `POST /api/auth/forgot-password` |
 | Reset Password | `POST /api/auth/reset-password` |
 | Google OAuth | Buttons exist, not wired |
-| Technical proposal generation | `POST /api/proposals/generate` + polling |
-| Financial proposal generation | `POST /api/proposals/financial/generate` + polling |
-| Proposals list (real data) | `GET /api/proposals` — table uses mock data |
-| Proposal download | `GET /api/proposals/:id/download` |
 | Dashboard stats (real) | `GET /api/dashboard/stats` — hardcoded on Proposals page; commented out on Overview |
-| Database files (real) | `GET /api/database/files` — grid uses mock data |
+| Database files page (real) | `GET /api/database/files` — DatabasePage grid still uses mock data |
 | File upload storage | `POST /api/database/files/upload` — no backend |
 | Notifications | `GET /api/user/notifications` — bell icon is UI only |
-| Search | `GET /api/proposals?search=` — client-side only |
 | Contact form | `POST /api/contact` — no submit handler |
-| Personal profile (real data) | `GET /api/settings/profile` + `PUT /api/settings/profile` |
-| Company profile (real data) | `GET /api/settings/company` + `PUT /api/settings/company` |
-| Billing plans (real data) | `GET /api/billing/plans` — hardcoded |
 | Billing subscribe | `POST /api/billing/plans/:id/subscribe` |
-| Billing invoices (real data) | `GET /api/billing/invoices` — hardcoded mock rows |
 | Invoice download | `GET /api/billing/invoices/:id/download` |
 
 ### UI / Wiring gaps
 
 | Feature | Detail |
 |---------|--------|
-| Technical Step 4 submit | `onSubmit()` is a no-op — needs `POST /api/proposals/generate` |
-| Financial Step 4 submit | `onSubmit()` is a no-op — needs `POST /api/proposals/financial/generate` |
-| Technical Step 3 database tab | "From Database" in UploadBox not wired — needs `GET /api/database/files` |
 | Technical Step 2 AI cards | `sections.cards` i18n keys defined but not yet rendered |
-| Financial Step 2 database tab | "From Database" in RfpUploadSection uses mock docs |
-| Financial Step 1 — BOQ/Project Type/Sector dropdowns | Inputs only — no dropdown options list |
-| Settings Personal — save | Cancel / Save buttons have no submit handler |
-| Settings Company — save | Cancel / Save buttons have no submit handler |
+| Financial Step 1 — BOQ/Project Type/Sector dropdowns | Text inputs only — no dropdown options list wired |
 | Billing filter icon | UI only — no filter logic |
 | Billing export button | UI only — no export handler |
-| Proposals table download | DownloadIcon column button not wired |
 
 ---
 
-*Last updated: 2026-06-03 · Project: Rayyan*
+*Last updated: 2026-06-06 · Project: Rayyan*

@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import spinnerImg from "@src/assets/dashboard/spinner.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LeftPanel from "./LeftPanel";
 // import StatsCards from "./StatsCards";
@@ -11,6 +13,20 @@ export default function OverviewPage({ userName }: { userName: string }) {
 
   return (
     <div className="layout-shell-x flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row lg:gap-4">
+      <div
+        className="pointer-events-none fixed left-0 top-0 z-10000 w-50 max-w-[58vw] sm:w-65 md:w-80 lg:w-95"
+        aria-hidden
+      >
+        <Image
+          src={spinnerImg}
+          alt=""
+          width={600}
+          height={600}
+          className="h-auto w-full object-contain"
+          priority
+          sizes="(max-width: 640px) 58vw, (max-width: 1024px) 260px, 380px"
+        />
+      </div>
       <LeftPanel />
       <div className="scrollbar-hide flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto py-4">
         <div>

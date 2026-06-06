@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PersonIcon from "@/icons/PersonIcon";
 import DateCalendarIcon from "@/icons/DateCalendarIcon";
-import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
+import DropdownSelect from "@/components/DropdownSelect";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 
@@ -148,12 +148,23 @@ function NumberSpinnerField({
 
 // ── Step component ───────────────────────────────────────────────────────────
 
+export interface DeliverablesStepData {
+  serviceCatalog: string;
+  name: string;
+  dueDate: string;
+  quantity: number;
+  unitPrice: number;
+  salaryCosts: number;
+  toolsCosts?: number;
+  otherExpenses?: number;
+}
+
 export default function FinancialDeliverablesStep({
   onBack,
   onNext,
 }: {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (data: DeliverablesStepData) => void;
 }) {
   const { t } = useLanguage();
   const fp = t.dashboard.financialProposal;
@@ -177,13 +188,12 @@ export default function FinancialDeliverablesStep({
   return (
     <main className="flex flex-col gap-5 rounded-2xl border border-white bg-linear-to-br from-white/35 from-65% to-[#D9FFFA]/50 p-3 md:p-6 dark:border-white/10 dark:bg-linear-to-br dark:from-white/5 dark:from-65% dark:to-[#D9FFFA]/50/15">
       {/* Service Catalog — full width */}
-      <InputField
+      <DropdownSelect
         label={f.serviceCatalogLabel}
         required
         placeholder={f.serviceCatalogPlaceholder}
-        icons={<SectorIcon />}
-        endButton={<ArrowDownCircleIcon size={20} />}
-        openAriaLabel={fp.actions.openAriaLabel}
+        icon={<SectorIcon />}
+        optionType="service-catalog"
         value={form.serviceCatalog}
         onChange={set("serviceCatalog")}
       />
@@ -261,7 +271,18 @@ export default function FinancialDeliverablesStep({
         </button>
         <button
           type="button"
-          onClick={onNext}
+          onClick={() =>
+            onNext({
+              serviceCatalog: form.serviceCatalog,
+              name: form.deliverableName,
+              dueDate: form.dueDate,
+              quantity: Number(form.quantity) || 0,
+              unitPrice: Number(form.unitPrice) || 0,
+              salaryCosts: Number(form.salaryCosts) || 0,
+              toolsCosts: form.toolsCosts ? Number(form.toolsCosts) : undefined,
+              otherExpenses: form.otherExpenses ? Number(form.otherExpenses) : undefined,
+            })
+          }
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
         >
           {fp.actions.nextPaymentTerms}

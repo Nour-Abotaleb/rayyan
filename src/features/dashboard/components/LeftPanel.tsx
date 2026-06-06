@@ -31,7 +31,7 @@ function CardBlock({
   return (
     <div className="flex flex-col gap-3">
       <div className="relative z-0 h-52 w-full overflow-hidden rounded-2xl">
-        <Image src={card.bg} alt="" fill className="object-fill" priority />
+        <Image src={card.bg} alt="" fill className="object-fill scale-x-[1.18] origin-center" priority />
 
         <div className="absolute inset-0 p-5">
           <div className="text-left" dir="ltr" style={{ textAlign: "left" }}>
@@ -52,7 +52,7 @@ function CardBlock({
       <button
         type="button"
         onClick={card.onCreateClick}
-        className={`relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2.5 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer ${
+        className={`relative z-20 -mt-10.5 flex w-fit items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 md:py-2 text-sm font-normal text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer ${
           isRtl ? "self-end flex-row-reverse" : "self-start"
         }`}
       >
@@ -128,7 +128,7 @@ export default function LeftPanel() {
           {cards.map((card, i) => (
             <div
               key={i}
-              className="relative flex min-h-0 w-[93%] max-w-[93%] flex-none shrink-0 snap-center flex-col overflow-hidden rounded-2xl bg-white sm:w-[62%] sm:max-w-[62%] md:w-[52%] md:max-w-[52%]"
+              className="relative flex min-h-0 w-[84%] max-w-[84%] flex-none shrink-0 snap-center flex-col overflow-hidden rounded-2xl bg-white dark:bg-black sm:w-[57%] sm:max-w-[57%] md:w-[50%] md:max-w-[50%]"
             >
               {/* <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl">
                 <Image
@@ -140,7 +140,7 @@ export default function LeftPanel() {
                   priority={i === 0}
                 />
               </div> */}
-              <div className="relative z-10 flex flex-col gap-5 px-2 lg:px-4 py-2 md:py-4 lg:py-6">
+              <div className="relative z-10 flex flex-col gap-5 px-4 py-6">
                 <CardBlock
                   card={card}
                   createProposalLabel={

@@ -113,6 +113,16 @@ body {
       rgba(255, 255, 255, 0.08)
     );
 }
+/* Overview page type-chip buttons */
+@utility chip-btn {
+  background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(248,250,255,0.8) 33%, rgba(245,248,255,0.9) 58%, rgba(255,255,255,0.2) 100%);
+}
+
+.dark .chip-btn {
+  background: linear-gradient(90deg, rgba(72,137,129,0.18) 0%, rgba(72,137,129,0.08) 100%);
+  border-color: rgba(72,137,129,0.45) !important;
+}
+
 .scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;

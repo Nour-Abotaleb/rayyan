@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import PersonIcon from "@/icons/PersonIcon";
 import CloseIcon from "@/icons/CloseIcon";
-import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
+import ChipDropdownButton from "@/components/ChipDropdownButton";
 import pdfIcon from "@src/assets/dashboard/pdf.svg";
 
 function UploadFileIcon() {
@@ -269,12 +269,18 @@ function DateInput({
   );
 }
 
+export interface SectionsStepData {
+  ganttCards: { title: string; from: string; to: string }[];
+  timelineFiles: File[];
+  sections: { title: string; chips: string[] }[];
+}
+
 export default function ProposalSectionsStep({
   onBack,
   onNext,
 }: {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (data: SectionsStepData) => void;
 }) {
   const { t, dir } = useLanguage();
   const isRtl = dir === "rtl";
@@ -351,6 +357,7 @@ export default function ProposalSectionsStep({
   }, [ganttCards]);
 
   const [timelineFiles, setTimelineFiles] = useState<{ name: string; size: string }[]>([]);
+  const [timelineFileObjects, setTimelineFileObjects] = useState<File[]>([]);
   const timelineFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -371,6 +378,7 @@ export default function ProposalSectionsStep({
           : `${(f.size / (1024 * 1024)).toFixed(1)}MB`,
       })),
     ]);
+    setTimelineFileObjects((prev) => [...prev, ...files]);
     e.target.value = "";
   }
 
@@ -385,6 +393,12 @@ export default function ProposalSectionsStep({
     s.adminComplianceTitle,
     s.technicalMethodologyTitle,
     s.managementResourcesTitle,
+  ];
+
+  const sectionEndpoints = [
+    "admin-compliance",
+    "technical-methodology",
+    "management-resources",
   ];
 
   function removeChip(si: number, ci: number) {
@@ -701,12 +715,17 @@ export default function ProposalSectionsStep({
                   <ComponentsIcon />
                 </span>
               </div>
-              <button
-                type="button"
-                className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer hover:opacity-70"
-              >
-                <ArrowDownCircleIcon size={20} />
-              </button>
+              <ChipDropdownButton
+                optionType={sectionEndpoints[si]}
+                activeChips={sectionChips[si]}
+                onAdd={(chip) =>
+                  setSectionChips((prev) =>
+                    prev.map((row, ri) =>
+                      ri === si && !row.includes(chip) ? [...row, chip] : row
+                    )
+                  )
+                }
+              />
             </div>
           </div>
         ))}
@@ -722,7 +741,13 @@ export default function ProposalSectionsStep({
         </button>
         <button
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
-          onClick={onNext}
+          onClick={() =>
+            onNext({
+              ganttCards: ganttCards.map(({ title, from, to }) => ({ title, from, to })),
+              timelineFiles: timelineFileObjects,
+              sections: optionalSections.map((title, i) => ({ title, chips: sectionChips[i] })),
+            })
+          }
         >
           {actions.nextUpload}
         </button>

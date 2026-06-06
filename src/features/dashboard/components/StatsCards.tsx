@@ -1,13 +1,13 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useStats } from "@/hooks/useStats";
 
 interface StatCardProps {
   label: string;
   value: number;
   sub: string;
   color: string;
-  /** stroke-dasharray out of circumference 94.25 (r=15 circle) */
   dash: number;
 }
 
@@ -22,7 +22,6 @@ function RingChart({
   color: string;
   dash: number;
 }) {
-  // End-point dot position (SVG is rotated -90deg, so no extra offset here)
   const angle = (dash / CIRCUMFERENCE) * 2 * Math.PI;
   const dotX = 18 + 15 * Math.cos(angle);
   const dotY = 18 + 15 * Math.sin(angle);
@@ -34,7 +33,6 @@ function RingChart({
         className="absolute inset-0 h-full w-full -rotate-90"
         overflow="visible"
       >
-        {/* Track */}
         <circle
           cx="18"
           cy="18"
@@ -44,7 +42,6 @@ function RingChart({
           strokeWidth="2.5"
           className="text-white/50 dark:text-[#0D0D0D]/50"
         />
-        {/* Arc */}
         <circle
           cx="18"
           cy="18"
@@ -55,7 +52,6 @@ function RingChart({
           strokeDasharray={`${dash} ${CIRCUMFERENCE}`}
           strokeLinecap="round"
         />
-        {/* End-dot */}
         <circle
           cx={dotX}
           cy={dotY}
@@ -66,7 +62,6 @@ function RingChart({
           className="text-white/50 dark:text-[#0D0D0D]/50"
         />
       </svg>
-      {/* Number inside ring */}
       <span className="relative z-10 font-[550] text-black/80 dark:text-white/80 text-lg md:text-[24px]">
         {value}
       </span>
@@ -75,13 +70,12 @@ function RingChart({
 }
 
 function StatCard({ label, value, sub, color, dash }: StatCardProps) {
-  const bg12 = `${color}1F`; // ~12% opacity
+  const bg12 = `${color}1F`;
   return (
     <div
       className="grid h-full grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-[1fr_auto] md:grid-rows-[auto_auto] md:gap-x-3 md:gap-y-4 rounded-[12px] p-4 md:p-6"
       style={{ backgroundColor: bg12 }}
     >
-      {/* % icon — small white circle */}
       <span className="col-start-1 row-start-1 flex h-12 w-12 shrink-0 items-center justify-center self-start rounded-full bg-white dark:bg-[#0D0D0D] text-[16px] font-bold">
         <svg
           width="28"
@@ -97,7 +91,6 @@ function StatCard({ label, value, sub, color, dash }: StatCardProps) {
         </svg>
       </span>
 
-      {/* Ring chart — right on mobile (space-between row), right column on md */}
       <div className="col-start-2 row-start-1 justify-self-end self-start md:row-span-2 md:justify-self-start">
         <RingChart value={value} color={color} dash={dash} />
       </div>
@@ -116,32 +109,52 @@ function StatCard({ label, value, sub, color, dash }: StatCardProps) {
 
 export default function StatsCards() {
   const { t } = useLanguage();
+  const { stats, loading } = useStats();
+
+  const total = stats?.totalProposals ?? 0;
+  const completed = stats?.completed ?? 0;
+  const inProgress = stats?.inProgress ?? 0;
+  const failed = stats?.failed ?? 0;
+
+  const safeDenom = Math.max(total, 1);
+  const successRate = Math.round((completed / safeDenom) * 100);
+
+  const totalDash = Math.round(((completed + inProgress) / safeDenom) * CIRCUMFERENCE);
+  const completedDash = Math.round((completed / safeDenom) * CIRCUMFERENCE);
+  const inProgressDash = Math.round((inProgress / safeDenom) * CIRCUMFERENCE);
+
+  if (loading) {
+    return (
+      <div className="flex h-32 items-center justify-center">
+        <div className="h-7 w-7 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-      {/* First card: full width on mobile, 1 col on desktop */}
       <div className="col-span-2 lg:col-span-1">
         <StatCard
           label={t.dashboard.stats.totalProposals}
-          value={24}
-          sub={t.dashboard.stats.totalProposalsSub}
+          value={total}
+          sub={`${failed} failed`}
           color="#58A19A"
-          dash={71}
+          dash={totalDash}
         />
       </div>
       <StatCard
         label={t.dashboard.stats.completed}
-        value={12}
-        sub={t.dashboard.stats.completedSub}
+        value={completed}
+        sub={`${successRate}% success rate`}
         color="#50AED4"
-        dash={47}
+        dash={completedDash}
       />
       <StatCard
         label={t.dashboard.stats.inProgress}
-        value={10}
-        sub={t.dashboard.stats.inProgressSub}
+        value={inProgress}
+        sub={`${failed} need action`}
         color="#51D1B8"
-        dash={38}
+        dash={inProgressDash}
       />
     </div>
   );

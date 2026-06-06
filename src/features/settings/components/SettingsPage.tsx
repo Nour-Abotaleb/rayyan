@@ -44,7 +44,7 @@ export default function SettingsPage({
       </div>
 
       {/* Content */}
-      <div className="mt-6 md:px-16">
+      <div className="mt-6 md:px-6">
         {activeTab === "personal" && <PersonalProfileTab user={user} />}
         {activeTab === "company" && <CompanyManagementTab />}
         {activeTab === "billing" && <BillingPlansTab />}

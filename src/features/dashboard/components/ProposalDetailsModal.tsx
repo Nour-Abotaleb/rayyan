@@ -1,15 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useProposals } from "@/hooks/useProposals";
 import CloseIcon from "@/icons/CloseIcon";
 import PersonIcon from "@/icons/PersonIcon";
 import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
+import DropdownSelect from "@/components/DropdownSelect";
 import arFlag from "@src/assets/dashboard/ar.svg";
 import enFlag from "@src/assets/dashboard/en.svg";
 import pdfIcon from "@src/assets/dashboard/pdf.svg";
+import { useOptions } from "@/hooks/useOptions";
+import { documentsService, type Document as ApiDocument } from "@/lib/api/documents.service";
 
 // ── Inline icons ──────────────────────────────────────────────────────
 
@@ -235,18 +240,7 @@ function DropzoneUploadIcon() {
   );
 }
 
-// ── DB mock docs (loaded when user clicks "Upload From Database") ──────
-
-const DB_DOCS = [
-  { id: "1", name: "Assets.Zip", size: "5.3MB" },
-  { id: "2", name: "Assets.Zip", size: "5.3MB" },
-  { id: "3", name: "Assets.Zip", size: "5.3MB" },
-  { id: "4", name: "Assets.Zip", size: "5.3MB" },
-  { id: "5", name: "Assets.Zip", size: "5.3MB" },
-  { id: "6", name: "Assets.Zip", size: "5.3MB" },
-];
-
-type UploadDoc = (typeof DB_DOCS)[number];
+interface UploadDoc { id: string; name: string; size?: string; }
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024) return `${bytes}B`;
@@ -320,42 +314,105 @@ function InputWithIcon({
 
 interface ProposalDetailsModalProps {
   onClose: () => void;
+  prompt?: string;
   initialFiles?: File[];
+  proposalType?: string;
 }
 
 export default function ProposalDetailsModal({
   onClose,
+  prompt = "",
   initialFiles = [],
+  proposalType,
 }: ProposalDetailsModalProps) {
   const { t, dir } = useLanguage();
+  const router = useRouter();
   const m = t.dashboard.proposalDetailsModal;
+  const { generateProposal, generating } = useProposals();
 
   const [rfpMode, setRfpMode] = useState<"none" | "upload" | "manual">(
     "manual",
   );
   const [rfpTab, setRfpTab] = useState<"system" | "database">("system");
+  const [rfpFiles, setRfpFiles] = useState<File[]>([]);
+  const [rfpDbSelected, setRfpDbSelected] = useState<Set<string>>(new Set());
   const [clientName, setClientName] = useState("");
   const [projectName, setProjectName] = useState("");
-  const [language, setLanguage] = useState<"ar" | "en">("en");
+  const [language, setLanguage] = useState("");
   const [sector, setSector] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [docsMode, setDocsMode] = useState<"database" | "manual">("database");
-  const [docs, setDocs] = useState<UploadDoc[]>(() => [
-    ...mapFilesToDocs(initialFiles, "attached"),
-    ...DB_DOCS,
-  ]);
+  const [localDocs, setLocalDocs] = useState<UploadDoc[]>(() => mapFilesToDocs(initialFiles, "attached"));
+  const [companyDbDocs, setCompanyDbDocs] = useState<ApiDocument[]>([]);
+  const [companyDbLoading, setCompanyDbLoading] = useState(false);
+  const [rfpDbDocs, setRfpDbDocs] = useState<ApiDocument[]>([]);
+  const [rfpDbLoading, setRfpDbLoading] = useState(false);
+  const [companyDocFiles, setCompanyDocFiles] = useState<File[]>([...initialFiles]);
   const [selectedDocs, setSelectedDocs] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const rfpFileInputRef = useRef<HTMLInputElement>(null);
-  const hasDocs = docs.length > 0;
+  const hasDocs = companyDbDocs.length > 0 || localDocs.length > 0;
 
-  const arFlagSrc =
-    typeof arFlag === "string" ? arFlag : (arFlag as { src: string }).src;
-  const enFlagSrc =
-    typeof enFlag === "string" ? enFlag : (enFlag as { src: string }).src;
-  const pdfIconSrc =
-    typeof pdfIcon === "string" ? pdfIcon : (pdfIcon as { src: string }).src;
+  useEffect(() => {
+    if (rfpMode !== "upload" || rfpTab !== "database") return;
+    if (rfpDbDocs.length || rfpDbLoading) return;
+    setRfpDbLoading(true);
+    documentsService.getDocuments("rfp").then((res) => {
+      if (res.ok) setRfpDbDocs(res.data.documents);
+      setRfpDbLoading(false);
+    });
+  }, [rfpMode, rfpTab]);
+
+  useEffect(() => {
+    if (docsMode !== "database") return;
+    if (companyDbDocs.length || companyDbLoading) return;
+    setCompanyDbLoading(true);
+    documentsService.getDocuments("company_doc").then((res) => {
+      if (res.ok) setCompanyDbDocs(res.data.documents);
+      setCompanyDbLoading(false);
+    });
+  }, [docsMode]);
+
+  async function handleDone() {
+    const res = await generateProposal({
+      prompt,
+      promptFiles: initialFiles,
+      proposalType,
+      rfpMode: rfpMode === "manual" ? "manual" : rfpMode === "upload" ? "upload" : "none",
+      rfpFiles: rfpTab === "system" ? rfpFiles : undefined,
+      rfpDocIds: rfpTab === "database" ? Array.from(rfpDbSelected) : undefined,
+      clientName,
+      projectName,
+      language,
+      sector,
+      startDate,
+      endDate,
+      companyDocFiles,
+      companyDocIds: Array.from(selectedDocs),
+    });
+    if (res.ok) {
+      onClose();
+      router.push(`/dashboard/proposals?generated=${res.data.proposalId}`);
+    }
+  }
+
+  const arFlagSrc = typeof arFlag === "string" ? arFlag : (arFlag as { src: string }).src;
+  const enFlagSrc = typeof enFlag === "string" ? enFlag : (enFlag as { src: string }).src;
+  const pdfIconSrc = typeof pdfIcon === "string" ? pdfIcon : (pdfIcon as { src: string }).src;
+
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+  const { options: langOptions, loading: langLoading } = useOptions("proposal-language");
+
+  useEffect(() => {
+    if (!langOpen) return;
+    function handle(e: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [langOpen]);
 
   function toggleDoc(id: string) {
     setSelectedDocs((prev) => {
@@ -373,10 +430,8 @@ export default function ProposalDetailsModal({
   function handleFilesSelected(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? []);
     if (!files.length) return;
-
-    const uploadedDocs = mapFilesToDocs(files);
-
-    setDocs((prev) => [...uploadedDocs, ...prev]);
+    setCompanyDocFiles((prev) => [...prev, ...files]);
+    setLocalDocs((prev) => [...mapFilesToDocs(files), ...prev]);
     event.target.value = "";
   }
 
@@ -425,12 +480,7 @@ export default function ProposalDetailsModal({
                 className="hidden"
                 onChange={(e) => {
                   const files = Array.from(e.target.files ?? []);
-                  if (files.length) {
-                    setDocs((prev) => [
-                      ...mapFilesToDocs(files, "rfp"),
-                      ...prev,
-                    ]);
-                  }
+                  if (files.length) setRfpFiles((prev) => [...prev, ...files]);
                   e.target.value = "";
                 }}
               />
@@ -506,12 +556,7 @@ export default function ProposalDetailsModal({
                   onDrop={(e) => {
                     e.preventDefault();
                     const files = Array.from(e.dataTransfer.files);
-                    if (files.length) {
-                      setDocs((prev) => [
-                        ...mapFilesToDocs(files, "rfp"),
-                        ...prev,
-                      ]);
-                    }
+                    if (files.length) setRfpFiles((prev) => [...prev, ...files]);
                   }}
                 >
                   <svg className="pointer-events-none absolute inset-0 h-full w-full text-[#488981]" style={{ overflow: "visible" }}>
@@ -538,33 +583,38 @@ export default function ProposalDetailsModal({
 
               {/* From Database */}
               {rfpTab === "database" && (
-                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
-                  {DB_DOCS.map((doc) => (
-                    <label
-                      key={doc.id}
-                      className="flex cursor-pointer items-center gap-2 rounded-[12px] bg-white p-3 hover:border-primary/40 dark:border-white/10 dark:bg-white/5"
-                    >
-                      <Image
-                        src={pdfIconSrc}
-                        alt="PDF"
-                        width={36}
-                        height={36}
-                        className="shrink-0"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-xs font-medium text-black dark:text-white">
-                          {doc.name}
-                        </p>
-                        <p className="text-xs text-[#6B7280]">{doc.size}</p>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={selectedDocs.has(doc.id)}
-                        onChange={() => toggleDoc(doc.id)}
-                        className="size-4 shrink-0 accent-primary cursor-pointer"
-                      />
-                    </label>
-                  ))}
+                <div className="mt-3">
+                  {rfpDbLoading ? (
+                    <div className="flex justify-center py-6">
+                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                    </div>
+                  ) : rfpDbDocs.length === 0 ? (
+                    <p className="py-4 text-center text-xs text-black/40 dark:text-white/30">No RFP documents found.</p>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                      {rfpDbDocs.map((doc) => (
+                        <label
+                          key={doc.id}
+                          className="flex cursor-pointer items-center gap-2 rounded-[12px] bg-white p-3 hover:border-primary/40 dark:border-white/10 dark:bg-white/5"
+                        >
+                          <Image src={pdfIconSrc} alt="PDF" width={36} height={36} className="shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-xs font-medium text-black dark:text-white">{doc.name}</p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={rfpDbSelected.has(doc.id)}
+                            onChange={() => setRfpDbSelected((prev) => {
+                              const next = new Set(prev);
+                              next.has(doc.id) ? next.delete(doc.id) : next.add(doc.id);
+                              return next;
+                            })}
+                            className="size-4 shrink-0 accent-primary cursor-pointer"
+                          />
+                        </label>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -598,90 +648,80 @@ export default function ProposalDetailsModal({
             <Field label={m.proposalLanguageLabel} required>
               <div className="flex items-center gap-2">
                 <div className="flex flex-1 items-center gap-2">
-                  {/* Arabic option */}
                   <button
                     type="button"
                     onClick={() => setLanguage("ar")}
                     className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white px-3 py-2.5 text-xs cursor-pointer"
                   >
-                    <Image
-                      src={arFlagSrc}
-                      alt="AR"
-                      width={20}
-                      height={20}
-                      className="rounded-full"
-                    />
-                    <span className="text-black dark:text-white">
-                      {m.arabic}
-                    </span>
-                    <span
-                      className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${language === "ar" ? "border-primary" : "border-[#D0D5DD]"}`}
-                    >
-                      {language === "ar" && (
-                        <span className="size-2 rounded-full bg-primary" />
-                      )}
+                    <Image src={arFlagSrc} alt="AR" width={20} height={20} className="rounded-full" />
+                    <span className="text-black dark:text-white">{m.arabic}</span>
+                    <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${language === "ar" ? "border-primary" : "border-[#D0D5DD]"}`}>
+                      {language === "ar" && <span className="size-2 rounded-full bg-primary" />}
                     </span>
                   </button>
-
-                  {/* English option */}
                   <button
                     type="button"
                     onClick={() => setLanguage("en")}
                     className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white px-3 py-2.5 text-xs cursor-pointer"
                   >
-                    <Image
-                      src={enFlagSrc}
-                      alt="EN"
-                      width={20}
-                      height={20}
-                      className="rounded-full"
-                    />
-                    <span className="text-black dark:text-white">
-                      {m.english}
-                    </span>
-                    <span
-                      className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${language === "en" ? "border-primary" : "border-[#D0D5DD]"}`}
-                    >
-                      {language === "en" && (
-                        <span className="size-2 rounded-full bg-primary" />
-                      )}
+                    <Image src={enFlagSrc} alt="EN" width={20} height={20} className="rounded-full" />
+                    <span className="text-black dark:text-white">{m.english}</span>
+                    <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${language === "en" ? "border-primary" : "border-[#D0D5DD]"}`}>
+                      {language === "en" && <span className="size-2 rounded-full bg-primary" />}
                     </span>
                   </button>
+                  {language && language !== "ar" && language !== "en" && (
+                    <button type="button" className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white px-3 py-2.5 text-xs cursor-pointer">
+                      <span className="text-black dark:text-white">{language}</span>
+                      <span className="ms-auto flex size-4 items-center justify-center rounded-full border-2 border-primary">
+                        <span className="size-2 rounded-full bg-primary" />
+                      </span>
+                    </button>
+                  )}
                 </div>
-                <button
-                  type="button"
-                  className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
-                  aria-label="Open language options"
-                >
-                  <ArrowDownCircleIcon size={20} />
-                </button>
+                <div className="relative shrink-0" ref={langRef}>
+                  <button
+                    type="button"
+                    onClick={() => setLangOpen((o) => !o)}
+                    className="input-style flex h-[44px] w-[44px] items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
+                    aria-label="Open language options"
+                  >
+                    <ArrowDownCircleIcon size={20} />
+                  </button>
+                  {langOpen && (
+                    <div className="absolute end-0 top-full z-50 mt-2 min-w-44 max-h-52 overflow-y-auto rounded-xl border border-black/8 bg-white dark:bg-[#1A1A1A] shadow-lg">
+                      {langLoading ? (
+                        <div className="flex items-center justify-center py-3">
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                        </div>
+                      ) : langOptions.map((opt) => (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => { setLanguage(opt); setLangOpen(false); }}
+                          className={`w-full px-4 py-2.5 text-start text-xs transition-colors hover:bg-primary/8 dark:hover:bg-white/5 ${
+                            language === opt ? "font-semibold text-primary dark:text-[#519A91]" : "text-black/70 dark:text-white/60"
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </Field>
 
             {/* Sector / Industry */}
-            <Field label={m.sectorIndustryLabel} required>
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1 items-center">
-                  <input
-                    type="text"
-                    placeholder={m.sectorIndustryPlaceholder}
-                    value={sector}
-                    onChange={(e) => setSector(e.target.value)}
-                    className="input-style w-full rounded-[44px] py-3 ps-4 pe-11 text-sm font-[300] text-[#A0A3BD] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD]"
-                  />
-                  <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-[#A0A3BD]">
-                    <SectorIcon />
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
-                  aria-label="Open sector options"
-                >
-                  <ArrowDownCircleIcon size={20} />
-                </button>
-              </div>
-            </Field>
+            <DropdownSelect
+              label={m.sectorIndustryLabel}
+              required
+              placeholder={m.sectorIndustryPlaceholder}
+              icon={<SectorIcon />}
+              optionType="sector-industry"
+              value={sector}
+              onChange={setSector}
+            />
 
             {/* Start Date */}
             <Field label={m.startDateLabel}>
@@ -758,7 +798,8 @@ export default function ProposalDetailsModal({
                   e.preventDefault();
                   const files = Array.from(e.dataTransfer.files);
                   if (files.length) {
-                    setDocs((prev) => [...mapFilesToDocs(files), ...prev]);
+                    setCompanyDocFiles((prev) => [...prev, ...files]);
+                    setLocalDocs((prev) => [...mapFilesToDocs(files), ...prev]);
                     setDocsMode("database");
                   }
                 }}
@@ -786,35 +827,45 @@ export default function ProposalDetailsModal({
             )}
 
             {/* Document grid */}
-            {docsMode === "database" && hasDocs && (
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                {docs.map((doc) => (
-                  <label
-                    key={doc.id}
-                    className="flex cursor-pointer items-center gap-2 rounded-[12px] bg-white p-3 hover:border-primary/40 dark:border-white/10 dark:bg-white/5"
-                  >
-                    <Image
-                      src={pdfIconSrc}
-                      alt="PDF"
-                      width={36}
-                      height={36}
-                      className="shrink-0"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-medium text-black dark:text-white">
-                        {doc.name}
-                      </p>
-                      <p className="text-xs text-[#6B7280]">{doc.size}</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={selectedDocs.has(doc.id)}
-                      onChange={() => toggleDoc(doc.id)}
-                      className="size-4 shrink-0 accent-primary cursor-pointer"
-                    />
-                  </label>
-                ))}
-              </div>
+            {docsMode === "database" && (
+              companyDbLoading ? (
+                <div className="flex justify-center py-6">
+                  <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                </div>
+              ) : !hasDocs ? (
+                <p className="py-4 text-center text-xs text-black/40 dark:text-white/30">No company documents found.</p>
+              ) : (
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  {[...companyDbDocs, ...localDocs].map((doc) => (
+                    <label
+                      key={doc.id}
+                      className="flex cursor-pointer items-center gap-2 rounded-[12px] bg-white p-3 hover:border-primary/40 dark:border-white/10 dark:bg-white/5"
+                    >
+                      <Image
+                        src={pdfIconSrc}
+                        alt="PDF"
+                        width={36}
+                        height={36}
+                        className="shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-xs font-medium text-black dark:text-white">
+                          {doc.name}
+                        </p>
+                        {"size" in doc && doc.size && (
+                          <p className="text-xs text-[#6B7280]">{doc.size}</p>
+                        )}
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={selectedDocs.has(doc.id)}
+                        onChange={() => toggleDoc(doc.id)}
+                        className="size-4 shrink-0 accent-primary cursor-pointer"
+                      />
+                    </label>
+                  ))}
+                </div>
+              )
             )}
           </div>
 
@@ -823,15 +874,20 @@ export default function ProposalDetailsModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full px-5 py-2.5 text-sm font-medium bg-white/50 border border-white text-black hover:opacity-70 cursor-pointer dark:text-white"
+              disabled={generating}
+              className="rounded-full px-5 py-2.5 text-sm font-medium bg-white/50 border border-white text-black hover:opacity-70 cursor-pointer dark:text-white disabled:opacity-40"
             >
               {m.cancel}
             </button>
             <button
               type="button"
-              onClick={onClose}
-              className="rounded-full bg-primary px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 cursor-pointer"
+              onClick={handleDone}
+              disabled={generating}
+              className="rounded-full bg-primary px-4 py-2.5 text-sm font-medium text-white hover:opacity-90 cursor-pointer disabled:opacity-40 flex items-center gap-2"
             >
+              {generating && (
+                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              )}
               {m.done}
             </button>
           </div>

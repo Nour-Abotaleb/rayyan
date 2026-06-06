@@ -1,20 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
-
-const TIMELINE_PHASES = [
-  { label: "Discovery Phase", sub: "3-4 days", flex: false, width: "12%", color: "#FFFFFF" },
-  { label: "Design System", sub: "3-4 days", flex: false, width: "12%", color: "#FFFFFF" },
-  { label: "Dashboard Design", sub: "15 weeks", flex: true, width: undefined, color: "#FFFFFF" },
-  { label: "Handover", sub: "", flex: false, width: "110px", color: "#FFFFFF" },
-];
-
-const DATE_MARKERS: { label: string; left?: string; right?: string }[] = [
-  { label: "13 . Feb", left: "0%" },
-  { label: "16 . Feb", left: "12%" },
-  { label: "20 . Feb", left: "24%" },
-  { label: "5 . April", right: "110px" },
-];
+import type { SectionsStepData } from "@/features/proposals/components/ProposalSectionsStep";
 
 const PRICE_PHASES = [
   {
@@ -50,11 +37,15 @@ const PRICE_PHASES = [
 const TOTAL = PRICE_PHASES.flatMap((p) => p.items).reduce((s, i) => s + i.price, 0);
 
 export default function ProposalFinalReviewStep({
+  sectionsData,
   onBack,
   onSubmit,
+  loading = false,
 }: {
+  sectionsData: SectionsStepData | null;
   onBack: () => void;
   onSubmit: () => void;
+  loading?: boolean;
 }) {
   const { t } = useLanguage();
   const actions = t.dashboard.newProposal.actions;
@@ -85,51 +76,63 @@ export default function ProposalFinalReviewStep({
 
           <hr className="border-black/10 dark:border-white/10" />
 
-          <div className="flex flex-col gap-1">
-            {/* Date markers */}
-            <div className="relative h-5 w-full">
-              {DATE_MARKERS.map((m) => (
-                <span
-                  key={m.label}
-                  className="absolute top-0 text-xs font-medium text-[#808080]"
-                  style={{ left: m.left, right: m.right }}
-                >
-                  {m.label}
-                </span>
-              ))}
-            </div>
+          {!sectionsData?.ganttCards.length ? (
+            <p className="text-sm text-black/40 dark:text-white/30">No timeline milestones added.</p>
+          ) : (() => {
+            const cards = sectionsData.ganttCards;
+            const n = cards.length;
 
-            {/* Timeline bar — flex so phases fill full width */}
-            <div className="flex h-14 w-full gap-1.5">
-            {TIMELINE_PHASES.map((ph) => (
-              <div
-                key={ph.label}
-                className="flex flex-col justify-center gap-0.5 overflow-hidden px-2"
-                style={{
-                  flex: ph.flex ? 1 : undefined,
-                  width: ph.flex ? undefined : ph.width,
-                  flexShrink: 0,
-                  background: ph.color,
-                }}
-              >
-                <span className="truncate text-xs font-semibold text-black dark:text-white">
-                  {ph.label}
-                </span>
-                {ph.sub && (
-                  <span className="truncate text-xs text-[#808080]">{ph.sub}</span>
-                )}
+            function daysBetween(from: string, to: string) {
+              const diff = new Date(to + "T00:00:00").getTime() - new Date(from + "T00:00:00").getTime();
+              return Math.max(1, Math.round(diff / 86400000));
+            }
+
+            function fmtDate(d: string) {
+              return new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+            }
+
+            return (
+              <div className="flex flex-col gap-1">
+                {/* Date markers */}
+                <div className="relative h-5 w-full">
+                  {cards.map((card, i) => (
+                    <span
+                      key={i}
+                      className="absolute top-0 text-xs font-medium text-[#808080]"
+                      style={{ left: `${(i / n) * 100}%` }}
+                    >
+                      {fmtDate(card.from)}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Timeline bar */}
+                <div className="flex h-14 w-full gap-1.5">
+                  {cards.map((card, i) => (
+                    <div
+                      key={i}
+                      className="flex flex-1 flex-col justify-center gap-0.5 overflow-hidden px-2 bg-white"
+                    >
+                      <span className="truncate text-xs font-semibold text-black">{card.title}</span>
+                      <span className="truncate text-xs text-[#808080]">{daysBetween(card.from, card.to)} days</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-            </div>
-          </div>
+            );
+          })()}
 
-          {/* Duration — below the bar, right-aligned */}
-          <div className="flex justify-end border-t border-black/10 pt-3 dark:border-white/10">
-            <div className="text-end">
-              <p className="text-base md:text-lg font-bold text-black dark:text-white">12 Weeks</p>
-              <p className="text-xs text-[#808080]">Timeline</p>
+          {/* Milestone count — below the bar, right-aligned */}
+          {!!sectionsData?.ganttCards.length && (
+            <div className="flex justify-end border-t border-black/10 pt-3 dark:border-white/10">
+              <div className="text-end">
+                <p className="text-base md:text-lg font-bold text-black dark:text-white">
+                  {sectionsData.ganttCards.length} {sectionsData.ganttCards.length === 1 ? "Milestone" : "Milestones"}
+                </p>
+                <p className="text-xs text-[#808080]">Timeline</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Project Price */}
@@ -191,8 +194,12 @@ export default function ProposalFinalReviewStep({
         <button
           type="button"
           onClick={onSubmit}
-          className="rounded-full bg-primary px-5 py-2.5 text-sm font-normal text-white hover:opacity-90 transition-opacity cursor-pointer dark:text-black"
+          disabled={loading}
+          className="flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-normal text-white hover:opacity-90 transition-opacity cursor-pointer dark:text-black disabled:opacity-60 disabled:cursor-not-allowed"
         >
+          {loading && (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent dark:border-black dark:border-t-transparent" />
+          )}
           {actions.createProposal}
         </button>
       </div>

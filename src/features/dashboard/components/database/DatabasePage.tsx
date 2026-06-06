@@ -2,10 +2,18 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useDatabase } from "@/hooks/useDatabase";
+import type { DocumentCategory } from "@/lib/api/documents.service";
 import DatabaseUploadSection from "./DatabaseUploadSection";
 import DatabaseFilesGrid from "./DatabaseFilesGrid";
 
 type DatabaseTab = "cvResume" | "projectInputs" | "portfolio";
+
+const TAB_CATEGORIES: Record<DatabaseTab, DocumentCategory[]> = {
+  cvResume: ["cv_resume"],
+  projectInputs: ["rfp", "boq"],
+  portfolio: ["portfolio", "certifications"],
+};
 
 export default function DatabasePage() {
   const { t } = useLanguage();
@@ -17,6 +25,20 @@ export default function DatabasePage() {
     { key: "projectInputs", label: db.tabs.projectInputs },
     { key: "portfolio", label: db.tabs.portfolio },
   ];
+
+  const { items, loading, upload, deleteDoc, viewDoc } = useDatabase(TAB_CATEGORIES[activeTab]);
+
+  const uploadSections: Record<DatabaseTab, { label: string; category: DocumentCategory }[]> = {
+    cvResume: [{ label: db.uploadLabel, category: "cv_resume" }],
+    projectInputs: [
+      { label: db.uploadRfpLabel, category: "rfp" },
+      { label: db.uploadBoqLabel, category: "boq" },
+    ],
+    portfolio: [
+      { label: db.uploadPortfolioLabel, category: "portfolio" },
+      { label: db.uploadCertificationsLabel, category: "certifications" },
+    ],
+  };
 
   return (
     <div className="layout-shell-x scrollbar-hide flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto py-4">
@@ -40,20 +62,22 @@ export default function DatabasePage() {
 
       {/* Tab content */}
       <div className="flex flex-col gap-6">
-        {activeTab === "projectInputs" ? (
-          <div className="flex flex-col gap-4">
-            <DatabaseUploadSection label={db.uploadRfpLabel} />
-            <DatabaseUploadSection label={db.uploadBoqLabel} />
-          </div>
-        ) : activeTab === "portfolio" ? (
-          <div className="flex flex-col gap-4">
-            <DatabaseUploadSection label={db.uploadPortfolioLabel} />
-            <DatabaseUploadSection label={db.uploadCertificationsLabel} />
-          </div>
-        ) : (
-          <DatabaseUploadSection />
-        )}
-        <DatabaseFilesGrid />
+        <div className="flex flex-col gap-4">
+          {uploadSections[activeTab].map(({ label, category }) => (
+            <DatabaseUploadSection
+              key={category}
+              label={label}
+              onUpload={(files) => upload(category, files)}
+            />
+          ))}
+        </div>
+
+        <DatabaseFilesGrid
+          items={items}
+          loading={loading}
+          onView={viewDoc}
+          onDelete={deleteDoc}
+        />
       </div>
     </div>
   );

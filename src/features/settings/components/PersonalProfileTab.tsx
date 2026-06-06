@@ -3,10 +3,12 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useProfile } from "@/hooks/useProfile";
 import PersonIcon from "@/icons/PersonIcon";
 import EmailIcon from "@/icons/EmailIcon";
 import PhoneIcon from "@/icons/PhoneIcon";
 import LockIcon from "@/icons/LockIcon";
+import EyeIcon from "@/icons/EyeIcon";
 import EyeOffIcon from "@/icons/EyeOffIcon";
 import avatarImg from "@src/assets/dashboard/avatar.svg";
 
@@ -163,6 +165,11 @@ export default function PersonalProfileTab({
 }) {
   const { t } = useLanguage();
   const s = t.dashboard.settings.personalProfile;
+  const { profile, loading, fetchProfile, updateProfile } = useProfile();
+
+  useEffect(() => {
+    if (!profile) fetchProfile();
+  }, [fetchProfile, profile]);
 
   const [form, setForm] = useState({
     fullName: user.name,
@@ -170,43 +177,96 @@ export default function PersonalProfileTab({
     phone: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (profile) {
+      setForm((prev) => ({
+        ...prev,
+        fullName: profile.fullName,
+        email: profile.email,
+        phone: profile.phone ?? "",
+      }));
+    }
+  }, [profile]);
   const [showPassword, setShowPassword] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<Country>(COUNTRIES[0]);
   const [countryOpen, setCountryOpen] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleChange(field: keyof typeof form, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
+  function handleFileSelect(file: File | null) {
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  }
+
+  function handleCancel() {
+    if (profile) {
+      setForm({ fullName: profile.fullName, email: profile.email, phone: profile.phone ?? "", password: "" });
+    }
+    setAvatarFile(null);
+    setAvatarPreview(null);
+  }
+
+  async function handleSave() {
+    const payload = {
+      fullName: form.fullName,
+      email: form.email,
+      phone: form.phone,
+      ...(form.password ? { password: form.password } : {}),
+      ...(avatarFile ? { avatar: avatarFile } : {}),
+    };
+    await updateProfile(payload);
+    setAvatarFile(null);
+    setForm((prev) => ({ ...prev, password: "" }));
+  }
+
+  const avatarSrc = avatarPreview ?? profile?.avatarUrl ?? user.avatar ?? null;
+  const displayName = profile?.fullName ?? user.name;
+  const displayEmail = profile?.email ?? user.email;
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-end justify-between gap-4">
         <div className="flex flex-col items-start gap-4">
           <div className="relative size-24 shrink-0 overflow-hidden rounded-full">
-            {user.avatar ? (
-              <Image src={user.avatar} alt={s.avatarAlt} fill className="object-cover" />
+            {avatarSrc ? (
+              <Image src={avatarSrc} alt={s.avatarAlt} fill className="object-cover" />
             ) : (
               <Image src={avatarImg} alt={s.avatarAlt} fill className="object-cover" />
             )}
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/30">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              </div>
+            )}
           </div>
           <div className="pb-1">
-            <p className="text-lg font-bold text-black dark:text-white">{user.name}</p>
-            <p className="text-sm text-[#808080]">{user.email}</p>
+            <p className="text-lg font-bold text-black dark:text-white">{displayName}</p>
+            <p className="text-sm text-[#808080]">{displayEmail}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 pt-1">
           <button
             type="button"
-            className="rounded-full border border-white bg-white/50 px-5 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-70 cursor-pointer dark:border-white/10 dark:bg-white/5 dark:text-white"
+            onClick={handleCancel}
+            disabled={loading}
+            className="rounded-full border border-white bg-white/50 px-5 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-70 cursor-pointer dark:border-white/10 dark:bg-white/5 dark:text-white disabled:opacity-40"
           >
             {s.cancel}
           </button>
           <button
             type="button"
-            className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 cursor-pointer dark:text-black"
+            onClick={handleSave}
+            disabled={loading}
+            className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 cursor-pointer dark:text-black disabled:opacity-40"
           >
-            {s.save}
+            {loading ? "..." : s.save}
           </button>
         </div>
       </div>
@@ -303,7 +363,7 @@ export default function PersonalProfileTab({
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute inset-y-0 end-4 flex items-center text-input-icon hover:text-primary transition-colors cursor-pointer"
               >
-                {showPassword ? <EyeOffIcon size={20} /> : <LockIcon size={20} />}
+                {showPassword ? <EyeIcon size={20} /> : <EyeOffIcon size={20} />}
               </button>
             </div>
           </div>
@@ -312,13 +372,19 @@ export default function PersonalProfileTab({
             <label className="text-sm md:text-[15px] font-[550] text-black dark:text-white">
               {s.changeImageLabel} <span>*</span>
             </label>
-            <input ref={fileInputRef} type="file" accept=".pdf,.docx,.doc,.txt,.jpg,.png" className="hidden" />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".jpg,.png,.pdf,.docx,.doc,.txt"
+              className="hidden"
+              onChange={(e) => handleFileSelect(e.target.files?.[0] ?? null)}
+            />
             <div
               className="relative flex flex-col items-center justify-center gap-2 rounded-xl py-4 text-center cursor-pointer"
               style={{ background: "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)" }}
               onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => e.preventDefault()}
+              onDrop={(e) => { e.preventDefault(); handleFileSelect(e.dataTransfer.files?.[0] ?? null); }}
             >
               <svg className="pointer-events-none absolute inset-0 h-full w-full text-primary" style={{ overflow: "visible" }}>
                 <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="8 6" />
@@ -326,7 +392,9 @@ export default function PersonalProfileTab({
               <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
                 <UploadIcon />
               </span>
-              <p className="text-xs text-black/60 dark:text-white/50">{s.dragDropLabel}</p>
+              <p className="text-xs text-black/60 dark:text-white/50">
+                {avatarFile ? avatarFile.name : s.dragDropLabel}
+              </p>
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}

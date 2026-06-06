@@ -5,17 +5,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import FilterIcon from "@/icons/FilterIcon";
 import SearchIcon from "@/icons/SearchIcon";
 import DatabaseFileCard from "./DatabaseFileCard";
+import type { Document } from "@/lib/api/documents.service";
 
 type SortOption = "newest" | "oldest" | "az" | "za";
-
-const mockFiles = [
-  { id: 1, date: "15-10-2023", title: "Dolor sed velit rem - Sunt velit dolor...", description: "just add your details and let the system do the rest." },
-  { id: 2, date: "20-11-2023", title: "Project Alpha - Technical Documentation", description: "just add your details and let the system do the rest." },
-  { id: 3, date: "03-01-2024", title: "Financial Summary Report Q4", description: "just add your details and let the system do the rest." },
-  { id: 4, date: "08-02-2024", title: "Portfolio Showcase - Design Assets", description: "just add your details and let the system do the rest." },
-  { id: 5, date: "12-03-2024", title: "CV Resume - Senior Engineer", description: "just add your details and let the system do the rest." },
-  { id: 6, date: "01-04-2024", title: "Project Inputs - Phase Two", description: "just add your details and let the system do the rest." },
-];
 
 const sortLabels: Record<SortOption, string> = {
   newest: "Newest First",
@@ -24,12 +16,20 @@ const sortLabels: Record<SortOption, string> = {
   za: "Z → A",
 };
 
-function parseDMY(date: string) {
-  const [d, m, y] = date.split("-").map(Number);
-  return new Date(y, m - 1, d).getTime();
+function fmtDate(iso: string) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
 }
 
-export default function DatabaseFilesGrid() {
+interface DatabaseFilesGridProps {
+  items: Document[];
+  loading: boolean;
+  onView: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+export default function DatabaseFilesGrid({ items, loading, onView, onDelete }: DatabaseFilesGridProps) {
   const { t } = useLanguage();
   const db = t.dashboard.database;
   const [search, setSearch] = useState("");
@@ -37,13 +37,13 @@ export default function DatabaseFilesGrid() {
   const [filterOpen, setFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
-  const processed = mockFiles
-    .filter((f) => f.title.toLowerCase().includes(search.toLowerCase()))
+  const processed = items
+    .filter((f) => f.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
-      if (sort === "newest") return parseDMY(b.date) - parseDMY(a.date);
-      if (sort === "oldest") return parseDMY(a.date) - parseDMY(b.date);
-      if (sort === "az") return a.title.localeCompare(b.title);
-      return b.title.localeCompare(a.title);
+      if (sort === "newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sort === "oldest") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      if (sort === "az") return a.name.localeCompare(b.name);
+      return b.name.localeCompare(a.name);
     });
 
   return (
@@ -55,7 +55,7 @@ export default function DatabaseFilesGrid() {
         </h2>
 
         <div className="flex items-center gap-2">
-          {/* Filter button + dropdown */}
+          {/* Filter */}
           <div className="relative" ref={filterRef}>
             <button
               type="button"
@@ -87,7 +87,7 @@ export default function DatabaseFilesGrid() {
           </div>
 
           {/* Search */}
-          <div className="flex items-center overflow-hidden rounded-full border border-white dark:border-white/10 bg-gradient-to-r from-[#FFFFFF] to-[#D9FFFA44]  dark:bg-gradient-to-r from-white/10 to-[#D9FFFA44] min-w-56 lg:min-w-64">
+          <div className="flex items-center overflow-hidden rounded-full border border-white dark:border-white/10 bg-gradient-to-r from-[#FFFFFF] to-[#D9FFFA44] min-w-56 lg:min-w-64">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -96,7 +96,6 @@ export default function DatabaseFilesGrid() {
             />
             <button
               type="button"
-              onClick={() => setSearch(search)}
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary dark:bg-[#519A91] text-white dark:text-black me-0.5"
             >
               <SearchIcon size={14} />
@@ -106,20 +105,27 @@ export default function DatabaseFilesGrid() {
       </div>
 
       {/* Grid */}
-      {processed.length === 0 ? (
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      ) : processed.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
           <SearchIcon size={28} className="text-primary/40" />
           <p className="text-sm font-semibold text-black/50 dark:text-zinc-400">No files found</p>
-          <p className="text-xs text-black/35 dark:text-zinc-500">Try a different search term</p>
+          <p className="text-xs text-black/35 dark:text-zinc-500">Upload files above or try a different search</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {processed.map((file) => (
             <DatabaseFileCard
               key={file.id}
-              date={file.date}
-              title={file.title}
-              description={file.description}
+              id={file.id}
+              date={fmtDate(file.createdAt)}
+              title={file.name}
+              category={file.category}
+              onView={() => onView(file.id)}
+              onDelete={() => onDelete(file.id)}
             />
           ))}
         </div>

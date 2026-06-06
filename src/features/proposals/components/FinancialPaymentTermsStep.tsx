@@ -123,12 +123,17 @@ function NumberSpinnerField({
 
 type PaymentTerm = { id: number; description: string; percentage: string };
 
+export interface PaymentTermsStepData {
+  description: string;
+  percentage: number;
+}
+
 export default function FinancialPaymentTermsStep({
   onBack,
   onNext,
 }: {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (data: PaymentTermsStepData[]) => void;
 }) {
   const { t } = useLanguage();
   const fp = t.dashboard.financialProposal;
@@ -213,7 +218,14 @@ export default function FinancialPaymentTermsStep({
         </button>
         <button
           type="button"
-          onClick={onNext}
+          onClick={() =>
+            onNext(
+              terms.map(({ description, percentage }) => ({
+                description,
+                percentage: Number(percentage) || 0,
+              })),
+            )
+          }
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
         >
           {fp.actions.nextFinalReview}

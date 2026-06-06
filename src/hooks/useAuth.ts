@@ -33,6 +33,9 @@ export function useAuth() {
         return { ok: false as const, error: res.error };
       }
 
+      persistApiToken(res.data.token, Boolean(body.remember));
+      dispatch(loginSuccess({ user: res.data.user, token: res.data.token }));
+
       const sessionRes = await fetch("/api/auth/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,11 +55,6 @@ export function useAuth() {
         dispatch(authFailure(msg));
         return { ok: false as const, error: msg };
       }
-
-      persistApiToken(res.data.token, Boolean(body.remember));
-      dispatch(
-        loginSuccess({ user: res.data.user, token: res.data.token }),
-      );
       return { ok: true as const };
     },
     [dispatch],

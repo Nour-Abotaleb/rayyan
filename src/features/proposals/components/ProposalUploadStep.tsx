@@ -1,17 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { documentsService, type Document as ApiDocument } from "@/lib/api/documents.service";
 import { useLanguage } from "@/contexts/LanguageContext";
 import pdfIcon from "@src/assets/dashboard/pdf.svg";
 import PersonIcon from "@/icons/PersonIcon";
-import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
+import DropdownSelect from "@/components/DropdownSelect";
 
-const DB_MOCK_CVS = [
-  { id: "1", name: "Assets.Zip", size: "5.3MB" },
-  { id: "2", name: "Assets.Zip", size: "5.3MB" },
-  { id: "3", name: "Assets.Zip", size: "5.3MB" },
-];
 
 interface Member {
   id: number;
@@ -19,6 +15,13 @@ interface Member {
   role: string;
   yearsOfExperience: string;
   keySkills: string;
+  cvFile: File | null;
+}
+
+export interface UploadStepData {
+  mode: "manual" | "database";
+  members: Omit<Member, "id">[];
+  cvDocIds: string[];
 }
 
 function UploadManualIcon() {
@@ -81,20 +84,26 @@ function DropzoneUploadIcon() {
   );
 }
 
-function MemberDropzone({ label }: { label: string }) {
+function MemberDropzone({ label, onFileChange }: { label: string; onFileChange: (file: File | null) => void }) {
   const fileRef = useRef<HTMLInputElement>(null);
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-[550] text-black dark:text-white">
         {label} <span>*</span>
       </label>
-      <input ref={fileRef} type="file" accept=".pdf,.docx,.doc,.txt,.jpg,.png" className="hidden" />
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".pdf,.docx,.doc,.txt,.jpg,.png"
+        className="hidden"
+        onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
+      />
       <div
         className="relative flex flex-col items-center justify-center gap-2 rounded-xl py-4 text-center cursor-pointer"
         style={{ background: "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)" }}
         onClick={() => fileRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => e.preventDefault()}
+        onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) onFileChange(f); }}
       >
         <svg className="pointer-events-none absolute inset-0 h-full w-full text-primary" style={{ overflow: "visible" }}>
           <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="8 6" />
@@ -120,10 +129,12 @@ function MemberForm({
   index,
   member,
   onChange,
+  onCvChange,
 }: {
   index: number;
   member: Member;
-  onChange: (id: number, field: keyof Member, value: string) => void;
+  onChange: (id: number, field: keyof Omit<Member, "id" | "cvFile">, value: string) => void;
+  onCvChange: (id: number, file: File | null) => void;
 }) {
   const { t } = useLanguage();
   const u = t.dashboard.newProposal.upload;
@@ -174,62 +185,30 @@ function MemberForm({
         </div>
 
         {/* Years of Experience */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-[550] text-black dark:text-white">
-            {u.yearsOfExperienceLabel} <span>*</span>
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                placeholder={u.yearsOfExperiencePlaceholder}
-                value={member.yearsOfExperience}
-                onChange={(e) => onChange(member.id, "yearsOfExperience", e.target.value)}
-                className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-[#A0A3BD] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD]"
-              />
-              <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
-                <ExperienceIcon />
-              </span>
-            </div>
-            <button
-              type="button"
-              className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon cursor-pointer hover:opacity-70 transition-opacity"
-            >
-              <ArrowDownCircleIcon size={20} />
-            </button>
-          </div>
-        </div>
+        <DropdownSelect
+          label={u.yearsOfExperienceLabel}
+          required
+          placeholder={u.yearsOfExperiencePlaceholder}
+          icon={<ExperienceIcon />}
+          optionType="years-of-experience"
+          value={member.yearsOfExperience}
+          onChange={(v) => onChange(member.id, "yearsOfExperience", v)}
+        />
 
         {/* Key Skills */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-[550] text-black dark:text-white">
-            {u.keySkillsLabel} <span>*</span>
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                placeholder={u.keySkillsPlaceholder}
-                value={member.keySkills}
-                onChange={(e) => onChange(member.id, "keySkills", e.target.value)}
-                className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm text-[#A0A3BD] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD]"
-              />
-              <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-input-icon">
-                <SkillsIcon />
-              </span>
-            </div>
-            <button
-              type="button"
-              className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon cursor-pointer hover:opacity-70 transition-opacity"
-            >
-              <ArrowDownCircleIcon size={20} />
-            </button>
-          </div>
-        </div>
+        <DropdownSelect
+          label={u.keySkillsLabel}
+          required
+          placeholder={u.keySkillsPlaceholder}
+          icon={<SkillsIcon />}
+          optionType="key-skills"
+          value={member.keySkills}
+          onChange={(v) => onChange(member.id, "keySkills", v)}
+        />
       </div>
 
       {/* CV/Resume dropzone */}
-      <MemberDropzone label={u.cvResumeLabel} />
+      <MemberDropzone label={u.cvResumeLabel} onFileChange={(f) => onCvChange(member.id, f)} />
     </div>
   );
 }
@@ -239,7 +218,7 @@ export default function ProposalUploadStep({
   onNext,
 }: {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (data: UploadStepData) => void;
 }) {
   const { t } = useLanguage();
   const u = t.dashboard.newProposal.upload;
@@ -247,9 +226,21 @@ export default function ProposalUploadStep({
 
   const [tab, setTab] = useState<"manual" | "database">("manual");
   const [members, setMembers] = useState<Member[]>([
-    { id: 1, name: "", role: "", yearsOfExperience: "", keySkills: "" },
+    { id: 1, name: "", role: "", yearsOfExperience: "", keySkills: "", cvFile: null },
   ]);
   const [selectedCvs, setSelectedCvs] = useState<string[]>([]);
+  const [cvDocs, setCvDocs] = useState<ApiDocument[]>([]);
+  const [cvLoading, setCvLoading] = useState(false);
+
+  useEffect(() => {
+    if (tab !== "database") return;
+    if (cvDocs.length || cvLoading) return;
+    setCvLoading(true);
+    documentsService.getDocuments("cv_resume").then((res) => {
+      if (res.ok) setCvDocs(res.data.documents);
+      setCvLoading(false);
+    });
+  }, [tab]);
 
   function updateMember(id: number, field: keyof Member, value: string) {
     setMembers((prev) =>
@@ -260,8 +251,12 @@ export default function ProposalUploadStep({
   function addMember() {
     setMembers((prev) => [
       ...prev,
-      { id: Date.now(), name: "", role: "", yearsOfExperience: "", keySkills: "" },
+      { id: Date.now(), name: "", role: "", yearsOfExperience: "", keySkills: "", cvFile: null },
     ]);
+  }
+
+  function updateMemberCv(id: number, file: File | null) {
+    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, cvFile: file } : m)));
   }
 
   function toggleCv(id: string) {
@@ -316,6 +311,7 @@ export default function ProposalUploadStep({
                 index={i}
                 member={member}
                 onChange={updateMember}
+                onCvChange={updateMemberCv}
               />
             ))}
           </div>
@@ -337,26 +333,33 @@ export default function ProposalUploadStep({
             <h3 className="text-sm font-semibold text-black dark:text-white">
               {u.selectCvResume}
             </h3>
-            <div className="flex flex-col gap-2">
-              {DB_MOCK_CVS.map((cv) => (
-                <label
-                  key={cv.id}
-                  className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white/60 px-4 py-3 dark:border-white/10 dark:bg-white/5"
-                >
-                  <Image src={pdfIcon} alt="PDF" width={40} height={40} className="shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-black dark:text-white">{cv.name}</p>
-                    <p className="text-xs text-[#6B7280]">{cv.size}</p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={selectedCvs.includes(cv.id)}
-                    onChange={() => toggleCv(cv.id)}
-                    className="size-4 shrink-0 accent-primary cursor-pointer"
-                  />
-                </label>
-              ))}
-            </div>
+            {cvLoading ? (
+              <div className="flex justify-center py-6">
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              </div>
+            ) : cvDocs.length === 0 ? (
+              <p className="py-4 text-center text-xs text-black/40 dark:text-white/30">No CV documents found.</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {cvDocs.map((cv) => (
+                  <label
+                    key={cv.id}
+                    className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white/60 px-4 py-3 dark:border-white/10 dark:bg-white/5"
+                  >
+                    <Image src={pdfIcon} alt="PDF" width={40} height={40} className="shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-black dark:text-white">{cv.name}</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={selectedCvs.includes(cv.id)}
+                      onChange={() => toggleCv(cv.id)}
+                      className="size-4 shrink-0 accent-primary cursor-pointer"
+                    />
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
 
           <button
@@ -379,7 +382,15 @@ export default function ProposalUploadStep({
         </button>
         <button
           type="button"
-          onClick={onNext}
+          onClick={() =>
+            onNext({
+              mode: tab,
+              members: members.map(({ name, role, yearsOfExperience, keySkills, cvFile }) => ({
+                name, role, yearsOfExperience, keySkills, cvFile,
+              })),
+              cvDocIds: selectedCvs,
+            })
+          }
           className="rounded-full bg-primary px-4 py-2.5 text-sm font-normal text-white hover:opacity-90 transition-colors cursor-pointer dark:text-black"
         >
           {actions.nextPersonalInformation}
