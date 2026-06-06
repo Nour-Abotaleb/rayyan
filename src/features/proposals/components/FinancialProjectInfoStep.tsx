@@ -6,49 +6,13 @@ import { documentsService, type Document as ApiDocument } from "@/lib/api/docume
 import { useLanguage } from "@/contexts/LanguageContext";
 import PersonIcon from "@/icons/PersonIcon";
 import DateCalendarIcon from "@/icons/DateCalendarIcon";
-import ArrowDownCircleIcon from "@/icons/ArrowDownCircleIcon";
+import DropzoneUploadIcon from "@/icons/DropzoneUploadIcon";
+import SectorIcon from "@/icons/SectorIcon";
+import LanguageSelector from "@/components/LanguageSelector";
 import DropdownSelect from "@/components/DropdownSelect";
-import arFlag from "@src/assets/dashboard/ar.svg";
-import enFlag from "@src/assets/dashboard/en.svg";
 import pdfIcon from "@src/assets/dashboard/pdf.svg";
-import { useOptions } from "@/hooks/useOptions";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
-
-function DropzoneUploadIcon() {
-  return (
-    <svg width="22" height="20" viewBox="0 0 22 20" fill="none">
-      <path
-        d="M14.834 13.8333L10.834 9.83325L6.83399 13.8333M10.834 9.83325V18.8333M18.834 14.5761C20.0555 13.5673 20.834 12.0412 20.834 10.3333C20.834 7.29569 18.3716 4.83325 15.334 4.83325C15.1155 4.83325 14.911 4.71925 14.8001 4.53099C13.496 2.31809 11.0884 0.833252 8.33399 0.833252C4.19185 0.833252 0.833984 4.19112 0.833984 8.33325C0.833984 10.3994 1.66943 12.2703 3.02093 13.6268"
-        stroke="#488981"
-        strokeWidth="1.66667"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SectorIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M18.32 11.9999C20.92 11.9999 22 10.9999 21.04 7.71994C20.39 5.50994 18.49 3.60994 16.28 2.95994C13 1.99994 12 3.07994 12 5.67994V8.55994C12 10.9999 13 11.9999 15 11.9999H18.32Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M20.0014 14.6998C19.0714 19.3298 14.6314 22.6898 9.5814 21.8698C5.7914 21.2598 2.7414 18.2098 2.1214 14.4198C1.3114 9.38977 4.6514 4.94977 9.2614 4.00977"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function TaxIcon() {
   return (
@@ -323,106 +287,6 @@ function NumberSpinnerField({
   );
 }
 
-function LanguageField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const { options, loading } = useOptions("proposal-language");
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    function handle(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
-  }, [open]);
-
-  const isOther = value && value !== "ar" && value !== "en";
-
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-sm md:text-base font-[550] text-black dark:text-white">
-        {label} <span>*</span>
-      </label>
-      <div className="flex items-center gap-2">
-        <div className="flex flex-1 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => onChange("ar")}
-            className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white dark:bg-white/5 px-3 py-2.5 text-xs cursor-pointer"
-          >
-            <Image src={arFlag} alt="AR" width={20} height={20} className="rounded-full shrink-0" />
-            <span className="text-black dark:text-white">Arabic</span>
-            <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${value === "ar" ? "border-primary" : "border-[#D0D5DD]"}`}>
-              {value === "ar" && <span className="size-2 rounded-full bg-primary" />}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onChange("en")}
-            className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white dark:bg-white/5 px-3 py-2.5 text-xs cursor-pointer"
-          >
-            <Image src={enFlag} alt="EN" width={20} height={20} className="rounded-full shrink-0" />
-            <span className="text-black dark:text-white">English</span>
-            <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${value === "en" ? "border-primary" : "border-[#D0D5DD]"}`}>
-              {value === "en" && <span className="size-2 rounded-full bg-primary" />}
-            </span>
-          </button>
-          {isOther && (
-            <button
-              type="button"
-              className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white dark:bg-white/5 px-3 py-2.5 text-xs cursor-pointer"
-            >
-              <span className="text-black dark:text-white">{value}</span>
-              <span className="ms-auto flex size-4 items-center justify-center rounded-full border-2 border-primary">
-                <span className="size-2 rounded-full bg-primary" />
-              </span>
-            </button>
-          )}
-        </div>
-        <div className="relative shrink-0" ref={dropdownRef}>
-          <button
-            type="button"
-            onClick={() => setOpen((o) => !o)}
-            className="input-style flex h-[44px] w-[44px] items-center justify-center rounded-full text-input-icon transition-colors cursor-pointer"
-            aria-label="Open language options"
-          >
-            <ArrowDownCircleIcon size={20} />
-          </button>
-          {open && (
-            <div className="absolute end-0 top-full z-50 mt-2 min-w-44 max-h-52 overflow-y-auto rounded-xl border border-black/8 bg-white dark:bg-[#1A1A1A] shadow-lg">
-              {loading ? (
-                <div className="flex items-center justify-center py-3">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                </div>
-              ) : options.map((opt) => (
-                <button
-                  key={opt}
-                  type="button"
-                  onClick={() => { onChange(opt); setOpen(false); }}
-                  className={`w-full px-4 py-2.5 text-start text-xs transition-colors hover:bg-primary/8 dark:hover:bg-white/5 ${
-                    value === opt ? "font-semibold text-primary dark:text-[#519A91]" : "text-black/70 dark:text-white/60"
-                  }`}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ── Step component ───────────────────────────────────────────────────────────
 
 export interface ProjectInfoStepData {
@@ -530,11 +394,12 @@ export default function FinancialProjectInfoStep({
           onChange={set("sectorIndustry")}
         />
 
-        <LanguageField
-          label={f.proposalLanguageLabel}
-          value={form.proposalLanguage}
-          onChange={set("proposalLanguage")}
-        />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm md:text-base font-[550] text-black dark:text-white">
+            {f.proposalLanguageLabel} <span>*</span>
+          </label>
+          <LanguageSelector value={form.proposalLanguage} onChange={set("proposalLanguage")} />
+        </div>
         <InputField
           label={f.taxConfigLabel}
           required

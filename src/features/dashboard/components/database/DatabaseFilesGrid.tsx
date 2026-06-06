@@ -87,16 +87,16 @@ export default function DatabaseFilesGrid({ items, loading, onView, onDelete }: 
           </div>
 
           {/* Search */}
-          <div className="flex items-center overflow-hidden rounded-full border border-white dark:border-white/10 bg-gradient-to-r from-[#FFFFFF] to-[#D9FFFA44] min-w-56 lg:min-w-64">
+          <div className="flex items-center overflow-hidden rounded-full border border-white dark:border-white/10 bg-linear-to-r from-white/35 to-white dark:bg-linear-to-r dark:from-white/15 dark:to-white/20 min-w-56 lg:min-w-64">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={db.searchPlaceholder}
-              className="flex-1 py-2 ps-4 text-[13px] text-zinc-700 dark:text-zinc-200 placeholder:text-[#A9A9A9] focus:outline-none bg-transparent"
+              className="flex-1 py-2 ps-4 text-[13px] text-zinc-700 dark:text-zinc-100 placeholder:text-[#A9A9A9] focus:outline-none bg-transparent"
             />
             <button
               type="button"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary dark:bg-[#519A91] text-white dark:text-black me-0.5"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary dark:bg-[#519A91] border border-white dark:border-[#0D0D0D] text-white dark:text-[#0D0D0D] me-0.5"
             >
               <SearchIcon size={14} />
             </button>

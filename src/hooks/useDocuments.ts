@@ -16,7 +16,7 @@ export function useDocuments() {
   const fetchTeamDocs = useCallback(async () => {
     if (team.items.length) return;
     dispatch(teamLoading());
-    const res = await documentsService.getDocuments("team");
+    const res = await documentsService.getDocuments("company_profile");
     if (!res.ok) {
       dispatch(teamFailure(res.error));
       return;

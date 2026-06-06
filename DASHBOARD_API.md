@@ -134,7 +134,7 @@ GET /documents
 
 | Key        | Type                      | Required | Description                    |
 |------------|---------------------------|----------|--------------------------------|
-| `category` | `"team" \| "cv_resume"`   | No       | Filter by document category    |
+| `category` | `"company_profile" \| "cv_resume"`   | No       | Filter by document category    |
 
 **Response `200`**
 ```json

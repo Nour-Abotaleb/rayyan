@@ -3,7 +3,7 @@ import { API_BASE_URL } from "@/lib/api/config";
 import { API_TOKEN_STORAGE_KEY } from "@/lib/auth/api-token-storage";
 
 export type DocumentCategory =
-  | "team"
+  | "company_profile"
   | "cv_resume"
   | "rfp"
   | "company_doc"
