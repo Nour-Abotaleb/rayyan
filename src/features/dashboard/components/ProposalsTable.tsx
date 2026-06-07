@@ -7,7 +7,6 @@ import { useProposals } from "@/hooks/useProposals";
 import SearchIcon from "@/icons/SearchIcon";
 import DownloadIcon from "@/icons/DownloadIcon";
 import EyeIcon from "@/icons/EyeIcon";
-import TrashIcon from "@/icons/TrashIcon";
 import ProposalTabBgSvg from "./ProposalTabBgSvg";
 import ProposalCalendarIcon from "@/icons/ProposalCalendarIcon";
 import StatusBgSvg from "./StatusBgSvg";
@@ -52,7 +51,6 @@ export default function ProposalsTable({
     activeTab,
     search,
     fetchProposals,
-    deleteProposal,
     downloadProposal,
     changeTab,
     changeSearch,
@@ -169,20 +167,10 @@ export default function ProposalsTable({
               >
                 <div className="relative">
                   <div className={`absolute ${variant === "page" ? "top-0" : "top-2.5"} right-0 z-20 flex items-center gap-2`}>
-                    {variant === "page" && (
-                      <button
-                        type="button"
-                        onClick={() => deleteProposal(p.id)}
-                        aria-label="Delete proposal"
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-500 transition-colors hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40"
-                      >
-                        <TrashIcon size={15} />
-                      </button>
-                    )}
                     <button
                       type="button"
                       onClick={() => router.push(`/dashboard/proposals/${p.id}`)}
-                      className={`flex items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 text-xs font-medium text-white dark:text-black transition-colors hover:bg-primary-dark ${
+                      className={`flex items-center gap-1.5 rounded-full bg-primary dark:bg-[#519A91] px-2 py-1.5 text-xs font-medium text-white dark:text-black transition-colors hover:bg-primary-dark cursor-pointer ${
                         isRtl ? "flex-row-reverse" : ""
                       }`}
                     >

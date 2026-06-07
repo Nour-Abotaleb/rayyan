@@ -282,64 +282,47 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
       </div>
 
       {/* Mobile dropdown */}
-      {mobileOpen && (
-        <div className="layout-shell-x flex flex-col gap-4 border-t border-zinc-100 pb-5 pt-4 lg:hidden dark:border-zinc-800">
-          {/* Nav items */}
-          <nav className="flex items-center gap-3 flex-wrap">
+      <div
+        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="layout-shell-x flex flex-col gap-1 border-t border-zinc-100 pb-5 pt-3 dark:border-zinc-800">
+          {/* Nav items — full-width rows */}
+          <nav className="flex flex-col gap-0.5">
             {navItems.map(({ Icon, key, href }) => {
               const isActive = isItemActive(key, pathname, href);
               const label = navLabelByKey[key];
+              const ActiveIcon =
+                key === "layout" ? OverviewActiveIcon :
+                key === "proposal" ? ProposalActiveIcon :
+                key === "database" ? DatabaseActiveIcon :
+                SettingsActiveIcon;
               return (
                 <Link
                   key={key}
                   href={href}
-                  aria-label={label}
-                  className={[
+                  className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-colors ${
                     isActive
-                      ? `${navIconActive} grid grid-cols-[18px_1fr] items-center gap-2 px-4 py-2`
-                      : `grid grid-cols-[18px_0fr] items-center gap-0 overflow-hidden ${
-                          key === "layout"
-                            ? overviewInactiveClass
-                            : navIconInactiveLanding
-                        }`,
-                  ].join(" ")}
+                      ? "bg-primary text-white dark:bg-primary"
+                      : "text-paragraph hover:bg-black/5 dark:text-zinc-300 dark:hover:bg-white/5"
+                  }`}
                 >
-                  {key === "layout" && isActive ? (
-                    <OverviewActiveIcon
-                      size={18}
-                      className="shrink-0 text-white"
-                    />
-                  ) : key === "proposal" && isActive ? (
-                    <ProposalActiveIcon
-                      size={18}
-                      className="shrink-0 text-white"
-                    />
-                  ) : key === "database" && isActive ? (
-                    <DatabaseActiveIcon
-                      size={18}
-                      className="shrink-0 text-white"
-                    />
-                  ) : key === "settings" && isActive ? (
-                    <SettingsActiveIcon
-                      size={18}
-                      className="shrink-0 text-white"
-                    />
-                  ) : (
-                    <Icon
-                      size={18}
-                      className={isActive ? "shrink-0 text-white" : undefined}
-                    />
-                  )}
-                  <span className="min-w-0 overflow-hidden whitespace-nowrap text-xs">
-                    {label}
-                  </span>
+                  {isActive
+                    ? <ActiveIcon size={18} className="shrink-0" />
+                    : <Icon size={18} className="shrink-0" />
+                  }
+                  {label}
                 </Link>
               );
             })}
           </nav>
 
+          {/* Divider */}
+          <div className="my-2 h-px bg-zinc-100 dark:bg-zinc-800" />
+
           {/* Controls */}
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-3 px-1">
             <DashboardRightControls
               theme={theme}
               toggleTheme={toggleTheme}
@@ -349,7 +332,7 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
             />
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

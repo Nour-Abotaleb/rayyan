@@ -26,7 +26,7 @@ export default function DatabaseFileCard({ date, title, category, onView, onDele
             type="button"
             onClick={onDelete}
             aria-label="Delete"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F4F5F9] dark:bg-zinc-800 text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F4F5F9] dark:bg-zinc-800 text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer"
           >
             <TrashIcon size={15} />
           </button>
@@ -34,7 +34,7 @@ export default function DatabaseFileCard({ date, title, category, onView, onDele
             type="button"
             onClick={onView}
             aria-label="View / Download"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F4F5F9] dark:bg-zinc-800 text-primary transition-colors hover:bg-primary/10"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F4F5F9] dark:bg-zinc-800 text-primary transition-colors hover:bg-primary/10 cursor-pointer"
           >
             <DownloadIcon size={16} />
           </button>

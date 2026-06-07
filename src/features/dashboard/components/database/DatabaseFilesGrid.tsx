@@ -16,20 +16,19 @@ const sortLabels: Record<SortOption, string> = {
   za: "Z → A",
 };
 
-function fmtDate(iso: string) {
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return iso;
-  return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
+function parseDMY(dateStr: string | undefined): number {
+  if (!dateStr) return 0;
+  const [day, month, year] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day).getTime();
 }
 
 interface DatabaseFilesGridProps {
   items: Document[];
   loading: boolean;
-  onView: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
-export default function DatabaseFilesGrid({ items, loading, onView, onDelete }: DatabaseFilesGridProps) {
+export default function DatabaseFilesGrid({ items, loading, onDelete }: DatabaseFilesGridProps) {
   const { t } = useLanguage();
   const db = t.dashboard.database;
   const [search, setSearch] = useState("");
@@ -40,8 +39,8 @@ export default function DatabaseFilesGrid({ items, loading, onView, onDelete }: 
   const processed = items
     .filter((f) => f.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
-      if (sort === "newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      if (sort === "oldest") return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      if (sort === "newest") return parseDMY(b.date) - parseDMY(a.date);
+      if (sort === "oldest") return parseDMY(a.date) - parseDMY(b.date);
       if (sort === "az") return a.name.localeCompare(b.name);
       return b.name.localeCompare(a.name);
     });
@@ -121,10 +120,10 @@ export default function DatabaseFilesGrid({ items, loading, onView, onDelete }: 
             <DatabaseFileCard
               key={file.id}
               id={file.id}
-              date={fmtDate(file.createdAt)}
+              date={file.date ?? ""}
               title={file.name}
               category={file.category}
-              onView={() => onView(file.id)}
+              onView={() => window.open(file.url, "_blank", "noopener,noreferrer")}
               onDelete={() => onDelete(file.id)}
             />
           ))}

@@ -29,6 +29,13 @@ export const companyService = {
     return api.get<CompanyData>("/settings/company");
   },
 
+  removeFile(fileType: "commercialRegister" | "taxCard") {
+    return apiRequest<CompanyData>("/settings/company/remove-file", {
+      method: "POST",
+      body: JSON.stringify({ fileType }),
+    });
+  },
+
   updateCompany(payload: UpdateCompanyPayload) {
     const hasFiles = payload.logo || payload.commercialRegister || payload.taxCard;
 

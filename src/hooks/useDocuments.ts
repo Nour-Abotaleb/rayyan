@@ -27,7 +27,7 @@ export function useDocuments() {
   const fetchCvDocs = useCallback(async () => {
     if (cv.items.length) return;
     dispatch(cvLoading());
-    const res = await documentsService.getDocuments("cv_resume");
+    const res = await documentsService.getDocuments("cvResume");
     if (!res.ok) {
       dispatch(cvFailure(res.error));
       return;

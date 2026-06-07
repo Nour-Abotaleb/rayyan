@@ -31,12 +31,15 @@ export async function apiRequest<T>(
   const url = `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
   const useAuth = options?.auth !== false;
 
+  const isFormData = init.body instanceof FormData;
+
   let res: Response;
   try {
     res = await fetch(url, {
       ...init,
       headers: {
-        "Content-Type": "application/json",
+        // Let the browser set Content-Type automatically for FormData (includes boundary)
+        ...(isFormData ? {} : { "Content-Type": "application/json" }),
         ...(useAuth ? bearerHeaders() : {}),
         ...(init.headers as Record<string, string>),
       },

@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PersonalProfileTab from "./PersonalProfileTab";
 import CompanyManagementTab from "./CompanyManagementTab";
 import BillingPlansTab from "./BillingPlansTab";
 
 type Tab = "personal" | "company" | "billing";
+
+const VALID_TABS: Tab[] = ["personal", "company", "billing"];
 
 export default function SettingsPage({
   user,
@@ -15,7 +18,10 @@ export default function SettingsPage({
 }) {
   const { t } = useLanguage();
   const s = t.dashboard.settings;
-  const [activeTab, setActiveTab] = useState<Tab>("personal");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab") as Tab | null;
+  const initialTab: Tab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : "personal";
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   const tabs: { key: Tab; label: string }[] = [
     { key: "personal", label: s.tabs.personalProfile },

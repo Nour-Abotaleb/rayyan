@@ -30,6 +30,12 @@ const companySlice = createSlice({
       state.data = action.payload;
       state.error = null;
     },
+    companyFileClear(state, action: PayloadAction<"commercialRegister" | "taxCard">) {
+      state.loading = false;
+      if (!state.data) return;
+      if (action.payload === "commercialRegister") state.data.commercialRegisterUrl = null;
+      if (action.payload === "taxCard") state.data.taxCardUrl = null;
+    },
     companyFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
@@ -41,7 +47,7 @@ const companySlice = createSlice({
   },
 });
 
-export const { companyLoading, companySaving, companySuccess, companyFailure, clearCompany } =
+export const { companyLoading, companySaving, companySuccess, companyFileClear, companyFailure, clearCompany } =
   companySlice.actions;
 
 export default companySlice.reducer;

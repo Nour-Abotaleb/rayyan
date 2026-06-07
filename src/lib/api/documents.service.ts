@@ -4,7 +4,8 @@ import { API_TOKEN_STORAGE_KEY } from "@/lib/auth/api-token-storage";
 
 export type DocumentCategory =
   | "company_profile"
-  | "cv_resume"
+  | "cvResume"
+  | "team"
   | "rfp"
   | "company_doc"
   | "boq"
@@ -13,10 +14,14 @@ export type DocumentCategory =
 
 export interface Document {
   id: string;
+  title: string;
+  description: string;
   name: string;
-  category: DocumentCategory;
+  size: string;
+  date: string;
+  type: string;
+  category: string;
   url: string;
-  createdAt: string;
 }
 
 export interface DocumentsResponse {

@@ -11,8 +11,50 @@ import WebsiteIcon from "@/icons/WebsiteIcon";
 import AddressIcon from "@/icons/AddressIcon";
 import ChevronDownIcon from "@/icons/ChevronDownIcon";
 import DropzoneUploadIcon from "@/icons/DropzoneUploadIcon";
+import TrashIcon from "@/icons/TrashIcon";
+import DownloadIcon from "@/icons/DownloadIcon";
 import CountryDropdown, { COUNTRIES, getFlagEmoji, type Country } from "@/components/CountryDropdown";
 import companyLogoImg from "@src/assets/dashboard/company-logo.svg";
+
+function FileCard({
+  url,
+  name,
+  onDelete,
+  deleting,
+}: {
+  url?: string;
+  name?: string;
+  onDelete: () => void;
+  deleting?: boolean;
+}) {
+  const fileName = name ?? (url ? url.split("/").pop() ?? url : "");
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-2xl bg-white dark:bg-[#1A1A1A] px-4 py-3">
+      <p className="truncate text-sm font-medium text-black dark:text-white">{fileName}</p>
+      <div className="flex shrink-0 items-center gap-1.5">
+        <button
+          type="button"
+          onClick={onDelete}
+          disabled={deleting}
+          aria-label="Delete"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F4F5F9] dark:bg-zinc-800 text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-40"
+        >
+          <TrashIcon size={15} />
+        </button>
+        {url && (
+        <button
+          type="button"
+          onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
+          aria-label="Download"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F4F5F9] dark:bg-zinc-800 text-primary transition-colors hover:bg-primary/10"
+        >
+          <DownloadIcon size={16} />
+        </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function UploadField({
   label,
@@ -75,19 +117,19 @@ import { useRef } from "react";
 export default function CompanyManagementTab() {
   const { t } = useLanguage();
   const s = t.dashboard.settings.companyManagement;
-  const { company, loading, fetchCompany, updateCompany } = useCompany();
+  const { company, loading, fetchCompany, updateCompany, removeFile } = useCompany();
 
   useEffect(() => {
     if (!company) fetchCompany();
   }, [fetchCompany, company]);
 
   const [form, setForm] = useState({
-    companyName: "",
-    companyEmail: "",
-    phone: "",
-    landline: "",
-    address: "",
-    website: "",
+    companyName: company?.companyName ?? "",
+    companyEmail: company?.companyEmail ?? "",
+    phone: company?.phone ?? "",
+    landline: company?.landline ?? "",
+    address: company?.address ?? "",
+    website: company?.website ?? "",
   });
   const [phoneCountry, setPhoneCountry] = useState<Country>(COUNTRIES[0]);
   const [landlineCountry, setLandlineCountry] = useState<Country>(COUNTRIES[0]);
@@ -101,12 +143,12 @@ export default function CompanyManagementTab() {
   useEffect(() => {
     if (company) {
       setForm({
-        companyName: company.companyName,
-        companyEmail: company.companyEmail,
-        phone: company.phone,
-        landline: company.landline,
-        address: company.address,
-        website: company.website,
+        companyName: company.companyName ?? "",
+        companyEmail: company.companyEmail ?? "",
+        phone: company.phone ?? "",
+        landline: company.landline ?? "",
+        address: company.address ?? "",
+        website: company.website ?? "",
       });
     }
   }, [company]);
@@ -269,14 +311,43 @@ export default function CompanyManagementTab() {
             </div>
           </div>
 
+          {(commercialRegisterFile || company?.commercialRegisterUrl || taxCardFile || company?.taxCardUrl) && (
+            <div className="sm:col-span-2 flex flex-col gap-3">
+              {commercialRegisterFile ? (
+                <FileCard
+                  name={commercialRegisterFile.name}
+                  onDelete={() => setCommercialRegisterFile(null)}
+                />
+              ) : company?.commercialRegisterUrl ? (
+                <FileCard
+                  url={company.commercialRegisterUrl}
+                  deleting={loading}
+                  onDelete={() => removeFile("commercialRegister")}
+                />
+              ) : null}
+              {taxCardFile ? (
+                <FileCard
+                  name={taxCardFile.name}
+                  onDelete={() => setTaxCardFile(null)}
+                />
+              ) : company?.taxCardUrl ? (
+                <FileCard
+                  url={company.taxCardUrl}
+                  deleting={loading}
+                  onDelete={() => removeFile("taxCard")}
+                />
+              ) : null}
+            </div>
+          )}
+
           <div className="sm:col-span-2">
             <UploadField label={s.companyLogoLabel} file={logoFile} existingUrl={company?.logoUrl ?? null} onChange={handleLogoChange} />
           </div>
           <div className="sm:col-span-2">
-            <UploadField label={s.commercialRegisterLabel} file={commercialRegisterFile} existingUrl={company?.commercialRegisterUrl ?? null} onChange={setCommercialRegisterFile} />
+            <UploadField label={s.commercialRegisterLabel} file={commercialRegisterFile} existingUrl={null} onChange={setCommercialRegisterFile} />
           </div>
           <div className="sm:col-span-2">
-            <UploadField label={s.taxCardLabel} file={taxCardFile} existingUrl={company?.taxCardUrl ?? null} onChange={setTaxCardFile} />
+            <UploadField label={s.taxCardLabel} file={taxCardFile} existingUrl={null} onChange={setTaxCardFile} />
           </div>
 
         </div>

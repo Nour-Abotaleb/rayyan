@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useBilling } from "@/hooks/useBilling";
 import { billingService } from "@/lib/api/billing.service";
@@ -56,6 +56,19 @@ export default function BillingPlansTab() {
   const { plans, currentPlanId, invoices, invoicesTotal, plansLoading, invoicesLoading, fetchPlans, fetchInvoices } = useBilling();
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const plansTrackRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const track = plansTrackRef.current;
+    if (!track) return;
+    const centerOnMobile = () => {
+      if (window.innerWidth >= 768) return;
+      track.scrollTo({ left: (track.scrollWidth - track.clientWidth) / 2, behavior: "auto" });
+    };
+    centerOnMobile();
+    window.addEventListener("resize", centerOnMobile);
+    return () => window.removeEventListener("resize", centerOnMobile);
+  }, []);
   const totalPages = Math.ceil(invoicesTotal / PER_PAGE);
 
   useEffect(() => {
@@ -77,20 +90,24 @@ export default function BillingPlansTab() {
   return (
     <div className={`${cardBg} flex flex-col gap-6`}>
       {/* Plan cards */}
-      <div className="flex flex-wrap items-stretch gap-4">
+      <div
+        ref={plansTrackRef}
+        className="max-w-full overflow-x-auto scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:overflow-visible"
+      >
+        <div className="flex items-stretch gap-3 snap-x snap-proximity md:flex-wrap md:gap-4">
         {plansLoading && plans.length === 0 ? (
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="w-full md:max-w-xs min-h-[440px] animate-pulse rounded-3xl bg-black/5 dark:bg-white/5" />
+            <div key={i} className="min-w-0 flex-[0_0_74%] snap-center md:flex-none md:w-full md:max-w-xs min-h-[440px] animate-pulse rounded-3xl bg-black/5 dark:bg-white/5" />
           ))
         ) : (
           plans.map((plan) => {
             const isSelected = selectedPlanId === plan.id;
             const isCurrent = currentPlanId === plan.id;
             return (
+              <div key={plan.id} className="min-w-0 flex-[0_0_74%] snap-center md:flex-none md:w-full md:max-w-xs">
               <article
-                key={plan.id}
                 onClick={() => setSelectedPlanId(plan.id)}
-                className={`w-full md:max-w-xs flex flex-col justify-between rounded-3xl border cursor-pointer transition-all ${
+                className={`h-full flex flex-col justify-between rounded-3xl border cursor-pointer transition-all ${
                   isSelected
                     ? "px-5 pt-6 pb-5 min-h-[440px] border-[#58A19A] bg-gradient-to-b from-[#50AED4]/30 to-[#58A19A]/15 dark:border-[#519A91] dark:from-[#50AED4]/15 dark:to-[#519A91]/12"
                     : "p-5 min-h-[440px] border-transparent bg-white hover:border-[#58A19A]/30 dark:bg-[#141414]"
@@ -137,9 +154,11 @@ export default function BillingPlansTab() {
                   {plan.cta}
                 </button>
               </article>
+              </div>
             );
           })
         )}
+        </div>
       </div>
 
       {/* Billing History */}

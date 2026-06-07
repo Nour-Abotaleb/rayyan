@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store";
 import {
   companyFailure,
+  companyFileClear,
   companyLoading,
   companySaving,
   companySuccess,
@@ -37,11 +38,23 @@ export function useCompany() {
     return { ok: true as const, data: res.data };
   }, [dispatch]);
 
+  const removeFile = useCallback(async (fileType: "commercialRegister" | "taxCard") => {
+    dispatch(companySaving());
+    const res = await companyService.removeFile(fileType);
+    if (!res.ok) {
+      dispatch(companyFailure(res.error));
+      return { ok: false as const, error: res.error };
+    }
+    dispatch(companyFileClear(fileType));
+    return { ok: true as const };
+  }, [dispatch]);
+
   return {
     company: data,
     loading,
     error,
     fetchCompany,
     updateCompany,
+    removeFile,
   };
 }

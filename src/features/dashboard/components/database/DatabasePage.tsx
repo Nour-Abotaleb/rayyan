@@ -10,7 +10,7 @@ import DatabaseFilesGrid from "./DatabaseFilesGrid";
 type DatabaseTab = "cvResume" | "projectInputs" | "portfolio";
 
 const TAB_CATEGORIES: Record<DatabaseTab, DocumentCategory[]> = {
-  cvResume: ["cv_resume"],
+  cvResume: ["cvResume"],
   projectInputs: ["rfp", "boq"],
   portfolio: ["portfolio", "certifications"],
 };
@@ -29,7 +29,7 @@ export default function DatabasePage() {
   const { items, loading, upload, deleteDoc, viewDoc } = useDatabase(TAB_CATEGORIES[activeTab]);
 
   const uploadSections: Record<DatabaseTab, { label: string; category: DocumentCategory }[]> = {
-    cvResume: [{ label: db.uploadLabel, category: "cv_resume" }],
+    cvResume: [{ label: db.uploadLabel, category: "cvResume" }],
     projectInputs: [
       { label: db.uploadRfpLabel, category: "rfp" },
       { label: db.uploadBoqLabel, category: "boq" },
@@ -75,7 +75,6 @@ export default function DatabasePage() {
         <DatabaseFilesGrid
           items={items}
           loading={loading}
-          onView={viewDoc}
           onDelete={deleteDoc}
         />
       </div>

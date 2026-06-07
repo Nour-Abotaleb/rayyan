@@ -236,7 +236,7 @@ export default function ProposalUploadStep({
     if (tab !== "database") return;
     if (cvDocs.length || cvLoading) return;
     setCvLoading(true);
-    documentsService.getDocuments("cv_resume").then((res) => {
+    documentsService.getDocuments("cvResume").then((res) => {
       if (res.ok) setCvDocs(res.data.documents);
       setCvLoading(false);
     });
