@@ -14,6 +14,7 @@ export default function DropdownSelect({
   value,
   onChange,
   optionType,
+  error,
 }: {
   label: string;
   required?: boolean;
@@ -24,6 +25,7 @@ export default function DropdownSelect({
   value: string;
   onChange: (value: string) => void;
   optionType: string;
+  error?: string;
 }) {
   const [open, setOpen] = useState(false);
   const { options, loading } = useOptions(optionType);
@@ -51,6 +53,8 @@ export default function DropdownSelect({
           </span>
         )}
       </label>
+
+      {error && <p className="text-xs text-red-500">{error}</p>}
 
       <div ref={containerRef} className="relative flex items-center gap-2">
         <div className="relative flex-1">
@@ -88,17 +92,17 @@ export default function DropdownSelect({
             ) : (
               options.map((opt) => (
                 <button
-                  key={opt}
+                  key={opt.id}
                   type="button"
                   onClick={() => {
-                    onChange(opt);
+                    onChange(opt.value);
                     setOpen(false);
                   }}
                   className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-primary/10 hover:text-primary ${
-                    value === opt ? "bg-primary/10 font-medium text-primary" : "text-black dark:text-white"
+                    value === opt.value ? "bg-primary/10 font-medium text-primary" : "text-black dark:text-white"
                   }`}
                 >
-                  {opt}
+                  {opt.label}
                 </button>
               ))
             )}

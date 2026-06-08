@@ -143,6 +143,19 @@ export default function FinancialPaymentTermsStep({
     { id: 1, description: "", percentage: "" },
   ]);
   const [nextId, setNextId] = useState(2);
+  const [errors, setErrors] = useState<Record<number, Record<string, string>>>({});
+
+  function validate() {
+    const e: Record<number, Record<string, string>> = {};
+    terms.forEach((term) => {
+      const te: Record<string, string> = {};
+      if (!term.description.trim()) te.description = "Required";
+      if (!term.percentage || Number(term.percentage) <= 0) te.percentage = "Required";
+      if (Object.keys(te).length) e[term.id] = te;
+    });
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
 
   function addTerm() {
     setTerms((prev) => [...prev, { id: nextId, description: "", percentage: "" }]);
@@ -188,21 +201,33 @@ export default function FinancialPaymentTermsStep({
             </button>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pr-8 mt-6">
-              <InputField
-                label={f.paymentDescLabel}
-                required
-                placeholder={f.paymentDescPlaceholder}
-                icons={<PersonIcon size={20} />}
-                value={term.description}
-                onChange={(v) => updateTerm(term.id, "description", v)}
-              />
-              <NumberSpinnerField
-                label={f.percentageLabel}
-                required
-                placeholder={f.percentagePlaceholder}
-                value={term.percentage}
-                onChange={(v) => updateTerm(term.id, "percentage", v)}
-              />
+              <div className="flex flex-col gap-1.5">
+                <InputField
+                  label={f.paymentDescLabel}
+                  required
+                  placeholder={f.paymentDescPlaceholder}
+                  icons={<PersonIcon size={20} />}
+                  value={term.description}
+                  onChange={(v) => {
+                    updateTerm(term.id, "description", v);
+                    if (errors[term.id]?.description) setErrors((e) => { const n = { ...e }; if (n[term.id]) { delete n[term.id].description; if (!Object.keys(n[term.id]).length) delete n[term.id]; } return n; });
+                  }}
+                />
+                {errors[term.id]?.description && <p className="text-xs text-red-500">{errors[term.id].description}</p>}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <NumberSpinnerField
+                  label={f.percentageLabel}
+                  required
+                  placeholder={f.percentagePlaceholder}
+                  value={term.percentage}
+                  onChange={(v) => {
+                    updateTerm(term.id, "percentage", v);
+                    if (errors[term.id]?.percentage) setErrors((e) => { const n = { ...e }; if (n[term.id]) { delete n[term.id].percentage; if (!Object.keys(n[term.id]).length) delete n[term.id]; } return n; });
+                  }}
+                />
+                {errors[term.id]?.percentage && <p className="text-xs text-red-500">{errors[term.id].percentage}</p>}
+              </div>
             </div>
           </div>
         ))}
@@ -218,14 +243,15 @@ export default function FinancialPaymentTermsStep({
         </button>
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
+            if (!validate()) return;
             onNext(
               terms.map(({ description, percentage }) => ({
                 description,
                 percentage: Number(percentage) || 0,
               })),
-            )
-          }
+            );
+          }}
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
         >
           {fp.actions.nextFinalReview}

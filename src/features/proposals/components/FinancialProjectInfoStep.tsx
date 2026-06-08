@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { documentsService, type Document as ApiDocument } from "@/lib/api/documents.service";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PersonIcon from "@/icons/PersonIcon";
-import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import DropzoneUploadIcon from "@/icons/DropzoneUploadIcon";
+import DateInput from "@/features/proposals/components/sections/DateInput";
 import SectorIcon from "@/icons/SectorIcon";
 import LanguageSelector from "@/components/LanguageSelector";
 import DropdownSelect from "@/components/DropdownSelect";
@@ -175,6 +175,7 @@ function InputField({
   onChange,
   openAriaLabel,
   type,
+  error,
 }: {
   label: string;
   required?: boolean;
@@ -187,6 +188,7 @@ function InputField({
   onChange: (value: string) => void;
   openAriaLabel?: string;
   type?: string;
+  error?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -205,7 +207,7 @@ function InputField({
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-[#A0A3BD] placeholder:font-[300] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD]"
+            className={`input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-[#A0A3BD] placeholder:font-[300] placeholder:text-input-icon focus:outline-none focus:ring-1 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD] ${error ? "border-red-400 focus:ring-red-300" : "focus:ring-primary/20"}`}
           />
           <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center gap-1 text-input-icon">
             {icons}
@@ -221,6 +223,7 @@ function InputField({
           </button>
         )}
       </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 }
@@ -313,7 +316,7 @@ export default function FinancialProjectInfoStep({
   onBack: () => void;
   onNext: (data: ProjectInfoStepData) => void;
 }) {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const fp = t.dashboard.financialProposal;
   const f = fp.form;
 
@@ -332,9 +335,27 @@ export default function FinancialProjectInfoStep({
     endDate: "",
     terms: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   function set(key: keyof typeof form) {
-    return (v: string) => setForm((s) => ({ ...s, [key]: v }));
+    return (v: string) => {
+      setForm((s) => ({ ...s, [key]: v }));
+      if (errors[key]) setErrors((e) => { const n = { ...e }; delete n[key]; return n; });
+    };
+  }
+
+  function validate() {
+    const e: Record<string, string> = {};
+    if (!form.clientName.trim())        e.clientName        = "Required";
+    if (!form.projectName.trim())       e.projectName       = "Required";
+    if (!form.numDeliverables || Number(form.numDeliverables) < 1) e.numDeliverables = "Required";
+    if (!form.boqType.trim())           e.boqType           = "Required";
+    if (!form.projectType.trim())       e.projectType       = "Required";
+    if (!form.sectorIndustry.trim())    e.sectorIndustry    = "Required";
+    if (!form.proposalLanguage.trim())  e.proposalLanguage  = "Required";
+    if (!form.taxRate || Number(form.taxRate) <= 0) e.taxRate = "Required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
   }
 
   return (
@@ -349,6 +370,7 @@ export default function FinancialProjectInfoStep({
           icons={<PersonIcon size={20} />}
           value={form.clientName}
           onChange={set("clientName")}
+          error={errors.clientName}
         />
         <InputField
           label={f.projectNameLabel}
@@ -357,14 +379,18 @@ export default function FinancialProjectInfoStep({
           icons={<PersonIcon size={20} />}
           value={form.projectName}
           onChange={set("projectName")}
+          error={errors.projectName}
         />
 
-        <NumberSpinnerField
-          label={f.numDeliverablesLabel}
-          placeholder={f.numDeliverablesPlaceholder}
-          value={form.numDeliverables}
-          onChange={set("numDeliverables")}
-        />
+        <div className="flex flex-col gap-1.5">
+          <NumberSpinnerField
+            label={f.numDeliverablesLabel}
+            placeholder={f.numDeliverablesPlaceholder}
+            value={form.numDeliverables}
+            onChange={set("numDeliverables")}
+          />
+          {errors.numDeliverables && <p className="text-xs text-red-500">{errors.numDeliverables}</p>}
+        </div>
         <DropdownSelect
           label={f.boqTypeLabel}
           required
@@ -373,6 +399,7 @@ export default function FinancialProjectInfoStep({
           optionType="boq-type"
           value={form.boqType}
           onChange={set("boqType")}
+          error={errors.boqType}
         />
 
         <DropdownSelect
@@ -383,6 +410,7 @@ export default function FinancialProjectInfoStep({
           optionType="project-type"
           value={form.projectType}
           onChange={set("projectType")}
+          error={errors.projectType}
         />
         <DropdownSelect
           label={f.sectorIndustryLabel}
@@ -392,6 +420,7 @@ export default function FinancialProjectInfoStep({
           optionType="sector-industry"
           value={form.sectorIndustry}
           onChange={set("sectorIndustry")}
+          error={errors.sectorIndustry}
         />
 
         <div className="flex flex-col gap-1.5">
@@ -399,6 +428,7 @@ export default function FinancialProjectInfoStep({
             {f.proposalLanguageLabel} <span>*</span>
           </label>
           <LanguageSelector value={form.proposalLanguage} onChange={set("proposalLanguage")} />
+          {errors.proposalLanguage && <p className="text-xs text-red-500">{errors.proposalLanguage}</p>}
         </div>
         <InputField
           label={f.taxConfigLabel}
@@ -408,26 +438,21 @@ export default function FinancialProjectInfoStep({
           value={form.taxRate}
           onChange={set("taxRate")}
           type="number"
+          error={errors.taxRate}
         />
 
-        <InputField
-          label={f.startDateLabel}
-          optional
-          optionalLabel={f.optionalLabel}
-          placeholder={f.datePlaceholder}
-          icons={<DateCalendarIcon size={20} />}
-          value={form.startDate}
-          onChange={set("startDate")}
-        />
-        <InputField
-          label={f.endDateLabel}
-          optional
-          optionalLabel={f.optionalLabel}
-          placeholder={f.datePlaceholder}
-          icons={<DateCalendarIcon size={20} />}
-          value={form.endDate}
-          onChange={set("endDate")}
-        />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm md:text-base font-[550] text-black dark:text-white">
+            {f.startDateLabel} <span className="font-[550]">({f.optionalLabel})</span>
+          </label>
+          <DateInput value={form.startDate} onChange={set("startDate")} placeholder={f.datePlaceholder} isRtl={dir === "rtl"} />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm md:text-base font-[550] text-black dark:text-white">
+            {f.endDateLabel} <span className="font-[550]">({f.optionalLabel})</span>
+          </label>
+          <DateInput value={form.endDate} onChange={set("endDate")} placeholder={f.datePlaceholder} isRtl={dir === "rtl"} />
+        </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -454,7 +479,8 @@ export default function FinancialProjectInfoStep({
         </button>
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
+            if (!validate()) return;
             onNext({
               rfpMode: rfpFiles.length || rfpDocIds.length ? "upload" : "none",
               rfpFiles,
@@ -470,8 +496,8 @@ export default function FinancialProjectInfoStep({
               startDate: form.startDate,
               endDate: form.endDate,
               terms: form.terms,
-            })
-          }
+            });
+          }}
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
         >
           {fp.actions.nextDeliverables}

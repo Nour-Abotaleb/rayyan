@@ -31,31 +31,31 @@ export default function LanguageSelector({
     return () => document.removeEventListener("mousedown", handle);
   }, [open]);
 
-  const isOther = value && value !== "ar" && value !== "en";
+  const isOther = value && value !== "Arabic" && value !== "English";
 
   return (
     <div className="flex items-center gap-2">
       <div className="flex flex-1 items-center gap-2">
         <button
           type="button"
-          onClick={() => onChange("ar")}
+          onClick={() => onChange("Arabic")}
           className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white dark:bg-white/5 px-3 py-2.5 text-xs cursor-pointer"
         >
           <Image src={arFlagSrc} alt="AR" width={20} height={20} className="rounded-full shrink-0" />
           <span className="text-black dark:text-white">Arabic</span>
-          <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${value === "ar" ? "border-primary" : "border-[#D0D5DD]"}`}>
-            {value === "ar" && <span className="size-2 rounded-full bg-primary" />}
+          <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${value === "Arabic" ? "border-primary" : "border-[#D0D5DD]"}`}>
+            {value === "Arabic" && <span className="size-2 rounded-full bg-primary" />}
           </span>
         </button>
         <button
           type="button"
-          onClick={() => onChange("en")}
+          onClick={() => onChange("English")}
           className="flex flex-1 items-center gap-1.5 rounded-[12px] bg-white dark:bg-white/5 px-3 py-2.5 text-xs cursor-pointer"
         >
           <Image src={enFlagSrc} alt="EN" width={20} height={20} className="rounded-full shrink-0" />
           <span className="text-black dark:text-white">English</span>
-          <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${value === "en" ? "border-primary" : "border-[#D0D5DD]"}`}>
-            {value === "en" && <span className="size-2 rounded-full bg-primary" />}
+          <span className={`ms-auto flex size-4 items-center justify-center rounded-full border-2 ${value === "English" ? "border-primary" : "border-[#D0D5DD]"}`}>
+            {value === "English" && <span className="size-2 rounded-full bg-primary" />}
           </span>
         </button>
         {isOther && (
@@ -87,14 +87,14 @@ export default function LanguageSelector({
               </div>
             ) : options.map((opt) => (
               <button
-                key={opt}
+                key={opt.id}
                 type="button"
-                onClick={() => { onChange(opt); setOpen(false); }}
+                onClick={() => { onChange(opt.label); setOpen(false); }}
                 className={`w-full px-4 py-2.5 text-start text-xs transition-colors hover:bg-primary/8 dark:hover:bg-white/5 ${
-                  value === opt ? "font-semibold text-primary dark:text-[#519A91]" : "text-black/70 dark:text-white/60"
+                  value === opt.label ? "font-semibold text-primary dark:text-[#519A91]" : "text-black/70 dark:text-white/60"
                 }`}
               >
-                {opt}
+                {opt.label}
               </button>
             ))}
           </div>

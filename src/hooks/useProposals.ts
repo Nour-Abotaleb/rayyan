@@ -40,8 +40,38 @@ export function useProposals() {
       dispatch(proposalsFailure(res.error));
       return { ok: false as const, error: res.error };
     }
-    dispatch(proposalsGenerateSuccess());
-    return { ok: true as const, data: res.data };
+
+    const { jobId } = res.data;
+    const POLL_INTERVAL = 3000;
+    const MAX_WAIT = 120_000;
+    const deadline = Date.now() + MAX_WAIT;
+
+    return new Promise<{ ok: true; data: { proposalId?: string } } | { ok: false; error: string }>((resolve) => {
+      async function poll() {
+        const statusRes = await proposalsService.getJobStatus(jobId);
+        if (statusRes.ok) {
+          const { status, proposalId } = statusRes.data;
+          if (status === "completed") {
+            dispatch(proposalsGenerateSuccess());
+            resolve({ ok: true, data: { proposalId } });
+            return;
+          }
+          if (status === "failed") {
+            const msg = statusRes.data.message ?? "Proposal generation failed";
+            dispatch(proposalsFailure(msg));
+            resolve({ ok: false, error: msg });
+            return;
+          }
+        }
+        if (Date.now() >= deadline) {
+          dispatch(proposalsFailure("Timed out waiting for proposal generation"));
+          resolve({ ok: false, error: "timeout" });
+          return;
+        }
+        setTimeout(poll, POLL_INTERVAL);
+      }
+      poll();
+    });
   }, [dispatch]);
 
   const getProposal = useCallback((id: string) => {

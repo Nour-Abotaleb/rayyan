@@ -132,8 +132,7 @@ export default function ProposalSectionsStep({
     return { weeks, flatDays, monthGroups, weekendBg, totalCols, dateToCol };
   }, [ganttCards]);
 
-  const [timelineFiles, setTimelineFiles] = useState<{ name: string; size: string }[]>([]);
-  const [timelineFileObjects, setTimelineFileObjects] = useState<File[]>([]);
+  const [timelineFiles, setTimelineFiles] = useState<{ file: File; name: string; size: string }[]>([]);
   const timelineFileRef = useRef<HTMLInputElement>(null);
 
   function handleTimelineUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -141,22 +140,17 @@ export default function ProposalSectionsStep({
     setTimelineFiles((prev) => [
       ...prev,
       ...files.map((f) => ({
+        file: f,
         name: f.name.replace(/\.[^.]+$/, ""),
         size: f.size < 1024 * 1024
           ? `${(f.size / 1024).toFixed(1)}KB`
           : `${(f.size / (1024 * 1024)).toFixed(1)}MB`,
       })),
     ]);
-    setTimelineFileObjects((prev) => [...prev, ...files]);
     e.target.value = "";
   }
 
-  const defaultChip = s.proposalTitleChip;
-  const [sectionChips, setSectionChips] = useState<string[][]>([
-    [defaultChip, defaultChip, defaultChip],
-    [defaultChip, defaultChip, defaultChip],
-    [defaultChip, defaultChip, defaultChip],
-  ]);
+  const [sectionChips, setSectionChips] = useState<string[][]>([[], [], []]);
 
   const optionalSections = [
     s.adminComplianceTitle,
@@ -271,7 +265,7 @@ export default function ProposalSectionsStep({
                 type="button"
                 onClick={() => setTimelineFiles((prev) => prev.filter((_, j) => j !== i))}
                 className="shrink-0 cursor-pointer hover:opacity-70 transition-opacity"
-                aria-label="Remove file"
+                aria-label="Remove timeline file"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path opacity="0.3" d="M12 4C7.59 4 4 7.59 4 12C4 16.41 7.59 20 12 20C16.41 20 20 16.41 20 12C20 7.59 16.41 4 12 4ZM16 14.59L14.59 16L12 13.41L9.41 16L8 14.59L10.59 12L8 9.41L9.41 8L12 10.59L14.59 8L16 9.41L13.41 12L16 14.59Z" fill="#858585" />
@@ -296,8 +290,8 @@ export default function ProposalSectionsStep({
             </h4>
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <div className="input-style w-full rounded-[44px] py-3 ps-4 pe-11 text-sm font-[300] text-black dark:text-zinc-100">
-                  <div className="flex flex-wrap items-center gap-2">
+                <div className="input-style flex h-[44px] w-full items-center overflow-x-auto rounded-[44px] ps-4 pe-11 text-sm font-[300] text-black dark:text-zinc-100">
+                  <div className="flex flex-nowrap items-center gap-2">
                     {sectionChips[si].map((chip, ci) => (
                       <span key={ci} className="inline-flex items-center gap-2">
                         <span className="inline-flex items-center rounded-full bg-[#E4ECEE] px-3 py-1.5 text-xs font-normal text-black dark:bg-[#1B272B] dark:text-white">
@@ -346,8 +340,10 @@ export default function ProposalSectionsStep({
           onClick={() =>
             onNext({
               ganttCards: ganttCards.map(({ title, from, to }) => ({ title, from, to })),
-              timelineFiles: timelineFileObjects,
-              sections: optionalSections.map((title, i) => ({ title, chips: sectionChips[i] })),
+              timelineFiles: timelineFiles.map((f) => f.file),
+              sections: optionalSections
+                .map((title, i) => ({ title, chips: sectionChips[i] }))
+                .filter((s) => s.chips.length > 0),
             })
           }
         >

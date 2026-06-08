@@ -5,7 +5,6 @@ import { useEffect, useRef, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { documentsService, type Document as ApiDocument } from "@/lib/api/documents.service";
 import PersonIcon from "@/icons/PersonIcon";
-import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import SectorIcon from "@/icons/SectorIcon";
 import DropzoneUploadIcon from "@/icons/DropzoneUploadIcon";
 import DropdownSelect from "@/components/DropdownSelect";
@@ -16,6 +15,7 @@ import ProposalStepsSidebar from "@/features/proposals/components/ProposalStepsS
 import ProposalSectionsStep, { type SectionsStepData } from "@/features/proposals/components/ProposalSectionsStep";
 import ProposalUploadStep, { type UploadStepData } from "@/features/proposals/components/ProposalUploadStep";
 import ProposalFinalReviewStep from "@/features/proposals/components/ProposalFinalReviewStep";
+import DateInput from "@/features/proposals/components/sections/DateInput";
 import { technicalProposalService } from "@/lib/api/technical-proposal.service";
 
 function InputField({
@@ -27,6 +27,7 @@ function InputField({
   icons,
   value,
   onChange,
+  error,
 }: {
   label: string;
   required?: boolean;
@@ -36,6 +37,7 @@ function InputField({
   icons: React.ReactNode;
   value: string;
   onChange: (value: string) => void;
+  error?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -47,13 +49,14 @@ function InputField({
           </span>
         )}
       </label>
+      {error && <p className="text-xs text-red-500">{error}</p>}
       <div className="relative flex-1">
         <input
           type="text"
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-[#A0A3BD] placeholder:font-[300] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD]"
+          className={`input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-[#A0A3BD] placeholder:font-[300] placeholder:text-input-icon focus:outline-none focus:ring-1 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD] ${error ? "border-red-400 focus:ring-red-300" : "focus:ring-primary/20"}`}
         />
         <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center gap-1 text-input-icon">
           {icons}
@@ -194,7 +197,7 @@ function RfpUploadSection({
 }
 
 export default function NewProposalPage() {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const router = useRouter();
   const steps = [
     { number: 1, title: t.dashboard.newProposal.steps.basicInfoTitle, subtitle: t.dashboard.newProposal.steps.basicInfoSubtitle },
@@ -207,17 +210,35 @@ export default function NewProposalPage() {
     clientName: "",
     projectName: "",
     sectorIndustry: "",
-    proposalType: "",
+    proposalType: "technical",
     proposalLanguage: "",
     startDate: "",
     endDate: "",
     additionalDetails: "",
   });
+  const [step1Errors, setStep1Errors] = useState<Record<string, string>>({});
   const [rfpFiles, setRfpFiles] = useState<File[]>([]);
   const [rfpDocIds, setRfpDocIds] = useState<string[]>([]);
   const [sectionsData, setSectionsData] = useState<SectionsStepData | null>(null);
   const [uploadData, setUploadData] = useState<UploadStepData | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  function setField(key: keyof typeof basicInfo) {
+    return (v: string) => {
+      setBasicInfo((s) => ({ ...s, [key]: v }));
+      if (step1Errors[key]) setStep1Errors((e) => { const n = { ...e }; delete n[key]; return n; });
+    };
+  }
+
+  function validateStep1() {
+    const errs: Record<string, string> = {};
+    if (!basicInfo.clientName.trim())     errs.clientName     = "This field is required";
+    if (!basicInfo.projectName.trim())    errs.projectName    = "This field is required";
+    if (!basicInfo.sectorIndustry.trim()) errs.sectorIndustry = "This field is required";
+    if (!basicInfo.proposalLanguage.trim()) errs.proposalLanguage = "Please select a language";
+    setStep1Errors(errs);
+    return Object.keys(errs).length === 0;
+  }
 
   const progress = useMemo(() => {
     const pct = Math.round((activeStep / steps.length) * 100);
@@ -241,14 +262,51 @@ export default function NewProposalPage() {
       ganttCards: sectionsData?.ganttCards,
       timelineFiles: sectionsData?.timelineFiles,
       sections: sectionsData?.sections,
-      members: uploadData?.members.map(({ name, role, yearsOfExperience, keySkills }) => ({ name, role, yearsOfExperience, keySkills })),
-      memberCvFiles: uploadData?.members.map((m) => m.cvFile).filter(Boolean) as File[],
+      members: uploadData?.members
+        .filter((m) => m.name.trim() || m.role.trim())
+        .map(({ name, role, yearsOfExperience, keySkills }) => ({ name, role, yearsOfExperience, keySkills })),
+      memberCvFiles: uploadData?.members
+        .filter((m) => m.name.trim() || m.role.trim())
+        .map((m) => m.cvFile).filter(Boolean) as File[],
       cvDocIds: uploadData?.cvDocIds,
     });
-    setSubmitting(false);
-    if (res.ok) {
-      router.push(`/dashboard/proposals?created=${res.data.proposalId}`);
+
+    if (!res.ok) {
+      setSubmitting(false);
+      return;
     }
+
+    const { jobId } = res.data;
+    const POLL_INTERVAL = 3000;
+    const MAX_WAIT = 120_000;
+    const deadline = Date.now() + MAX_WAIT;
+
+    await new Promise<void>((resolve) => {
+      async function poll() {
+        const statusRes = await technicalProposalService.getJobStatus(jobId);
+        if (statusRes.ok) {
+          const { status, proposalId } = statusRes.data;
+          if (status === "completed") {
+            setSubmitting(false);
+            router.push(`/dashboard/proposals${proposalId ? `?created=${proposalId}` : ""}`);
+            resolve();
+            return;
+          }
+          if (status === "failed") {
+            setSubmitting(false);
+            resolve();
+            return;
+          }
+        }
+        if (Date.now() >= deadline) {
+          setSubmitting(false);
+          resolve();
+          return;
+        }
+        setTimeout(poll, POLL_INTERVAL);
+      }
+      poll();
+    });
   }
 
   return (
@@ -272,7 +330,8 @@ export default function NewProposalPage() {
                 placeholder={t.dashboard.newProposal.form.clientNamePlaceholder}
                 icons={<PersonIcon size={20} />}
                 value={basicInfo.clientName}
-                onChange={(v) => setBasicInfo((s) => ({ ...s, clientName: v }))}
+                onChange={setField("clientName")}
+                error={step1Errors.clientName}
               />
               <InputField
                 label={t.dashboard.newProposal.form.projectNameLabel}
@@ -280,7 +339,8 @@ export default function NewProposalPage() {
                 placeholder={t.dashboard.newProposal.form.projectNamePlaceholder}
                 icons={<PersonIcon size={20} />}
                 value={basicInfo.projectName}
-                onChange={(v) => setBasicInfo((s) => ({ ...s, projectName: v }))}
+                onChange={setField("projectName")}
+                error={step1Errors.projectName}
               />
               <DropdownSelect
                 label={t.dashboard.newProposal.form.sectorIndustryLabel}
@@ -289,15 +349,8 @@ export default function NewProposalPage() {
                 icon={<SectorIcon />}
                 optionType="sector-industry"
                 value={basicInfo.sectorIndustry}
-                onChange={(v) => setBasicInfo((s) => ({ ...s, sectorIndustry: v }))}
-              />
-              <InputField
-                label={t.dashboard.newProposal.form.proposalTypeLabel}
-                required
-                placeholder={t.dashboard.newProposal.form.proposalTypePlaceholder}
-                icons={<PersonIcon size={20} />}
-                value={basicInfo.proposalType}
-                onChange={(v) => setBasicInfo((s) => ({ ...s, proposalType: v }))}
+                onChange={setField("sectorIndustry")}
+                error={step1Errors.sectorIndustry}
               />
               <div className="sm:col-span-2 flex flex-col gap-1.5">
                 <label className="text-sm md:text-base font-[550] text-black dark:text-white">
@@ -305,27 +358,36 @@ export default function NewProposalPage() {
                 </label>
                 <LanguageSelector
                   value={basicInfo.proposalLanguage}
-                  onChange={(v) => setBasicInfo((s) => ({ ...s, proposalLanguage: v }))}
+                  onChange={setField("proposalLanguage")}
+                />
+                {step1Errors.proposalLanguage && (
+                  <p className="text-xs text-red-500">{step1Errors.proposalLanguage}</p>
+                )}
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm md:text-base font-[550] text-black dark:text-white">
+                  {t.dashboard.newProposal.form.startDateLabel}{" "}
+                  <span className="font-[550]">({t.dashboard.newProposal.form.optionalLabel})</span>
+                </label>
+                <DateInput
+                  value={basicInfo.startDate}
+                  onChange={setField("startDate")}
+                  placeholder={t.dashboard.newProposal.form.datePlaceholder}
+                  isRtl={dir === "rtl"}
                 />
               </div>
-              <InputField
-                label={t.dashboard.newProposal.form.startDateLabel}
-                optional
-                optionalLabel={t.dashboard.newProposal.form.optionalLabel}
-                placeholder={t.dashboard.newProposal.form.datePlaceholder}
-                icons={<DateCalendarIcon size={20} />}
-                value={basicInfo.startDate}
-                onChange={(v) => setBasicInfo((s) => ({ ...s, startDate: v }))}
-              />
-              <InputField
-                label={t.dashboard.newProposal.form.endDateLabel}
-                optional
-                optionalLabel={t.dashboard.newProposal.form.optionalLabel}
-                placeholder={t.dashboard.newProposal.form.datePlaceholder}
-                icons={<DateCalendarIcon size={20} />}
-                value={basicInfo.endDate}
-                onChange={(v) => setBasicInfo((s) => ({ ...s, endDate: v }))}
-              />
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm md:text-base font-[550] text-black dark:text-white">
+                  {t.dashboard.newProposal.form.endDateLabel}{" "}
+                  <span className="font-[550]">({t.dashboard.newProposal.form.optionalLabel})</span>
+                </label>
+                <DateInput
+                  value={basicInfo.endDate}
+                  onChange={setField("endDate")}
+                  placeholder={t.dashboard.newProposal.form.datePlaceholder}
+                  isRtl={dir === "rtl"}
+                />
+              </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -347,7 +409,7 @@ export default function NewProposalPage() {
             <div className="mt-2 flex justify-end">
               <button
                 className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
-                onClick={() => setActiveStep(2)}
+                onClick={() => { if (validateStep1()) setActiveStep(2); }}
               >
                 {t.dashboard.newProposal.actions.nextSections}
               </button>
@@ -371,10 +433,38 @@ export default function NewProposalPage() {
 
         {activeStep === 4 && (
           <ProposalFinalReviewStep
+            basicInfo={basicInfo}
             sectionsData={sectionsData}
+            uploadData={uploadData}
             onBack={() => setActiveStep(3)}
             onSubmit={handleSubmit}
             loading={submitting}
+            onRemoveTimelineFile={(i) =>
+              setSectionsData((prev) =>
+                prev ? { ...prev, timelineFiles: prev.timelineFiles.filter((_, j) => j !== i) } : prev
+              )
+            }
+            onRemoveMemberCv={(i) =>
+              setUploadData((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      members: prev.members.map((m, j) => j === i ? { ...m, cvFile: null } : m),
+                    }
+                  : prev
+              )
+            }
+            onRemoveCvDoc={(docId) =>
+              setUploadData((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      cvDocIds: prev.cvDocIds.filter((id) => id !== docId),
+                      cvDocs: prev.cvDocs.filter((d) => d.id !== docId),
+                    }
+                  : prev
+              )
+            }
           />
         )}
       </div>

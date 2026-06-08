@@ -48,17 +48,17 @@ export default function ChipDropdownButton({
             </p>
           ) : (
             options.map((opt) => {
-              const selected = activeChips.includes(opt);
+              const selected = activeChips.includes(opt.value);
               return (
                 <button
-                  key={opt}
+                  key={opt.id}
                   type="button"
-                  onClick={() => onAdd(opt)}
+                  onClick={() => onAdd(opt.value)}
                   className={`flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-colors hover:bg-primary/10 hover:text-primary ${
                     selected ? "text-primary font-medium" : "text-black dark:text-white"
                   }`}
                 >
-                  <span>{opt}</span>
+                  <span>{opt.label}</span>
                   {selected && (
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                       <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

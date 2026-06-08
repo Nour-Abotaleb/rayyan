@@ -22,6 +22,7 @@ export interface UploadStepData {
   mode: "manual" | "database";
   members: Omit<Member, "id">[];
   cvDocIds: string[];
+  cvDocs: { id: string; name: string }[];
 }
 
 function UploadManualIcon() {
@@ -86,6 +87,13 @@ function DropzoneUploadIcon() {
 
 function MemberDropzone({ label, onFileChange }: { label: string; onFileChange: (file: File | null) => void }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+
+  function handleFile(f: File | null) {
+    setFile(f);
+    onFileChange(f);
+  }
+
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-[550] text-black dark:text-white">
@@ -96,31 +104,53 @@ function MemberDropzone({ label, onFileChange }: { label: string; onFileChange: 
         type="file"
         accept=".pdf,.docx,.doc,.txt,.jpg,.png"
         className="hidden"
-        onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
+        onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
       />
-      <div
-        className="relative flex flex-col items-center justify-center gap-2 rounded-xl py-4 text-center cursor-pointer"
-        style={{ background: "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)" }}
-        onClick={() => fileRef.current?.click()}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) onFileChange(f); }}
-      >
-        <svg className="pointer-events-none absolute inset-0 h-full w-full text-primary" style={{ overflow: "visible" }}>
-          <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="8 6" />
-        </svg>
-        <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
-          <DropzoneUploadIcon />
-        </span>
-        <p className="text-xs text-black/60 dark:text-white/50">Drag and drop files here or</p>
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }}
-          className="rounded-full bg-primary px-4 py-1 text-xs font-medium text-white hover:opacity-90 cursor-pointer"
+      {file ? (
+        <div className="flex items-center gap-3 rounded-xl border border-white bg-white/60 px-4 py-3 dark:border-white/10 dark:bg-white/5">
+          <Image src={pdfIcon} alt="PDF" width={36} height={36} className="shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium text-black dark:text-white">{file.name.replace(/\.[^.]+$/, "")}</p>
+            <p className="text-xs text-black/40 dark:text-white/35">
+              {file.size < 1024 * 1024 ? `${(file.size / 1024).toFixed(1)}KB` : `${(file.size / (1024 * 1024)).toFixed(1)}MB`}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleFile(null)}
+            className="shrink-0 cursor-pointer text-black/40 hover:text-red-500 transition-colors dark:text-white/40"
+            aria-label="Remove file"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      ) : (
+        <div
+          className="relative flex flex-col items-center justify-center gap-2 rounded-xl py-4 text-center cursor-pointer"
+          style={{ background: "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)" }}
+          onClick={() => fileRef.current?.click()}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
         >
-          Browse Files
-        </button>
-        <p className="text-[10px] text-black/40 dark:text-white/30">(PDF, DOCX, DOC, TXT, JPG, PNG)</p>
-      </div>
+          <svg className="pointer-events-none absolute inset-0 h-full w-full text-primary" style={{ overflow: "visible" }}>
+            <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="8 6" />
+          </svg>
+          <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
+            <DropzoneUploadIcon />
+          </span>
+          <p className="text-xs text-black/60 dark:text-white/50">Drag and drop files here or</p>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }}
+            className="rounded-full bg-primary px-4 py-1 text-xs font-medium text-white hover:opacity-90 cursor-pointer"
+          >
+            Browse Files
+          </button>
+          <p className="text-[10px] text-black/40 dark:text-white/30">(PDF, DOCX, DOC, TXT, JPG, PNG)</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -130,11 +160,13 @@ function MemberForm({
   member,
   onChange,
   onCvChange,
+  showCv = true,
 }: {
   index: number;
   member: Member;
   onChange: (id: number, field: keyof Omit<Member, "id" | "cvFile">, value: string) => void;
   onCvChange: (id: number, file: File | null) => void;
+  showCv?: boolean;
 }) {
   const { t } = useLanguage();
   const u = t.dashboard.newProposal.upload;
@@ -208,7 +240,7 @@ function MemberForm({
       </div>
 
       {/* CV/Resume dropzone */}
-      <MemberDropzone label={u.cvResumeLabel} onFileChange={(f) => onCvChange(member.id, f)} />
+      {showCv && <MemberDropzone label={u.cvResumeLabel} onFileChange={(f) => onCvChange(member.id, f)} />}
     </div>
   );
 }
@@ -312,10 +344,10 @@ export default function ProposalUploadStep({
                 member={member}
                 onChange={updateMember}
                 onCvChange={updateMemberCv}
+                showCv
               />
             ))}
           </div>
-
           <button
             type="button"
             onClick={addMember}
@@ -329,6 +361,7 @@ export default function ProposalUploadStep({
       {/* Database tab */}
       {tab === "database" && (
         <>
+          {/* CV database selector */}
           <div className="flex flex-col gap-3">
             <h3 className="text-sm font-semibold text-black dark:text-white">
               {u.selectCvResume}
@@ -361,13 +394,6 @@ export default function ProposalUploadStep({
               </div>
             )}
           </div>
-
-          <button
-            type="button"
-            className="w-full rounded-full bg-primary py-3 text-sm font-medium text-white hover:opacity-90 transition-opacity cursor-pointer dark:text-black"
-          >
-            {u.done}
-          </button>
         </>
       )}
 
@@ -389,6 +415,9 @@ export default function ProposalUploadStep({
                 name, role, yearsOfExperience, keySkills, cvFile,
               })),
               cvDocIds: selectedCvs,
+              cvDocs: cvDocs
+                .filter((d) => selectedCvs.includes(d.id))
+                .map(({ id, name }) => ({ id, name })),
             })
           }
           className="rounded-full bg-primary px-4 py-2.5 text-sm font-normal text-white hover:opacity-90 transition-colors cursor-pointer dark:text-black"

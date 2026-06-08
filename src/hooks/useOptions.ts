@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { optionsService } from "@/lib/api/options.service";
+import { optionsService, OptionItem } from "@/lib/api/options.service";
 
-const cache = new Map<string, string[]>();
-const pending = new Map<string, Promise<string[]>>();
+const cache = new Map<string, OptionItem[]>();
+const pending = new Map<string, Promise<OptionItem[]>>();
 
 export function useOptions(type: string) {
-  const [options, setOptions] = useState<string[]>(() => cache.get(type) ?? []);
+  const [options, setOptions] = useState<OptionItem[]>(() => cache.get(type) ?? []);
   const [loading, setLoading] = useState(!cache.has(type));
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export function useOptions(type: string) {
 
     if (!pending.has(type)) {
       const p = optionsService.getOptions(type).then((res) => {
-        const opts = res.ok ? res.data.options : [];
+        const opts = res.ok ? (res.data.data ?? []) : [];
         cache.set(type, opts);
         pending.delete(type);
         return opts;

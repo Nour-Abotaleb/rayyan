@@ -65,9 +65,15 @@ export interface GenerateProposalPayload {
 }
 
 export interface GenerateProposalResponse {
-  proposalId: string;
-  status: ProposalStatus;
+  jobId: string;
+  estimatedSeconds: number;
   message: string;
+}
+
+export interface JobStatusResponse {
+  status: "pending" | "processing" | "completed" | "failed";
+  proposalId?: string;
+  message?: string;
 }
 
 export const proposalsService = {
@@ -109,6 +115,10 @@ export const proposalsService = {
       method: "POST",
       body: form,
     });
+  },
+
+  getJobStatus(jobId: string) {
+    return apiRequest<JobStatusResponse>(`/proposals/generate/${jobId}/status`);
   },
 
   getProposal(id: string) {

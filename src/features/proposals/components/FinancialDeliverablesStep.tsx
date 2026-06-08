@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PersonIcon from "@/icons/PersonIcon";
-import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import DropdownSelect from "@/components/DropdownSelect";
+import DateInput from "@/features/proposals/components/sections/DateInput";
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 
@@ -23,61 +23,40 @@ function SectorIcon() {
 function InputField({
   label,
   required,
-  optional,
-  optionalLabel,
   placeholder,
   icons,
-  endButton,
   value,
   onChange,
-  openAriaLabel,
   type,
+  error,
 }: {
   label: string;
   required?: boolean;
-  optional?: boolean;
-  optionalLabel?: string;
   placeholder: string;
   icons: React.ReactNode;
-  endButton?: React.ReactNode;
   value: string;
   onChange: (value: string) => void;
-  openAriaLabel?: string;
   type?: string;
+  error?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm md:text-base font-[550] text-black dark:text-white">
         {label} {required && <span>*</span>}
-        {optional && (
-          <span className="font-[550] text-black dark:text-white">
-            {" "}({optionalLabel ?? "Optional"})
-          </span>
-        )}
       </label>
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <input
-            type={type ?? "text"}
-            placeholder={placeholder}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-[#A0A3BD] placeholder:font-[300] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD]"
-          />
-          <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center gap-1 text-input-icon">
-            {icons}
-          </span>
-        </div>
-        {endButton && (
-          <button
-            type="button"
-            className="input-style flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full text-input-icon transition-colors"
-            aria-label={openAriaLabel ?? "Open"}
-          >
-            {endButton}
-          </button>
-        )}
+      <div className="relative">
+        <input
+          type={type ?? "text"}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={`input-style w-full rounded-[44px] py-3.5 ps-4 pe-11 text-sm font-[300] text-[#A0A3BD] placeholder:font-[300] placeholder:text-input-icon focus:outline-none focus:ring-1 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD] ${error ? "border-red-400 focus:ring-red-300" : "focus:ring-primary/20"}`}
+        />
+        <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center gap-1 text-input-icon">
+          {icons}
+        </span>
       </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 }
@@ -166,7 +145,7 @@ export default function FinancialDeliverablesStep({
   onBack: () => void;
   onNext: (data: DeliverablesStepData) => void;
 }) {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const fp = t.dashboard.financialProposal;
   const f = fp.step2Form;
 
@@ -180,9 +159,25 @@ export default function FinancialDeliverablesStep({
     toolsCosts: "",
     otherExpenses: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   function set(key: keyof typeof form) {
-    return (v: string) => setForm((s) => ({ ...s, [key]: v }));
+    return (v: string) => {
+      setForm((s) => ({ ...s, [key]: v }));
+      if (errors[key]) setErrors((e) => { const n = { ...e }; delete n[key]; return n; });
+    };
+  }
+
+  function validate() {
+    const e: Record<string, string> = {};
+    if (!form.serviceCatalog.trim())  e.serviceCatalog  = "Required";
+    if (!form.deliverableName.trim()) e.deliverableName = "Required";
+    if (!form.dueDate.trim())         e.dueDate         = "Required";
+    if (!form.quantity || Number(form.quantity) < 1)    e.quantity    = "Required";
+    if (!form.unitPrice || Number(form.unitPrice) <= 0) e.unitPrice   = "Required";
+    if (!form.salaryCosts || Number(form.salaryCosts) <= 0) e.salaryCosts = "Required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
   }
 
   return (
@@ -196,6 +191,7 @@ export default function FinancialDeliverablesStep({
         optionType="service-catalog"
         value={form.serviceCatalog}
         onChange={set("serviceCatalog")}
+        error={errors.serviceCatalog}
       />
 
       {/* 3-column row */}
@@ -207,16 +203,15 @@ export default function FinancialDeliverablesStep({
           icons={<PersonIcon size={20} />}
           value={form.deliverableName}
           onChange={set("deliverableName")}
+          error={errors.deliverableName}
         />
-        <InputField
-          label={f.dueDateLabel}
-          required
-          placeholder={f.dueDatePlaceholder}
-          icons={<DateCalendarIcon size={20} />}
-          value={form.dueDate}
-          onChange={set("dueDate")}
-          type="text"
-        />
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm md:text-base font-[550] text-black dark:text-white">
+            {f.dueDateLabel} <span>*</span>
+          </label>
+          <DateInput value={form.dueDate} onChange={set("dueDate")} placeholder={f.dueDatePlaceholder} isRtl={dir === "rtl"} />
+          {errors.dueDate && <p className="text-xs text-red-500">{errors.dueDate}</p>}
+        </div>
         <InputField
           label={f.quantityLabel}
           required
@@ -224,25 +219,32 @@ export default function FinancialDeliverablesStep({
           icons={<PersonIcon size={20} />}
           value={form.quantity}
           onChange={set("quantity")}
+          error={errors.quantity}
         />
       </div>
 
       {/* 2-column row — required price fields */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <NumberSpinnerField
-          label={f.unitPriceLabel}
-          required
-          placeholder={f.unitPricePlaceholder}
-          value={form.unitPrice}
-          onChange={set("unitPrice")}
-        />
-        <NumberSpinnerField
-          label={f.salaryCostsLabel}
-          required
-          placeholder={f.salaryCostsPlaceholder}
-          value={form.salaryCosts}
-          onChange={set("salaryCosts")}
-        />
+        <div className="flex flex-col gap-1.5">
+          <NumberSpinnerField
+            label={f.unitPriceLabel}
+            required
+            placeholder={f.unitPricePlaceholder}
+            value={form.unitPrice}
+            onChange={set("unitPrice")}
+          />
+          {errors.unitPrice && <p className="text-xs text-red-500">{errors.unitPrice}</p>}
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <NumberSpinnerField
+            label={f.salaryCostsLabel}
+            required
+            placeholder={f.salaryCostsPlaceholder}
+            value={form.salaryCosts}
+            onChange={set("salaryCosts")}
+          />
+          {errors.salaryCosts && <p className="text-xs text-red-500">{errors.salaryCosts}</p>}
+        </div>
       </div>
 
       {/* 2-column row — optional cost fields */}
@@ -271,7 +273,8 @@ export default function FinancialDeliverablesStep({
         </button>
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
+            if (!validate()) return;
             onNext({
               serviceCatalog: form.serviceCatalog,
               name: form.deliverableName,
@@ -281,8 +284,8 @@ export default function FinancialDeliverablesStep({
               salaryCosts: Number(form.salaryCosts) || 0,
               toolsCosts: form.toolsCosts ? Number(form.toolsCosts) : undefined,
               otherExpenses: form.otherExpenses ? Number(form.otherExpenses) : undefined,
-            })
-          }
+            });
+          }}
           className="cursor-pointer rounded-full bg-primary px-3 py-2.5 text-sm font-normal text-white transition-colors hover:bg-primary-dark dark:text-black"
         >
           {fp.actions.nextPaymentTerms}

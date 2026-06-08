@@ -74,12 +74,7 @@ export default function ProposalsTable({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, activeTab, search]);
 
-  const desktopCols =
-    proposals.length >= 3
-      ? "lg:grid-cols-3"
-      : proposals.length === 2
-        ? "lg:grid-cols-2"
-        : "lg:grid-cols-3";
+  const desktopCols = "lg:grid-cols-3";
 
   return (
     <div className="relative flex flex-col gap-4 rounded-2xl px-3 md:px-5">
@@ -197,7 +192,7 @@ export default function ProposalsTable({
                     </span>
 
                     {/* Title + subtitle + download */}
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex gap-3 py-4">
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-base font-semibold leading-snug text-black/80 dark:text-white/80">
                           {p.title}

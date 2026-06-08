@@ -10,6 +10,7 @@ import FinancialDeliverablesStep, { type DeliverablesStepData } from "@/features
 import FinancialPaymentTermsStep, { type PaymentTermsStepData } from "@/features/proposals/components/FinancialPaymentTermsStep";
 import FinancialFinalReviewStep from "@/features/proposals/components/FinancialFinalReviewStep";
 import { financialProposalService } from "@/lib/api/financial-proposal.service";
+import { proposalsService } from "@/lib/api/proposals.service";
 
 export default function FinancialProposalPage() {
   const { t } = useLanguage();
@@ -44,10 +45,43 @@ export default function FinancialProposalPage() {
       deliverables: [deliverable],
       paymentTerms,
     });
-    setSubmitting(false);
-    if (res.ok) {
-      router.push(`/dashboard/proposals?created=${res.data.proposalId}`);
+
+    if (!res.ok) {
+      setSubmitting(false);
+      return;
     }
+
+    const { jobId } = res.data;
+    const POLL_INTERVAL = 3000;
+    const MAX_WAIT = 120_000;
+    const deadline = Date.now() + MAX_WAIT;
+
+    await new Promise<void>((resolve) => {
+      async function poll() {
+        const statusRes = await proposalsService.getJobStatus(jobId);
+        if (statusRes.ok) {
+          const { status, proposalId } = statusRes.data;
+          if (status === "completed") {
+            setSubmitting(false);
+            router.push(`/dashboard/proposals${proposalId ? `?created=${proposalId}` : ""}`);
+            resolve();
+            return;
+          }
+          if (status === "failed") {
+            setSubmitting(false);
+            resolve();
+            return;
+          }
+        }
+        if (Date.now() >= deadline) {
+          setSubmitting(false);
+          resolve();
+          return;
+        }
+        setTimeout(poll, POLL_INTERVAL);
+      }
+      poll();
+    });
   }
 
   const steps = [

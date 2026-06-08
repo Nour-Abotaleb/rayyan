@@ -7,12 +7,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useProposals } from "@/hooks/useProposals";
 import CloseIcon from "@/icons/CloseIcon";
 import PersonIcon from "@/icons/PersonIcon";
-import DateCalendarIcon from "@/icons/DateCalendarIcon";
 import SectorIcon from "@/icons/SectorIcon";
 import PlusIcon from "@/icons/PlusIcon";
 import DropzoneUploadIcon from "@/icons/DropzoneUploadIcon";
 import DropdownSelect from "@/components/DropdownSelect";
 import LanguageSelector from "@/components/LanguageSelector";
+import DateInput from "@/features/proposals/components/sections/DateInput";
 import pdfIcon from "@src/assets/dashboard/pdf.svg";
 import { documentsService, type Document as ApiDocument } from "@/lib/api/documents.service";
 
@@ -124,7 +124,7 @@ function InputWithIcon({ placeholder, icon, value, onChange }: { placeholder: st
 function DashedDropzone({ children, onDrop }: { children: React.ReactNode; onDrop: (files: File[]) => void }) {
   return (
     <div
-      className="relative flex flex-col items-center justify-center gap-2 rounded-xl py-3 text-center"
+      className="relative flex flex-col items-center justify-center gap-2 rounded-xl py-3 text-center mt-2"
       style={{ background: "linear-gradient(to top, #FFFFFF66 0%, #48898120 100%)" }}
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => { e.preventDefault(); onDrop(Array.from(e.dataTransfer.files)); }}
@@ -220,7 +220,7 @@ export default function ProposalDetailsModal({
     });
     if (res.ok) {
       onClose();
-      router.push(`/dashboard/proposals?generated=${res.data.proposalId}`);
+      router.push(`/dashboard/proposals${res.data.proposalId ? `?generated=${res.data.proposalId}` : ""}`);
     }
   }
 
@@ -395,10 +395,10 @@ export default function ProposalDetailsModal({
               onChange={setSector}
             />
             <Field label={m.startDateLabel}>
-              <InputWithIcon placeholder={m.datePlaceholder} icon={<DateCalendarIcon size={20} />} value={startDate} onChange={setStartDate} />
+              <DateInput value={startDate} onChange={setStartDate} placeholder={m.datePlaceholder} isRtl={dir === "rtl"} />
             </Field>
             <Field label={m.endDateLabel}>
-              <InputWithIcon placeholder={m.datePlaceholder} icon={<DateCalendarIcon size={20} />} value={endDate} onChange={setEndDate} />
+              <DateInput value={endDate} onChange={setEndDate} placeholder={m.datePlaceholder} isRtl={dir === "rtl"} />
             </Field>
           </div>
 

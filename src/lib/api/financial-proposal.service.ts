@@ -40,43 +40,33 @@ export interface FinancialProposalPayload {
 }
 
 export interface CreateProposalResponse {
-  proposalId: string;
-  status: string;
+  jobId: string;
+  estimatedSeconds: number;
   message: string;
 }
 
 export const financialProposalService = {
   createProposal(payload: FinancialProposalPayload) {
-    const hasFiles = !!payload.rfpFiles?.length;
-
-    if (hasFiles) {
-      const form = new FormData();
-      form.append("rfpMode", payload.rfpMode);
-      form.append("clientName", payload.clientName);
-      form.append("projectName", payload.projectName);
-      form.append("numDeliverables", String(payload.numDeliverables));
-      form.append("boqType", payload.boqType);
-      form.append("projectType", payload.projectType);
-      form.append("sectorIndustry", payload.sectorIndustry);
-      form.append("language", payload.language);
-      form.append("taxRate", String(payload.taxRate));
-      if (payload.startDate) form.append("startDate", payload.startDate);
-      if (payload.endDate) form.append("endDate", payload.endDate);
-      if (payload.terms) form.append("terms", payload.terms);
-      payload.rfpFiles?.forEach((f) => form.append("rfpFiles", f));
-      payload.rfpDocIds?.forEach((id) => form.append("rfpDocIds", id));
-      form.append("deliverables", JSON.stringify(payload.deliverables));
-      form.append("paymentTerms", JSON.stringify(payload.paymentTerms));
-      return apiRequest<CreateProposalResponse>("/proposals/financial", {
-        method: "POST",
-        body: form,
-      });
-    }
-
+    const form = new FormData();
+    form.append("rfpMode", payload.rfpMode);
+    form.append("clientName", payload.clientName);
+    form.append("projectName", payload.projectName);
+    form.append("numDeliverables", String(payload.numDeliverables));
+    form.append("boqType", payload.boqType);
+    form.append("projectType", payload.projectType);
+    form.append("sectorIndustry", payload.sectorIndustry);
+    form.append("language", payload.language);
+    form.append("taxRate", String(payload.taxRate));
+    if (payload.startDate) form.append("startDate", payload.startDate);
+    if (payload.endDate) form.append("endDate", payload.endDate);
+    if (payload.terms) form.append("terms", payload.terms);
+    payload.rfpFiles?.forEach((f) => form.append("rfpFiles", f));
+    payload.rfpDocIds?.forEach((id) => form.append("rfpDocIds", id));
+    form.append("deliverables", JSON.stringify(payload.deliverables));
+    form.append("paymentTerms", JSON.stringify(payload.paymentTerms));
     return apiRequest<CreateProposalResponse>("/proposals/financial", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: form,
     });
   },
 };

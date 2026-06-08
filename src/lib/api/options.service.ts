@@ -1,7 +1,13 @@
 import { api } from "@/lib/api/client";
 
+export interface OptionItem {
+  id: string;
+  label: string;
+  value: string;
+}
+
 export interface OptionsResponse {
-  options: string[];
+  data: OptionItem[];
 }
 
 export const optionsService = {
