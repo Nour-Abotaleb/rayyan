@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { store } from "@/store";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ToastProvider } from "@/contexts/ToastContext";
 import { API_TOKEN_STORAGE_KEY } from "@/lib/auth/api-token-storage";
 
 function TokenMigrator() {
@@ -25,8 +26,10 @@ export default function AppProviders({ children }: { children: React.ReactNode }
     <Provider store={store}>
       <ThemeProvider>
         <LanguageProvider>
-          <TokenMigrator />
-          {children}
+          <ToastProvider>
+            <TokenMigrator />
+            {children}
+          </ToastProvider>
         </LanguageProvider>
       </ThemeProvider>
     </Provider>

@@ -38,7 +38,7 @@ export function useProposals() {
     const res = await proposalsService.generateProposal(payload);
     if (!res.ok) {
       dispatch(proposalsFailure(res.error));
-      return { ok: false as const, error: res.error };
+      return { ok: false as const, error: res.error, fields: res.fields };
     }
 
     const { jobId } = res.data;
@@ -46,7 +46,7 @@ export function useProposals() {
     const MAX_WAIT = 120_000;
     const deadline = Date.now() + MAX_WAIT;
 
-    return new Promise<{ ok: true; data: { proposalId?: string } } | { ok: false; error: string }>((resolve) => {
+    return new Promise<{ ok: true; data: { proposalId?: string } } | { ok: false; error: string; fields?: Record<string, string | null> }>((resolve) => {
       async function poll() {
         const statusRes = await proposalsService.getJobStatus(jobId);
         if (statusRes.ok) {

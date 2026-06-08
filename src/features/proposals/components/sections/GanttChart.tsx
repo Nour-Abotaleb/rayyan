@@ -61,8 +61,8 @@ export default function GanttChart({
         <rect x="0.5" y="0.5" width="99.8%" height="99.8%" rx="11" fill="none"
           stroke="currentColor" strokeWidth="1" strokeDasharray="12 7" />
       </svg>
-      <div className="overflow-x-auto rounded-xl scrollbar-hide">
-        <table className="border-collapse text-xs" style={{ tableLayout: "fixed", minWidth: 700 }}>
+      <div className="overflow-x-auto scrollbar-hide rounded-xl">
+        <table className="w-full border-collapse text-xs" style={{ tableLayout: "fixed", minWidth: 700 }}>
           <colgroup>
             {ganttData.flatDays.map((_, i) => <col key={i} />)}
           </colgroup>

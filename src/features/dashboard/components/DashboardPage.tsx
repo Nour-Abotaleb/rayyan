@@ -122,8 +122,9 @@ export default function DashboardPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setShowDetailsModal(true)}
-                className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary-dark cursor-pointer"
+                onClick={() => { if (prompt.trim()) setShowDetailsModal(true); }}
+                disabled={!prompt.trim()}
+                className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary-dark cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Send"
               >
                 <SendIcon />

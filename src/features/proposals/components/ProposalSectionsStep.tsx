@@ -290,8 +290,8 @@ export default function ProposalSectionsStep({
             </h4>
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <div className="input-style flex h-[44px] w-full items-center overflow-x-auto rounded-[44px] ps-4 pe-11 text-sm font-[300] text-black dark:text-zinc-100">
-                  <div className="flex flex-nowrap items-center gap-2">
+                <div className="input-style w-full rounded-[44px] py-3 ps-4 pe-11 text-sm font-[300] text-black dark:text-zinc-100">
+                  <div className="flex flex-wrap items-center gap-2">
                     {sectionChips[si].map((chip, ci) => (
                       <span key={ci} className="inline-flex items-center gap-2">
                         <span className="inline-flex items-center rounded-full bg-[#E4ECEE] px-3 py-1.5 text-xs font-normal text-black dark:bg-[#1B272B] dark:text-white">

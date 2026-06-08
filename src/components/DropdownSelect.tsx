@@ -54,8 +54,6 @@ export default function DropdownSelect({
         )}
       </label>
 
-      {error && <p className="text-xs text-red-500">{error}</p>}
-
       <div ref={containerRef} className="relative flex items-center gap-2">
         <div className="relative flex-1">
           <input
@@ -109,6 +107,7 @@ export default function DropdownSelect({
           </div>
         )}
       </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 }

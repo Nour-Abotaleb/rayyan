@@ -11,12 +11,14 @@ import FinancialPaymentTermsStep, { type PaymentTermsStepData } from "@/features
 import FinancialFinalReviewStep from "@/features/proposals/components/FinancialFinalReviewStep";
 import { financialProposalService } from "@/lib/api/financial-proposal.service";
 import { proposalsService } from "@/lib/api/proposals.service";
+import { useToast } from "@/contexts/ToastContext";
 
 export default function FinancialProposalPage() {
   const { t } = useLanguage();
   const fp = t.dashboard.financialProposal;
 
   const router = useRouter();
+  const { addToast } = useToast();
   const [phase, setPhase] = useState<"readiness" | "steps">("readiness");
   const [activeStep, setActiveStep] = useState(1);
   const [projectInfo, setProjectInfo] = useState<ProjectInfoStepData | null>(null);
@@ -48,6 +50,7 @@ export default function FinancialProposalPage() {
 
     if (!res.ok) {
       setSubmitting(false);
+      addToast(res.error || "Validation failed", "error", res.fields);
       return;
     }
 

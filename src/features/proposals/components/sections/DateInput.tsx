@@ -25,7 +25,7 @@ export default function DateInput({
     : placeholder;
 
   return (
-    <div className="relative flex-1">
+    <div className="relative w-full">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

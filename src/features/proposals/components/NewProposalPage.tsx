@@ -10,6 +10,7 @@ import DropzoneUploadIcon from "@/icons/DropzoneUploadIcon";
 import DropdownSelect from "@/components/DropdownSelect";
 import LanguageSelector from "@/components/LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useToast } from "@/contexts/ToastContext";
 import pdfIcon from "@src/assets/dashboard/pdf.svg";
 import ProposalStepsSidebar from "@/features/proposals/components/ProposalStepsSidebar";
 import ProposalSectionsStep, { type SectionsStepData } from "@/features/proposals/components/ProposalSectionsStep";
@@ -199,6 +200,7 @@ function RfpUploadSection({
 export default function NewProposalPage() {
   const { t, dir } = useLanguage();
   const router = useRouter();
+  const { addToast } = useToast();
   const steps = [
     { number: 1, title: t.dashboard.newProposal.steps.basicInfoTitle, subtitle: t.dashboard.newProposal.steps.basicInfoSubtitle },
     { number: 2, title: t.dashboard.newProposal.steps.sectionsTitle, subtitle: t.dashboard.newProposal.steps.sectionsSubtitle },
@@ -273,6 +275,7 @@ export default function NewProposalPage() {
 
     if (!res.ok) {
       setSubmitting(false);
+      addToast(res.error || "Validation failed", "error", res.fields);
       return;
     }
 

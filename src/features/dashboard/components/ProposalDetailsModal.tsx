@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProposals } from "@/hooks/useProposals";
+import { useToast } from "@/contexts/ToastContext";
 import CloseIcon from "@/icons/CloseIcon";
 import PersonIcon from "@/icons/PersonIcon";
 import SectorIcon from "@/icons/SectorIcon";
-import PlusIcon from "@/icons/PlusIcon";
 import DropzoneUploadIcon from "@/icons/DropzoneUploadIcon";
 import DropdownSelect from "@/components/DropdownSelect";
 import LanguageSelector from "@/components/LanguageSelector";
@@ -94,19 +94,21 @@ function mapFilesToDocs(files: File[], prefix = "upload"): UploadDoc[] {
   }));
 }
 
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function Field({ label, required, optional, error, children }: { label: string; required?: boolean; optional?: boolean; error?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-medium text-black dark:text-white">
         {label}
         {required && <span className="ms-0.5 text-black dark:text-white"> *</span>}
+        {optional && <span className="ms-1 text-xs font-normal text-black/40 dark:text-white/40">(Optional)</span>}
       </label>
       {children}
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 }
 
-function InputWithIcon({ placeholder, icon, value, onChange }: { placeholder: string; icon: React.ReactNode; value: string; onChange: (v: string) => void }) {
+function InputWithIcon({ placeholder, icon, value, onChange, error }: { placeholder: string; icon: React.ReactNode; value: string; onChange: (v: string) => void; error?: string }) {
   return (
     <div className="relative flex items-center">
       <input
@@ -114,7 +116,7 @@ function InputWithIcon({ placeholder, icon, value, onChange }: { placeholder: st
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="input-style w-full rounded-[44px] py-3 ps-4 pe-10 text-sm font-[300] text-[#A0A3BD] placeholder:text-input-icon focus:outline-none focus:ring-1 focus:ring-primary/20 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD]"
+        className={`input-style w-full rounded-[44px] py-3 ps-4 pe-10 text-sm font-[300] text-[#A0A3BD] placeholder:text-input-icon focus:outline-none focus:ring-1 dark:text-[#A0A3BD] dark:placeholder:text-[#A0A3BD] ${error ? "border-red-400 focus:ring-red-300" : "focus:ring-primary/20"}`}
       />
       <span className="pointer-events-none absolute end-3 text-[#A0A3BD]">{icon}</span>
     </div>
@@ -156,6 +158,7 @@ export default function ProposalDetailsModal({
   const router = useRouter();
   const m = t.dashboard.proposalDetailsModal;
   const { generateProposal, generating } = useProposals();
+  const { addToast } = useToast();
 
   const [rfpMode, setRfpMode] = useState<"none" | "upload" | "manual">("manual");
   const [rfpTab, setRfpTab] = useState<"system" | "database">("system");
@@ -165,6 +168,7 @@ export default function ProposalDetailsModal({
   const [projectName, setProjectName] = useState("");
   const [language, setLanguage] = useState("");
   const [sector, setSector] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [docsMode, setDocsMode] = useState<"database" | "manual">("database");
@@ -201,7 +205,22 @@ export default function ProposalDetailsModal({
     });
   }, [docsMode]);
 
+  function validate() {
+    const e: Record<string, string> = {};
+    if (!clientName.trim()) e.clientName = "Required";
+    if (!projectName.trim()) e.projectName = "Required";
+    if (!language) e.language = "Required";
+    if (!sector) e.sector = "Required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
+  function clearError(key: string) {
+    if (errors[key]) setErrors((prev) => { const n = { ...prev }; delete n[key]; return n; });
+  }
+
   async function handleDone() {
+    if (!validate()) return;
     const res = await generateProposal({
       prompt,
       promptFiles: initialFiles,
@@ -221,6 +240,8 @@ export default function ProposalDetailsModal({
     if (res.ok) {
       onClose();
       router.push(`/dashboard/proposals${res.data.proposalId ? `?generated=${res.data.proposalId}` : ""}`);
+    } else {
+      addToast(res.error || "Validation failed", "error", res.fields);
     }
   }
 
@@ -329,16 +350,41 @@ export default function ProposalDetailsModal({
               </div>
 
               {rfpTab === "system" && (
-                <DashedDropzone onDrop={(files) => setRfpFiles((prev) => [...prev, ...files])}>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
-                    <DropzoneUploadIcon />
-                  </span>
-                  <p className="text-xs text-black/60 dark:text-white/50">{t.dashboard.newProposal.upload.dragDropLabel}</p>
-                  <button type="button" onClick={() => rfpFileInputRef.current?.click()} className="rounded-full bg-primary px-4 py-1 text-xs font-medium text-white hover:opacity-90 cursor-pointer">
-                    {t.dashboard.newProposal.upload.browseFiles}
-                  </button>
-                  <p className="text-[10px] text-black/40 dark:text-white/30">{t.dashboard.newProposal.upload.fileTypes}</p>
-                </DashedDropzone>
+                <>
+                  <DashedDropzone onDrop={(files) => setRfpFiles((prev) => [...prev, ...files])}>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/50 text-primary">
+                      <DropzoneUploadIcon />
+                    </span>
+                    <p className="text-xs text-black/60 dark:text-white/50">{t.dashboard.newProposal.upload.dragDropLabel}</p>
+                    <button type="button" onClick={() => rfpFileInputRef.current?.click()} className="rounded-full bg-primary px-4 py-1 text-xs font-medium text-white hover:opacity-90 cursor-pointer">
+                      {t.dashboard.newProposal.upload.browseFiles}
+                    </button>
+                    <p className="text-[10px] text-black/40 dark:text-white/30">{t.dashboard.newProposal.upload.fileTypes}</p>
+                  </DashedDropzone>
+                  {rfpFiles.length > 0 && (
+                    <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                      {rfpFiles.map((file, i) => (
+                        <div key={i} className="flex items-center gap-2 rounded-[12px] bg-white p-3 dark:border-white/10 dark:bg-white/5">
+                          <Image src={pdfIconSrc} alt="PDF" width={36} height={36} className="shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-xs font-medium text-black dark:text-white">{file.name}</p>
+                            <p className="text-xs text-[#6B7280]">{formatFileSize(file.size)}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setRfpFiles((prev) => prev.filter((_, j) => j !== i))}
+                            className="shrink-0 text-black/30 hover:text-red-500 transition-colors cursor-pointer"
+                            aria-label="Remove"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
 
               {rfpTab === "database" && (
@@ -376,14 +422,14 @@ export default function ProposalDetailsModal({
 
           {/* Form grid */}
           <div className={`grid grid-cols-1 gap-4 sm:grid-cols-2 ${rfpMode === "upload" ? "hidden" : ""}`}>
-            <Field label={m.clientNameLabel} required>
-              <InputWithIcon placeholder={m.clientNamePlaceholder} icon={<PersonIcon size={20} />} value={clientName} onChange={setClientName} />
+            <Field label={m.clientNameLabel} required error={errors.clientName}>
+              <InputWithIcon placeholder={m.clientNamePlaceholder} icon={<PersonIcon size={20} />} value={clientName} onChange={(v) => { setClientName(v); clearError("clientName"); }} error={errors.clientName} />
             </Field>
-            <Field label={m.projectNameLabel} required>
-              <InputWithIcon placeholder={m.projectNamePlaceholder} icon={<MonitorIcon />} value={projectName} onChange={setProjectName} />
+            <Field label={m.projectNameLabel} required error={errors.projectName}>
+              <InputWithIcon placeholder={m.projectNamePlaceholder} icon={<MonitorIcon />} value={projectName} onChange={(v) => { setProjectName(v); clearError("projectName"); }} error={errors.projectName} />
             </Field>
-            <Field label={m.proposalLanguageLabel} required>
-              <LanguageSelector value={language} onChange={setLanguage} />
+            <Field label={m.proposalLanguageLabel} required error={errors.language}>
+              <LanguageSelector value={language} onChange={(v) => { setLanguage(v); clearError("language"); }} />
             </Field>
             <DropdownSelect
               label={m.sectorIndustryLabel}
@@ -392,12 +438,13 @@ export default function ProposalDetailsModal({
               icon={<SectorIcon />}
               optionType="sector-industry"
               value={sector}
-              onChange={setSector}
+              onChange={(v) => { setSector(v); clearError("sector"); }}
+              error={errors.sector}
             />
-            <Field label={m.startDateLabel}>
+            <Field label={m.startDateLabel} optional>
               <DateInput value={startDate} onChange={setStartDate} placeholder={m.datePlaceholder} isRtl={dir === "rtl"} />
             </Field>
-            <Field label={m.endDateLabel}>
+            <Field label={m.endDateLabel} optional>
               <DateInput value={endDate} onChange={setEndDate} placeholder={m.datePlaceholder} isRtl={dir === "rtl"} />
             </Field>
           </div>
@@ -493,7 +540,6 @@ export default function ProposalDetailsModal({
             >
               {generating && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />}
               {m.done}
-              {!generating && <PlusIcon size={15} />}
             </button>
           </div>
         </div>

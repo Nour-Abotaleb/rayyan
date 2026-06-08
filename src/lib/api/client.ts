@@ -3,7 +3,7 @@ import { API_TOKEN_STORAGE_KEY } from "@/lib/auth/api-token-storage";
 
 export type ApiResult<T> =
   | { ok: true; data: T; status: number }
-  | { ok: false; error: string; status: number };
+  | { ok: false; error: string; status: number; fields?: Record<string, string | null> };
 
 function bearerHeaders(): HeadersInit {
   if (typeof window === "undefined") return {};
@@ -51,18 +51,15 @@ export async function apiRequest<T>(
 
   if (!res.ok) {
     let error = res.statusText;
+    let fields: Record<string, string | null> | undefined;
     try {
-      const body = (await parseJson<{ message?: string; error?: string }>(
-        res,
-      )) as {
-        message?: string;
-        error?: string;
-      };
+      const body = await parseJson<{ message?: string; error?: string; fields?: Record<string, string | null> }>(res);
       error = body?.message ?? body?.error ?? error;
+      if (body?.fields) fields = body.fields;
     } catch {
       // keep statusText
     }
-    return { ok: false, error, status: res.status };
+    return { ok: false, error, status: res.status, fields };
   }
 
   const data = (await parseJson<T>(res)) as T;
