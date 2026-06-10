@@ -23,7 +23,9 @@ import SettingsActiveIcon from "@/icons/SettingsActiveIcon";
 import DashboardRightControls from "@/components/layout/DashboardRightControls";
 import MenuIcon from "@/icons/MenuIcon";
 import CloseIcon from "@/icons/CloseIcon";
+import PersonIcon from "@/icons/PersonIcon";
 import { type Language, languages } from "@/lib/i18n";
+import { useAuth } from "@/hooks/useAuth";
 
 interface DashboardNavbarProps {
   user: { name: string; email: string; avatar?: string };
@@ -84,6 +86,7 @@ function isItemActive(
 export default function DashboardNavbar({ user }: DashboardNavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const { lang, setLang, t } = useLanguage();
+  const { logout, loading: authLoading } = useAuth();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -270,15 +273,25 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
           />
         </div>
 
-        {/* Hamburger — mobile only */}
-        <button
-          type="button"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label={mobileOpen ? t.contact.closeMenu : t.contact.openMenu}
-          className="flex items-center justify-center rounded-full p-2 text-paragraph transition-colors hover:text-primary lg:hidden dark:text-zinc-400"
-        >
-          {mobileOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
-        </button>
+        {/* Controls + Hamburger — mobile only */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <DashboardRightControls
+            theme={theme}
+            toggleTheme={toggleTheme}
+            cycleLanguage={cycleLanguage}
+            navLabel={t.nav}
+            user={user}
+            hideUserMenu
+          />
+          <button
+            type="button"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? t.contact.closeMenu : t.contact.openMenu}
+            className="flex items-center justify-center rounded-full p-2 text-paragraph transition-colors hover:text-primary dark:text-zinc-400"
+          >
+            {mobileOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile dropdown */}
@@ -316,21 +329,24 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
                 </Link>
               );
             })}
+            {/* Profile & Logout — below Settings */}
+            <Link
+              href="/dashboard/settings"
+              className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-paragraph transition-colors hover:bg-black/5 dark:text-zinc-300 dark:hover:bg-white/5"
+            >
+              <PersonIcon size={18} className="shrink-0" />
+              {t.dashboard.userMenu.profile}
+            </Link>
+            <button
+              type="button"
+              disabled={authLoading}
+              onClick={async () => { setMobileOpen(false); await logout(); }}
+              className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-[#C10000] transition-colors hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-white/5"
+            >
+              {authLoading ? t.dashboard.userMenu.loggingOut : t.dashboard.userMenu.logout}
+            </button>
           </nav>
 
-          {/* Divider */}
-          <div className="my-2 h-px bg-zinc-100 dark:bg-zinc-800" />
-
-          {/* Controls */}
-          <div className="flex items-center gap-3 px-1">
-            <DashboardRightControls
-              theme={theme}
-              toggleTheme={toggleTheme}
-              cycleLanguage={cycleLanguage}
-              navLabel={t.nav}
-              user={user}
-            />
-          </div>
         </div>
       </div>
     </header>

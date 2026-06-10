@@ -32,12 +32,14 @@ export default function DashboardRightControls({
   cycleLanguage,
   navLabel,
   user,
+  hideUserMenu,
 }: {
   theme: string;
   toggleTheme: () => void;
   cycleLanguage: () => void;
   navLabel: { lightMode: string; darkMode: string; language: string };
   user: DashboardRightControlsUser;
+  hideUserMenu?: boolean;
 }) {
   const { lang, dir, t } = useLanguage();
   const { logout, loading: authLoading } = useAuth();
@@ -188,45 +190,90 @@ export default function DashboardRightControls({
       </button>
 
       {/* Search */}
-      <div
-        ref={searchRef}
-        className={`flex h-10 shrink-0 items-stretch overflow-hidden rounded-full border transition-[width] duration-300 ease-out motion-reduce:transition-none ${
-          searchExpanded
-            ? "w-[min(17rem,calc(100vw-10rem))] border-zinc-200 bg-white/60 dark:border-zinc-600 dark:bg-zinc-900"
-            : "w-10 border-transparent bg-white/50 dark:border-white/10 dark:bg-white/8"
-        }`}
-      >
-        {searchExpanded ? (
-          <form role="search" className="flex min-w-0 flex-1 items-center ps-3" onSubmit={(e) => e.preventDefault()}>
+      <div ref={searchRef} className="relative">
+        {/* Desktop: inline expand */}
+        <div
+          className={`hidden lg:flex h-10 shrink-0 items-stretch overflow-hidden rounded-full border transition-[width] duration-300 ease-out motion-reduce:transition-none ${
+            searchExpanded
+              ? "w-[min(17rem,calc(100vw-10rem))] border-zinc-200 bg-white/60 dark:border-zinc-600 dark:bg-zinc-900"
+              : "w-10 border-transparent bg-white/50 dark:border-white/10 dark:bg-white/8"
+          }`}
+        >
+          {searchExpanded ? (
+            <form role="search" className="flex min-w-0 flex-1 items-center ps-3" onSubmit={(e) => e.preventDefault()}>
+              <input
+                id={searchInputId}
+                ref={searchInputRef}
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t.dashboard.search.placeholder}
+                aria-label={t.dashboard.search.placeholder}
+                className="min-w-0 flex-1 bg-transparent py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-400"
+              />
+              <button
+                type="button"
+                aria-label={t.dashboard.search.ariaClose}
+                className="me-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-opacity hover:opacity-90"
+                onClick={() => setSearchExpanded(false)}
+              >
+                <SearchIcon size={18} className="text-white" />
+              </button>
+            </form>
+          ) : (
+            <button
+              type="button"
+              aria-label={t.dashboard.search.ariaCollapsed}
+              aria-expanded={searchExpanded}
+              onClick={() => setSearchExpanded((open) => !open)}
+              className="flex h-full w-full items-center justify-center p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:hover:text-primary-light"
+            >
+              <SearchIcon size={20} />
+            </button>
+          )}
+        </div>
+
+        {/* Mobile: fixed icon toggle */}
+        <button
+          type="button"
+          aria-label={searchExpanded ? t.dashboard.search.ariaClose : t.dashboard.search.ariaCollapsed}
+          aria-expanded={searchExpanded}
+          onClick={() => setSearchExpanded((open) => !open)}
+          className={`flex lg:hidden h-10 w-10 items-center justify-center rounded-full border transition-colors ${
+            searchExpanded
+              ? "border-primary bg-primary/10 text-primary dark:border-primary dark:bg-primary/20"
+              : "border-transparent bg-white/50 text-zinc-900 hover:text-primary dark:border-white/10 dark:bg-white/8 dark:text-white dark:hover:text-primary-light"
+          }`}
+        >
+          <SearchIcon size={20} />
+        </button>
+
+        {/* Mobile: absolute dropdown below icon */}
+        {searchExpanded && (
+          <form
+            role="search"
+            className="absolute end-0 top-full z-50 mt-2 flex w-72 items-center gap-2 rounded-2xl border border-zinc-200 bg-white px-3 py-1 shadow-lg lg:hidden dark:border-zinc-700 dark:bg-zinc-900"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <input
-              id={searchInputId}
-              ref={searchInputRef}
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.dashboard.search.placeholder}
               aria-label={t.dashboard.search.placeholder}
-              className="min-w-0 flex-1 bg-transparent py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-400"
+              className="min-w-0 flex-1 bg-transparent py-1 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-zinc-100 dark:placeholder:text-zinc-400"
             />
             <button
               type="button"
               aria-label={t.dashboard.search.ariaClose}
-              className="me-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-opacity hover:opacity-90"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-opacity hover:opacity-90"
               onClick={() => setSearchExpanded(false)}
             >
               <SearchIcon size={18} className="text-white" />
             </button>
           </form>
-        ) : (
-          <button
-            type="button"
-            aria-label={t.dashboard.search.ariaCollapsed}
-            aria-expanded={searchExpanded}
-            onClick={() => setSearchExpanded((open) => !open)}
-            className="flex h-full w-full items-center justify-center p-2 text-zinc-900 transition-colors hover:text-primary dark:text-white dark:hover:text-primary-light"
-          >
-            <SearchIcon size={20} />
-          </button>
         )}
       </div>
 
@@ -247,14 +294,16 @@ export default function DashboardRightControls({
       />
 
       {/* User menu */}
-      <UserMenu
-        open={menuOpen}
-        onToggle={() => { setNotificationsOpen(false); setMenuOpen((v) => !v); }}
-        user={user}
-        onLogout={handleLogout}
-        authLoading={authLoading}
-        t={t.dashboard.userMenu}
-      />
+      {!hideUserMenu && (
+        <UserMenu
+          open={menuOpen}
+          onToggle={() => { setNotificationsOpen(false); setMenuOpen((v) => !v); }}
+          user={user}
+          onLogout={handleLogout}
+          authLoading={authLoading}
+          t={t.dashboard.userMenu}
+        />
+      )}
     </>
   );
 }

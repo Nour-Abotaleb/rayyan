@@ -1,12 +1,9 @@
 "use client";
 
 import { useState, type ComponentType } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import cardBg from "@src/assets/dashboard/card-bg.svg";
-// import leftPanelBg from "@src/assets/dashboard/left-panel-bg.png";
-// import leftPanelBgMobile from "@src/assets/dashboard/left-panel-bg-mobile.png";
+import CardBg from "./CardBg";
 import Card1Illustration from "./Card1Illustration";
 import Card2Illustration from "./Card2Illustration";
 import CreateProposalModal from "./CreateProposalModal";
@@ -15,7 +12,6 @@ interface CardItem {
   title: string;
   description: string;
   Illustration: ComponentType<{ className?: string }>;
-  bg: string;
   onCreateClick: () => void;
 }
 
@@ -31,7 +27,7 @@ function CardBlock({
   return (
     <div className="flex flex-col gap-3">
       <div className="relative z-0 h-52 w-full overflow-hidden rounded-2xl">
-        <Image src={card.bg} alt="" fill className="object-fill scale-x-[1.18] origin-center" priority />
+        <CardBg className="absolute inset-0 h-full w-full" />
 
         <div className="absolute inset-0 p-5">
           <div className="text-left" dir="ltr" style={{ textAlign: "left" }}>
@@ -104,14 +100,12 @@ export default function LeftPanel() {
       title: t.dashboard.leftPanel.createNewProposalTitle,
       description: t.dashboard.leftPanel.createNewProposalDescription,
       Illustration: Card1Illustration,
-      bg: cardBg,
       onCreateClick: () => router.push("/dashboard/proposals/create"),
     },
     {
       title: t.dashboard.leftPanel.createCompanyProfileTitle,
       description: t.dashboard.leftPanel.createCompanyProfileDescription,
       Illustration: Card2Illustration,
-      bg: cardBg,
       onCreateClick: () => setModalOpen(true),
     },
   ];

@@ -83,44 +83,56 @@ export default function ProposalsTable({
         <div className="w-full pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl opacity-100 dark:opacity-[0.15]">
           <ProposalTabBgSvg
             variant={activeTab}
-            className={`h-auto w-full ${isRtl ? "scale-x-[-1]" : ""}`}
+            className={isRtl ? "scale-x-[-1]" : undefined}
           />
         </div>
       )}
 
       <div className="relative z-10 flex flex-col gap-4">
         {/* Header */}
-        <div className="flex items-center justify-between gap-6 mt-3">
-          {/* Tabs */}
-          <div
-            className={`flex items-center ${
-              variant === "page"
-                ? "border-b border-black/15 dark:border-white/10"
-                : ""
-            } ${
-              isRtl
-                ? "gap-1 md:gap-2 lg:gap-3 xl:gap-20"
-                : "gap-1 md:gap-4 lg:gap-4 xl:gap-17"
-            }`}
-          >
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => changeTab(tab)}
-                className={`pb-3 text-sm md:text-base font-medium transition-colors ${
-                  variant === "page"
-                    ? activeTab === tab
+        <div className="relative flex items-center justify-end mt-3 h-10">
+          {/* Tabs — card variant: absolutely centered over SVG notches */}
+          {variant === "card" ? (
+            tabs.map((tab) => {
+              // notch flat-top center as % of 909-unit viewBox width
+              const centerPct = { ALL: 5.7, Technical: 19.0, Financial: 35.8, Visualization: 51.0 }[tab];
+              const pos = isRtl ? 100 - centerPct : centerPct;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => changeTab(tab)}
+                  style={{ left: `${pos}%` }}
+                  className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 whitespace-nowrap text-sm md:text-base font-medium transition-colors ${
+                    activeTab === tab
+                      ? "text-primary dark:text-[#519A91]"
+                      : "text-black dark:text-zinc-100"
+                  }`}
+                >
+                  {tabLabel[tab]}
+                </button>
+              );
+            })
+          ) : (
+            <div
+              className={`absolute left-0 flex items-center border-b border-black/15 dark:border-white/10 ${
+                isRtl ? "gap-1 md:gap-2 lg:gap-3 xl:gap-20" : "gap-1 md:gap-4 lg:gap-4 xl:gap-17"
+              }`}
+            >
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => changeTab(tab)}
+                  className={`pb-3 text-sm md:text-base font-medium transition-colors ${
+                    activeTab === tab
                       ? "px-4 border-b-[2px] border-primary text-black dark:border-[#519A91] dark:text-[#519A91] -mb-px"
                       : "px-4 text-black dark:text-zinc-400 hover:text-black dark:hover:text-white"
-                    : activeTab === tab
-                      ? "px-3 lg:px-4 text-primary dark:text-[#519A91]"
-                      : "px-3 lg:px-4 text-black dark:text-zinc-100"
-                }`}
-              >
-                {tabLabel[tab]}
-              </button>
-            ))}
-          </div>
+                  }`}
+                >
+                  {tabLabel[tab]}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Search */}
           <div className="hidden md:flex items-center bg-linear-to-r from-white/35 to-white dark:bg-linear-to-r dark:from-white/15 dark:to-white/20 justify-between gap-0 overflow-hidden rounded-full border border-white dark:border-white/10 min-w-52 lg:min-w-70">
