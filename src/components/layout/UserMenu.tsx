@@ -32,18 +32,18 @@ export default function UserMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={onToggle}
-        className="flex items-center gap-2.5 rounded-full border border-transparent bg-white/50 py-1.5 ps-2 pe-3 transition-colors hover:bg-zinc-100 dark:border-white/10 dark:bg-white/8 dark:hover:bg-white/12"
+        className="flex items-center gap-2.5 rounded-full border border-transparent bg-[#996627] py-1.5 ps-2 pe-3 transition-colors hover:bg-[#7a5120] dark:border-white/10 dark:bg-[#996627] dark:hover:bg-[#7a5120]"
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-sm font-bold text-white">
           {user.name.charAt(0)}
         </div>
         <div className="hidden flex-col text-start lg:flex">
-          <span className="text-xs font-semibold text-black dark:text-zinc-100">{user.name}</span>
-          <span className="text-[10px] font-light text-[#656769]">{user.email}</span>
+          <span className="text-xs font-semibold text-white">{user.name}</span>
+          <span className="text-[10px] font-light text-white/70">{user.email}</span>
         </div>
         <ChevronDownIcon
           size={14}
-          className={`hidden text-paragraph transition-transform lg:block dark:text-zinc-400 ${open ? "rotate-180" : ""}`}
+          className={`hidden text-white/70 transition-transform lg:block ${open ? "rotate-180" : ""}`}
         />
       </button>
 
