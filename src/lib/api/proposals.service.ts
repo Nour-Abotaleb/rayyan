@@ -129,6 +129,10 @@ export const proposalsService = {
     return apiRequest<{ ok: boolean }>(`/proposals/${id}`, { method: "DELETE" });
   },
 
+  getParsedData(id: string) {
+    return api.get<Record<string, unknown>>(`/ai/parsed-data/${id}`);
+  },
+
   async downloadProposal(id: string): Promise<void> {
     const token =
       window.localStorage.getItem(API_TOKEN_STORAGE_KEY) ??

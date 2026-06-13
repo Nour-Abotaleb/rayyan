@@ -100,7 +100,7 @@ export default function DashboardRightControls({
     const res = await listNotifications();
     setNotificationsLoading(false);
     if (!res.ok) { setNotificationsError(res.error); return; }
-    const sorted = [...res.data].sort(
+    const sorted = [...(Array.isArray(res.data) ? res.data : [])].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
     const merged = sorted.map((n) =>

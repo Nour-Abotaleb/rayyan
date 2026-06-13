@@ -75,7 +75,8 @@ function isItemActive(
       (pathname?.startsWith("/dashboard/proposals/") &&
         !pathname?.startsWith("/dashboard/proposals/new") &&
         !pathname?.startsWith("/dashboard/proposals/create") &&
-        !pathname?.startsWith("/dashboard/proposals/financial"))
+        !pathname?.startsWith("/dashboard/proposals/financial") &&
+        !pathname?.startsWith("/dashboard/proposals/visualization"))
     );
   }
   if (key === "database") return pathname?.startsWith("/dashboard/database");
@@ -110,7 +111,8 @@ export default function DashboardNavbar({ user }: DashboardNavbarProps) {
       (pathname?.startsWith("/dashboard/proposals/") &&
         !pathname?.startsWith("/dashboard/proposals/new") &&
         !pathname?.startsWith("/dashboard/proposals/create") &&
-        !pathname?.startsWith("/dashboard/proposals/financial"))
+        !pathname?.startsWith("/dashboard/proposals/financial") &&
+        !pathname?.startsWith("/dashboard/proposals/visualization"))
     ) {
       return "proposal";
     }

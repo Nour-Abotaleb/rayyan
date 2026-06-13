@@ -1,6 +1,13 @@
 import { API_BASE_URL } from "@/lib/api/config";
 import { API_TOKEN_STORAGE_KEY } from "@/lib/auth/api-token-storage";
 
+let _onUnauthorized: (() => void) | null = null;
+let _handlingUnauthorized = false;
+
+export function setUnauthorizedHandler(fn: () => void): void {
+  _onUnauthorized = fn;
+}
+
 export type ApiResult<T> =
   | { ok: true; data: T; status: number }
   | { ok: false; error: string; status: number; fields?: Record<string, string | null> };
@@ -58,6 +65,11 @@ export async function apiRequest<T>(
       if (body?.fields) fields = body.fields;
     } catch {
       // keep statusText
+    }
+    if (res.status === 401 && !_handlingUnauthorized && _onUnauthorized) {
+      _handlingUnauthorized = true;
+      _onUnauthorized();
+      setTimeout(() => { _handlingUnauthorized = false; }, 5000);
     }
     return { ok: false, error, status: res.status, fields };
   }

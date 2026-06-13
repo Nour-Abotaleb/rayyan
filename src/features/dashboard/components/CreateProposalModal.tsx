@@ -67,6 +67,7 @@ export default function CreateProposalModal({
       description:
         t.dashboard.createProposalModal.types.visualization.description,
       tone: "secondary",
+      href: "/dashboard/proposals/visualization",
     },
     {
       title: t.dashboard.createProposalModal.types.financial.title,

@@ -9,7 +9,9 @@
       "Bash(node -e ':*)",
       "Bash(git checkout:*)",
       "Bash(xargs grep *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(mkdir -p E:/rayyan/src/app/dashboard/proposals/test-pdf)",
+      "Bash(mkdir -p E:/rayyan/src/features/proposals/components)"
     ]
   }
 }

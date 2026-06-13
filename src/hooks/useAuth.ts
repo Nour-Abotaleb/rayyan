@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import type { AppDispatch, RootState } from "@/store";
@@ -18,6 +18,7 @@ import {
   type RegisterRequest,
 } from "@/lib/api/auth.service";
 import { clearApiToken, persistApiToken } from "@/lib/auth/api-token-storage";
+import { setUnauthorizedHandler } from "@/lib/api/client";
 
 export function useAuth() {
   const dispatch = useDispatch<AppDispatch>();
@@ -73,6 +74,16 @@ export function useAuth() {
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      clearApiToken();
+      dispatch(logoutAction());
+      fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+      router.replace("/login");
+      router.refresh();
+    });
+  }, [dispatch, router]);
 
   const logout = useCallback(async () => {
     try {
